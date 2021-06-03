@@ -1,13 +1,18 @@
 package com.hoc081098.flowext
 
-import kotlin.native.concurrent.FreezableAtomicReference as KAtomicRef
+import kotlin.native.concurrent.AtomicInt
 
-public actual class AtomicBoolean actual constructor(value: Boolean) {
-    private val atomic = KAtomicRef(value)
+actual class AtomicBoolean actual constructor(value: Boolean) {
+    private val atomic = AtomicInt(value.asInt)
 
-    public actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean = atomic.compareAndSet(expect, update)
+    actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean =
+        atomic.compareAndSet(expect.asInt, update.asInt)
 
-    public actual fun set(value: Boolean) {
-        atomic.value = value
-    }
+    actual var value: Boolean
+        get() = atomic.value != 0
+        set(value) {
+            atomic.value = value.asInt
+        }
 }
+
+private inline val Boolean.asInt: Int get() = if (this) 1 else 0

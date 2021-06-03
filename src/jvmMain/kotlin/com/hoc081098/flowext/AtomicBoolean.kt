@@ -1,9 +1,14 @@
 package com.hoc081098.flowext
 
-public actual class AtomicBoolean actual constructor(value: Boolean) {
-    private val atomic = java.util.concurrent.atomic.AtomicBoolean(value)
+import java.util.concurrent.atomic.AtomicBoolean as JavaAtomicBoolean
 
-    public actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean = atomic.compareAndSet(expect, update)
+actual class AtomicBoolean actual constructor(value: Boolean) {
+    private val atomic = JavaAtomicBoolean(value)
 
-    public actual fun set(value: Boolean): Unit = atomic.set(value)
+    actual var value: Boolean
+        get() = atomic.get()
+        set(value) = atomic.set(value)
+
+    actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean =
+        atomic.compareAndSet(expect, update)
 }
