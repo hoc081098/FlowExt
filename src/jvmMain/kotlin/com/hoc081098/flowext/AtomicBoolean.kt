@@ -2,7 +2,7 @@ package com.hoc081098.flowext
 
 import java.util.concurrent.atomic.AtomicBoolean as JavaAtomicBoolean
 
-actual class AtomicBoolean actual constructor(value: Boolean) {
+internal actual class AtomicBoolean actual constructor(value: Boolean) {
     private val atomic = JavaAtomicBoolean(value)
 
     actual var value: Boolean

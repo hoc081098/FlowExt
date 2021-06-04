@@ -2,7 +2,7 @@ package com.hoc081098.flowext
 
 import kotlin.native.concurrent.AtomicInt
 
-actual class AtomicBoolean actual constructor(value: Boolean) {
+internal actual class AtomicBoolean actual constructor(value: Boolean) {
     private val atomic = AtomicInt(value.asInt)
 
     actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean =
