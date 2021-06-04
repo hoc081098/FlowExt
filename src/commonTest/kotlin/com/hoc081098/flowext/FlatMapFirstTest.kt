@@ -70,7 +70,7 @@ class FlatMapFirstTest {
     }
 
     @Test
-    fun outerError() = suspendTest {
+    fun testFailureUpstream() = suspendTest {
         val original = RuntimeException("Broken!")
 
         flow<Int> { throw original }
@@ -80,5 +80,23 @@ class FlatMapFirstTest {
                 assertEquals(original.message, error.message)
                 assertIs<RuntimeException>(error)
             }
+    }
+
+    @Test
+    fun testFailureTransform() = suspendTest {
+        val original = RuntimeException("Broken!")
+
+        flowOf(1, 2, 3).flatMapFirst {v ->
+            if (v == 2) {
+                throw original
+            } else {
+                flowOf(v)
+            }
+        }.test {
+            assertEquals(1, expectItem())
+            val error = expectError()
+            assertEquals(original.message, error.message)
+            assertIs<RuntimeException>(error)
+        }
     }
 }
