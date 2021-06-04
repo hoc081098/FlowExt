@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="FlowExt-js-1.0">
-    <output-path>$PROJECT_DIR$/build/libs</output-path>
-    <root id="archive" name="FlowExt-js-1.0.jar">
-      <element id="module-output" name="FlowExt.jsMain" />
-    </root>
+    <output-path>C:\Users\Admin\Desktop\Documents\FlowExt\build\libs</output-path>
+    <root id="archive" name="FlowExt-js-1.0.jar" />
   </artifact>
 </component>
