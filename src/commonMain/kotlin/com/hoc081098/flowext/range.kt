@@ -9,5 +9,6 @@ import kotlinx.coroutines.flow.flow
  * @param count The number of sequential integers to generate.
  */
 public fun range(start: Int, count: Int): Flow<Int> = flow {
+  if (count <= 0) return@flow
   repeat(count) { emit(it + start) }
 }
