@@ -1,5 +1,7 @@
 # FlowExt
-Kotlinx Coroutine Flow Extensions
+
+Kotlinx Coroutines Flow Extensions.
+Extensions to the Kotlin Flow library.
 
 [![CI](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml)
 
