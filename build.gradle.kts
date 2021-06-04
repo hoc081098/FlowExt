@@ -21,7 +21,11 @@ tasks.withType<JacocoReport> {
     dependsOn(tasks.withType<Test>())
 }
 
+val kotlinCoroutinesVersion = "1.5.0"
+
 kotlin {
+    explicitApi()
+
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
@@ -31,12 +35,13 @@ kotlin {
             finalizedBy(tasks.withType<JacocoReport>())
         }
     }
-    js(LEGACY) {
+    js {
         browser {
             commonWebpackConfig {
                 cssSupport.enabled = true
             }
         }
+        nodejs()
     }
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -51,7 +56,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                val kotlinCoroutinesVersion = "1.5.0"
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
             }
         }
@@ -60,12 +64,14 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation("app.cash.turbine:turbine:0.5.2")
+                implementation("org.jetbrains.kotlin:kotlin-test")
             }
         }
         val jvmMain by getting
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutinesVersion")
             }
         }
         val jsMain by getting

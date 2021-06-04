@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 
 @ExperimentalCoroutinesApi
-fun <T, R> Flow<T>.flatMapFirst(transform: suspend (value: T) -> Flow<R>): Flow<R> =
+public fun <T, R> Flow<T>.flatMapFirst(transform: suspend (value: T) -> Flow<R>): Flow<R> =
     map(transform).flattenFirst()
 
 @ExperimentalCoroutinesApi
-fun <T> Flow<Flow<T>>.flattenFirst(): Flow<T> = channelFlow {
+public fun <T> Flow<Flow<T>>.flattenFirst(): Flow<T> = channelFlow {
     val outerScope = this
     val busy = AtomicBoolean(false)
 
