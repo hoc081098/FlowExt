@@ -7,5 +7,5 @@ import kotlinx.coroutines.promise
 
 @DelicateCoroutinesApi
 actual fun suspendTest(block: suspend CoroutineScope.() -> Unit): dynamic {
-    return GlobalScope.promise(block = block)
+  return GlobalScope.promise(block = block)
 }

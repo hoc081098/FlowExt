@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform") version "1.5.0"
     jacoco
+    id("com.diffplug.spotless") version "5.12.5"
 }
 
 group = "com.hoc081098"
@@ -52,7 +53,7 @@ kotlin {
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
 
-    
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -82,5 +83,19 @@ kotlin {
         }
         val nativeMain by getting
         val nativeTest by getting
+    }
+}
+
+spotless {
+    kotlin {
+        target("**/*.kt")
+
+        ktlint("0.37.2").userData(
+            mapOf(
+                // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
+                "indent_size" to "2",
+                "kotlin_imports_layout" to "ascii",
+            )
+        )
     }
 }

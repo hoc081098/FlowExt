@@ -5,5 +5,5 @@ import kotlinx.coroutines.CoroutineScope
 expect fun suspendTest(block: suspend CoroutineScope.() -> Unit)
 
 fun unreached() {
-    throw RuntimeException("Should not reach here!")
+  throw RuntimeException("Should not reach here!")
 }
