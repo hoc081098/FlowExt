@@ -36,15 +36,17 @@ kotlin {
 
     
     sourceSets {
-        val commonMain by getting
-        commonMain.dependencies {
-            val kotlinCoroutinesVersion = "1.5.0"
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+        val commonMain by getting {
+            dependencies {
+                val kotlinCoroutinesVersion = "1.5.0"
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+            }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation("app.cash.turbine:turbine:0.5.2")
             }
         }
         val jvmMain by getting
