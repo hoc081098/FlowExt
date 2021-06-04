@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.5.0"
+    jacoco
 }
 
 group = "com.hoc081098"
@@ -9,6 +10,17 @@ repositories {
     mavenCentral()
 }
 
+jacoco {
+    toolVersion = "0.8.6"
+}
+
+tasks.withType<JacocoReport> {
+    reports {
+        xml.isEnabled = true
+    }
+    dependsOn(tasks.withType<Test>())
+}
+
 kotlin {
     jvm {
         compilations.all {
@@ -16,6 +28,7 @@ kotlin {
         }
         testRuns["test"].executionTask.configure {
             useJUnit()
+            finalizedBy(tasks.withType<JacocoReport>())
         }
     }
     js(LEGACY) {
