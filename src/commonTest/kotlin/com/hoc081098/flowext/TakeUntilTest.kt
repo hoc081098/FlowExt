@@ -9,7 +9,9 @@ import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 
 @ExperimentalTime
 @ExperimentalCoroutinesApi
@@ -64,6 +66,17 @@ class TakeUntilTest {
       .test {
         assertEquals(1, expectItem())
         assertIs<RuntimeException>(expectError())
+      }
+  }
+
+  @Test
+  fun take() = suspendTest {
+    flowOf(1, 2, 3)
+      .takeUntil(timer(Unit, 100))
+      .take(1)
+      .test {
+        assertEquals(1, expectItem())
+        expectComplete()
       }
   }
 }
