@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
-  coroutineScope {
-    try {
+  try {
+    coroutineScope {
       val job = launch {
         notifier.take(1).collect()
         throw ClosedException
@@ -19,9 +19,9 @@ public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
 
       collect { return@collect emit(it) }
       job.cancel()
-    } catch (e: ClosedException) {
-      // no-op
     }
+  } catch (e: ClosedException) {
+    // no-op
   }
 }
 
