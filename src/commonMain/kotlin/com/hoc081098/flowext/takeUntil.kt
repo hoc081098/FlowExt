@@ -17,7 +17,7 @@ public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
         throw ClosedException
       }
 
-      collect { return@collect emit(it) }
+      collect { emit(it) }
       job.cancel()
     }
   } catch (e: ClosedException) {
