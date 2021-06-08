@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "1.5.0"
+    kotlin("multiplatform") version "1.5.10"
     jacoco
     id("com.diffplug.spotless") version "5.12.5"
 }
@@ -8,6 +8,7 @@ group = "com.hoc081098"
 version = "1.0"
 
 repositories {
+    google()
     mavenCentral()
 }
 
@@ -36,22 +37,29 @@ kotlin {
             finalizedBy(tasks.withType<JacocoReport>())
         }
     }
-    js {
-        browser {
-            commonWebpackConfig {
-                cssSupport.enabled = true
-            }
+    js(BOTH) {
+        compilations.all {
+            kotlinOptions.moduleKind = "commonjs"
         }
+        browser()
         nodejs()
     }
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }
+
+    iosArm64()
+    iosArm32()
+    iosX64()
+
+    macosX64()
+    mingwX64()
+    linuxX64()
+
+    tvosX64()
+    tvosArm64()
+
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosX86()
 
 
     sourceSets {
@@ -65,14 +73,14 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 implementation("app.cash.turbine:turbine:0.5.2")
-                implementation("org.jetbrains.kotlin:kotlin-test")
             }
         }
         val jvmMain by getting
         val jvmTest by getting {
+            dependsOn(commonTest)
+
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutinesVersion")
             }
         }
         val jsMain by getting
@@ -81,8 +89,35 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        val nativeMain by getting
-        val nativeTest by getting
+
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+        val nativeTest by creating {
+            dependsOn(commonTest)
+        }
+
+        val appleTargets = listOf(
+            "iosX64",
+            "iosArm64",
+            "iosArm32",
+            "macosX64",
+            "tvosArm64",
+            "tvosX64",
+            "watchosArm32",
+            "watchosArm64",
+            "watchosX86",
+            "watchosX64",
+        )
+
+        (appleTargets + listOf("mingwX64", "linuxX64")).forEach {
+            getByName("${it}Main") {
+                dependsOn(nativeMain)
+            }
+            getByName("${it}Test") {
+                dependsOn(nativeTest)
+            }
+        }
     }
 }
 
