@@ -8,7 +8,6 @@ import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
@@ -18,12 +17,7 @@ import kotlinx.coroutines.flow.take
 @ExperimentalCoroutinesApi
 class TakeUntilTest {
   @Test
-  fun warm() = suspendTest {
-    timer(
-      Unit,
-      Duration.milliseconds(350)
-    ).collect()
-  }
+  fun warm() = warmTest()
 
   @Test
   fun sourceCompletesAfterNotifier() = suspendTest {
