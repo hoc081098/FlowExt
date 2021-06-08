@@ -7,15 +7,25 @@ import kotlin.test.assertIs
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlin.time.Duration
 
 @ExperimentalCoroutinesApi
 @ExperimentalTime
 class FlatMapFirstTest {
+  @Test
+  fun warm() = suspendTest {
+    timer(
+      Unit,
+      Duration.milliseconds(350)
+    ).collect()
+  }
+
   @Test
   fun basic1() = suspendTest {
     flowOf("one", "two")
