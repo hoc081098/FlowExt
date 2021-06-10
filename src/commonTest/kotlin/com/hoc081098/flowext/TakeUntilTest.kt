@@ -22,11 +22,11 @@ class TakeUntilTest {
   @Test
   fun sourceCompletesAfterNotifier() = suspendTest {
     range(0, 10)
-      .onEach { delay(100) }
+      .onEach { delay(140) }
       .takeUntil(
         timer(
           Unit,
-          Duration.milliseconds(350)
+          Duration.milliseconds(490)
         )
       )
       .test {

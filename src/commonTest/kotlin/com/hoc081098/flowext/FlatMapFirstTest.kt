@@ -37,10 +37,10 @@ class FlatMapFirstTest {
   @Test
   fun basic2() = suspendTest {
     range(1, 10)
-      .onEach { delay(100) }
+      .onEach { delay(140) }
       .flatMapFirst {
         range(it * 100, 5)
-          .onEach { delay(30) }
+          .onEach { delay(42) }
       }
       .test {
         listOf(
@@ -59,10 +59,10 @@ class FlatMapFirstTest {
     var input: Int? = null
 
     range(1, 10)
-      .onEach { delay(100) }
+      .onEach { delay(140) }
       .flatMapFirst {
         input = it
-        range(it * 100, 5).onEach { delay(30) }
+        range(it * 100, 5).onEach { delay(42) }
       }
       .take(7)
       .test {
