@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
 plugins {
     kotlin("multiplatform") version "1.5.10"
     jacoco
@@ -116,6 +119,22 @@ kotlin {
             }
             getByName("${it}Test") {
                 dependsOn(nativeTest)
+            }
+        }
+    }
+
+    // enable running ios tests on a background thread as well
+    // configuration copied from: https://github.com/square/okio/pull/929
+    targets.withType<KotlinNativeTargetWithTests<*>>().all {
+        binaries {
+            // Configure a separate test where code runs in background
+            test("background", setOf(NativeBuildType.DEBUG)) {
+                freeCompilerArgs = freeCompilerArgs + "-trw"
+            }
+        }
+        testRuns {
+            val background by creating {
+                setExecutionSourceFrom(binaries.getTest("background", NativeBuildType.DEBUG))
             }
         }
     }
