@@ -1,13 +1,12 @@
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.yield
 
 private object NULL {
   @Suppress("UNCHECKED_CAST")
@@ -21,17 +20,16 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 ): Flow<R> {
   return flow {
     coroutineScope {
-      val otherValues: ReceiveChannel<Any> = produce(capacity = Channel.CONFLATED) {
+      val otherValues = produce(Dispatchers.Unconfined, Channel.CONFLATED) {
         other.collect {
-          send(it ?: NULL)
-          yield()
+          return@collect send(it ?: NULL)
         }
       }
 
       var lastValue: Any? = null
       collect { value ->
         otherValues
-          .receiveCatching()
+          .tryReceive()
           .onSuccess { lastValue = it }
 
         emit(
