@@ -29,6 +29,22 @@ class WithLatestFromTest {
   }
 
   @Test
+  fun basicWithNull() = suspendTest {
+    val f1 = flowOf(1, 2, 3, 4, null)
+    val f2 = flowOf("a", "b", "c", "d", "e")
+    assertEquals(
+      f2.withLatestFrom(f1).toList(),
+      listOf(
+        "a" to null,
+        "b" to null,
+        "c" to null,
+        "d" to null,
+        "e" to null,
+      )
+    )
+  }
+
+  @Test
   fun basic2() = suspendTest {
     val f1 = flowOf(1, 2, 3, 4).onEach { delay(300) }
     val f2 = flowOf("a", "b", "c", "d", "e").onEach { delay(100) }
