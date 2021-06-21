@@ -26,7 +26,7 @@ tasks.withType<JacocoReport> {
     dependsOn(tasks.withType<Test>())
 }
 
-val kotlinCoroutinesVersion = "1.5.0"
+val kotlinCoroutinesVersion = "1.5.0-native-mt"
 
 kotlin {
     explicitApi()
