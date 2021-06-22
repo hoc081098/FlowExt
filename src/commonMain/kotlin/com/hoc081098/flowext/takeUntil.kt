@@ -1,5 +1,6 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
   try {
     coroutineScope {
-      val job = launch(Dispatchers.Unconfined) {
+      val job = launch(start = CoroutineStart.UNDISPATCHED) {
         notifier.take(1).collect()
         throw ClosedException
       }

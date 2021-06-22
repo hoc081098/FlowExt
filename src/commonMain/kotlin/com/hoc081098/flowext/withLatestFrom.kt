@@ -1,3 +1,4 @@
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -20,7 +21,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 ): Flow<R> {
   return flow {
     coroutineScope {
-      val otherValues = produce(Dispatchers.Unconfined, Channel.CONFLATED) {
+      val otherValues = produce(capacity = Channel.CONFLATED) {
         other.collect {
           return@collect send(it ?: NULL)
         }
