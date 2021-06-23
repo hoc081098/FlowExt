@@ -1,13 +1,12 @@
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.onSuccess
-import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 private object NULL {
   @Suppress("UNCHECKED_CAST")
@@ -21,9 +20,10 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 ): Flow<R> {
   return flow {
     coroutineScope {
-      val otherValues = produce(capacity = Channel.CONFLATED) {
+      val otherValues = Channel<Any>(Channel.CONFLATED)
+      launch(start = CoroutineStart.UNDISPATCHED) {
         other.collect {
-          return@collect send(it ?: NULL)
+          return@collect otherValues.send(it ?: NULL)
         }
       }
 
