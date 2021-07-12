@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
-    kotlin("multiplatform") version "1.5.10"
+    kotlin("multiplatform") version "1.5.20"
     jacoco
     id("com.diffplug.spotless") version "5.14.1"
 }
@@ -26,7 +26,7 @@ tasks.withType<JacocoReport> {
     dependsOn(tasks.withType<Test>())
 }
 
-val kotlinCoroutinesVersion = "1.5.0"
+val kotlinCoroutinesVersion = "1.5.1"
 
 kotlin {
     explicitApi()
