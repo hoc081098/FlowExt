@@ -6,6 +6,7 @@ plugins {
     jacoco
     id("com.diffplug.spotless") version "5.14.1"
     id("maven-publish")
+    id("com.vanniktech.maven.publish") version "0.17.0"
 }
 
 group = "io.github.hoc081098"
