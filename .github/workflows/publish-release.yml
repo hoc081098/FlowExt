@@ -23,11 +23,10 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
+
       - name: Make gradlew executable
-
-
         run: chmod +x ./gradlew
-        
+
       - name: Upload release
         run: ./gradlew publish --no-daemon --no-parallel
         if: matrix.os == 'macos-latest'
