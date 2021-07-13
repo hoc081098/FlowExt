@@ -8,7 +8,7 @@ plugins {
     id("maven-publish")
 }
 
-group = "com.hoc081098"
+group = "io.github.hoc081098"
 version = "0.0.1"
 
 repositories {
