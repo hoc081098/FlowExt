@@ -5,10 +5,11 @@ plugins {
     kotlin("multiplatform") version "1.5.20"
     jacoco
     id("com.diffplug.spotless") version "5.14.1"
+    id("maven-publish")
 }
 
 group = "com.hoc081098"
-version = "1.0"
+version = "0.0.1"
 
 repositories {
     google()
