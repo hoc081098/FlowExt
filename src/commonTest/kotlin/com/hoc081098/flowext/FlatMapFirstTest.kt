@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 
 @ExperimentalCoroutinesApi
 @ExperimentalTime
@@ -28,10 +29,8 @@ class FlatMapFirstTest {
           emit(v)
         }
       }
-      .test {
-        assertEquals("one", expectItem())
-        expectComplete()
-      }
+      .toList()
+      .let { assertEquals(it.single(), "one") }
   }
 
   @Test
@@ -42,15 +41,15 @@ class FlatMapFirstTest {
         range(it * 100, 5)
           .onEach { delay(42) }
       }
-      .test {
+      .toList()
+      .let { list ->
         listOf(
           100, 101, 102, 103, 104,
           300, 301, 302, 303, 304,
           500, 501, 502, 503, 504,
           700, 701, 702, 703, 704,
           900, 901, 902, 903, 904,
-        ).forEach { assertEquals(it, expectItem()) }
-        expectComplete()
+        ).let { assertEquals(it, list) }
       }
   }
 

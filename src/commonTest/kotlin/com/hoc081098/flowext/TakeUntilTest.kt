@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 
 @ExperimentalTime
 @ExperimentalCoroutinesApi
@@ -21,7 +22,7 @@ class TakeUntilTest {
 
   @Test
   fun sourceCompletesAfterNotifier() = suspendTest {
-    range(0, 10)
+    range(0, 5)
       .onEach { delay(140) }
       .takeUntil(
         timer(
@@ -29,11 +30,9 @@ class TakeUntilTest {
           Duration.milliseconds(490)
         )
       )
-      .test {
-        assertEquals(0, expectItem())
-        assertEquals(1, expectItem())
-        assertEquals(2, expectItem())
-        expectComplete()
+      .toList()
+      .let {
+        assertEquals(it, listOf(0, 1, 2))
       }
   }
 
