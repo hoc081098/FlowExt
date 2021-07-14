@@ -1,5 +1,5 @@
+package com.hoc081098.flowext
 
-import com.hoc081098.flowext.suspendTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.ExperimentalTime

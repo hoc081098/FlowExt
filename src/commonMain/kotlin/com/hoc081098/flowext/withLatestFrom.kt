@@ -1,3 +1,5 @@
+package com.hoc081098.flowext
+
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
