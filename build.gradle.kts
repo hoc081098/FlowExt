@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.hoc081098"
-version = "0.0.5"
+version = "0.0.6"
 
 repositories {
     google()
@@ -153,5 +153,13 @@ spotless {
                 "kotlin_imports_layout" to "ascii",
             )
         )
+    }
+}
+
+allprojects {
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = com.vanniktech.maven.publish.SonatypeHost.S01
+        }
     }
 }
