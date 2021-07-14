@@ -13,6 +13,13 @@ private object NULL {
   inline fun <T> unbox(v: Any?): T = if (this === v) null as T else v as T
 }
 
+/**
+ * Merges two [Flow]s into one [Flow] by combining each value from self with the latest value from the second [Flow], if any.
+ * Values emitted by self before the second [Flow] has emitted any values will be omitted.
+ *
+ * @param other Second [Flow]
+ * @param transform A transform function to apply to each value from self combined with the latest value from the second [Flow], if any.
+ */
 @ExperimentalCoroutinesApi
 public fun <A, B, R> Flow<A>.withLatestFrom(
   other: Flow<B>,
