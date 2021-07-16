@@ -97,6 +97,12 @@ kotlin {
 
         val nativeMain by creating {
             dependsOn(commonMain)
+            
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
+                    version { strictly("1.5.1-native-mt") }
+                }
+            }
         }
         val nativeTest by creating {
             dependsOn(commonTest)
