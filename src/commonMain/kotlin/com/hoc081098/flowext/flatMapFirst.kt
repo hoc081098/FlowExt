@@ -64,6 +64,6 @@ public fun <T, R> Flow<T>.exhaustMap(transform: suspend (value: T) -> Flow<R>): 
 /**
  * This function is an alias to [flattenFirst] operator.
  */
-@Suppress("NOTHING_TO_INLINE")
 @ExperimentalCoroutinesApi
+@Suppress("NOTHING_TO_INLINE")
 public inline fun <T> Flow<Flow<T>>.exhaustAll(): Flow<T> = flattenFirst()

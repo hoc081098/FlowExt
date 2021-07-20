@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.take
@@ -21,15 +22,15 @@ public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
     coroutineScope {
       val job = launch(start = CoroutineStart.UNDISPATCHED) {
         notifier.take(1).collect()
-        throw ClosedException
+        throw ClosedException(this@flow)
       }
 
       collect { emit(it) }
       job.cancel()
     }
   } catch (e: ClosedException) {
-    // no-op
+    if (e.owner !== this) throw e
   }
 }
 
-private object ClosedException : Exception()
+private class ClosedException(val owner: FlowCollector<*>) : Exception("Flow was aborted, no more elements needed")

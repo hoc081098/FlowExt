@@ -10,6 +10,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 
@@ -23,6 +24,7 @@ class TakeUntilTest {
   fun sourceCompletesAfterNotifier() = suspendTest {
     range(0, 10)
       .onEach { delay(140) }
+      .onCompletion { println(it) }
       .takeUntil(
         timer(
           Unit,
