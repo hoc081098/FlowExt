@@ -19,26 +19,26 @@ Extensions to the Kotlin Flow library.
 
 # API
 
--   [flatMapFirst]()/[exhaustMap]() (similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap), [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/1a1fa37b0d08e0f99ffa41f98f340e8bc60c35c4/RxSwift/Observables/Merge.swift#L37))\
+-   `flatMapFirst`/`exhaustMap` (similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap), [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/1a1fa37b0d08e0f99ffa41f98f340e8bc60c35c4/RxSwift/Observables/Merge.swift#L37))\
     Projects each source value to a Flow which is merged in the output Flow only if the previous projected Flow has completed.
     If value is received while there is some projected Flow sequence being merged it will simply be ignored.
 
--   [flattenFirst]()/[exhaustAll]() (similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll))\
+-   `flattenFirst`/`exhaustAll` (similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll))\
     Converts a higher-order Flow into a first-order Flow by dropping inner Flow while the previous inner Flow has not yet completed.
 
--   [mapTo] (similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))\
+-   `mapTo` (similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))\
     Emits the given constant value on the output Flow every time the source Flow emits a value.
 
--   [range]() (http://reactivex.io/documentation/operators/range.html) (similar to [RxJS range](https://rxjs.dev/api/index/function/range))\
+-   `range` (http://reactivex.io/documentation/operators/range.html) (similar to [RxJS range](https://rxjs.dev/api/index/function/range))\
     Creates a Flow that emits a sequence of numbers within a specified range.
 
--   [takeUntil]() (http://reactivex.io/documentation/operators/takeuntil.html) (similar to [RxJS takeUntil](https://rxjs.dev/api/operators/takeUntil))\
+-   `takeUntil` (http://reactivex.io/documentation/operators/takeuntil.html) (similar to [RxJS takeUntil](https://rxjs.dev/api/operators/takeUntil))\
     Emits the values emitted by the source Flow until a notifier Flow emits a value or completes.
 
--   [timer]() (http://reactivex.io/documentation/operators/timer.html) (similar to [RxJS timer](https://rxjs.dev/api/index/function/timer))\
+-   `timer` (http://reactivex.io/documentation/operators/timer.html) (similar to [RxJS timer](https://rxjs.dev/api/index/function/timer))\
     Creates a Flow that will wait for a specified time, before emitting the given value.
 
--   [withLatestFrom]() (https://rxmarbles.com/#withLatestFrom) (similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom))\
+-   `withLatestFrom` (https://rxmarbles.com/#withLatestFrom) (similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom))\
     Merges two Flows into one Flow by combining each value from self with the latest value from the second Flow, if any.
     Values emitted by self before the second Flow has emitted any values will be omitted.
 
