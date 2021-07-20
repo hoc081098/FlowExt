@@ -25,6 +25,9 @@ Extensions to the Kotlin Flow library.
 -   [flattenFirst]()/[exhaustAll]() (similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll))\
     Converts a higher-order Flow into a first-order Flow by dropping inner Flow while the previous inner Flow has not yet completed.
 
+-   [mapTo] (similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))\
+    Emits the given constant value on the output Flow every time the source Flow emits a value.
+
 -   [range]() (http://reactivex.io/documentation/operators/range.html) (similar to [RxJS range](https://rxjs.dev/api/index/function/range))\
     Creates a Flow that emits a sequence of numbers within a specified range.
 
