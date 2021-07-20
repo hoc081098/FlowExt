@@ -1,6 +1,7 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 
 /**
@@ -8,7 +9,6 @@ import kotlinx.coroutines.flow.flow
  * @param start The value of the first integer in the sequence.
  * @param count The number of sequential integers to generate.
  */
-public fun range(start: Int, count: Int): Flow<Int> = flow {
-  if (count <= 0) return@flow
-  repeat(count) { emit(it + start) }
-}
+public fun range(start: Int, count: Int): Flow<Int> =
+  if (count <= 0) emptyFlow()
+  else flow { repeat(count) { emit(it + start) } }
