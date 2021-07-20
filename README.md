@@ -19,7 +19,7 @@ Extensions to the Kotlin Flow library.
 
 # API
 
--   `flatMapFirst`/`exhaustMap` (similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap), [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/1a1fa37b0d08e0f99ffa41f98f340e8bc60c35c4/RxSwift/Observables/Merge.swift#L37))\
+-   **`flatMapFirst`**/**`exhaustMap`** (similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap), [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/1a1fa37b0d08e0f99ffa41f98f340e8bc60c35c4/RxSwift/Observables/Merge.swift#L37))\
     Projects each source value to a Flow which is merged in the output Flow only if the previous projected Flow has completed.
     If value is received while there is some projected Flow sequence being merged it will simply be ignored.
 
