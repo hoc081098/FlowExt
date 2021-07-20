@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.hoc081098"
-version = "0.0.7"
+version = "0.0.7-SNAPSHOT"
 
 repositories {
     google()
