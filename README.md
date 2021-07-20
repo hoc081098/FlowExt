@@ -80,6 +80,39 @@ implementation("io.github.hoc081098:FlowExt-mingwx64:0.0.6")
 implementation("io.github.hoc081098:FlowExt-linuxx64:0.0.6")
 ```
 
+### Snapshot
+
+Snapshots of the development version are available in Sonatype's snapshots repository.
+
+- Kotlin
+```kotlin
+allprojects {
+  repositories {
+    ...
+    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
+  }
+}
+
+dependencies {
+  implementation("io.github.hoc081098:FlowExt:0.0.7-SNAPSHOT")
+}
+```
+
+- Groovy
+```groovy
+allprojects {
+  repositories {
+    ...
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" } 
+  }
+}
+
+dependencies {
+  implementation("io.github.hoc081098:FlowExt:0.0.7-SNAPSHOT")
+}
+```
+
+
 ## License
 
 ```License
