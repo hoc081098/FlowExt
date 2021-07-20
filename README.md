@@ -1,5 +1,6 @@
 # FlowExt
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.hoc081098/FlowExt?style=flat)](https://search.maven.org/search?q=io.github.hoc081098)
 [![CI](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.5.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
@@ -40,6 +41,44 @@ Extensions to the Kotlin Flow library.
 -   [withLatestFrom]() (https://rxmarbles.com/#withLatestFrom) (similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom))\
     Merges two Flows into one Flow by combining each value from self with the latest value from the second Flow, if any.
     Values emitted by self before the second Flow has emitted any values will be omitted.
+
+## Installation
+
+```groovy
+allprojects {
+  repositories {
+    ...
+    mavenCentral()
+  }
+}
+```
+
+### Multiplatform
+
+```groovy
+implementation("io.github.hoc081098:FlowExt:0.0.6")
+```
+
+### JVM / Android only
+```groovy
+implementation("io.github.hoc081098:FlowExt-jvm:0.0.6")
+```
+
+### Native binaries
+```groovy
+implementation("io.github.hoc081098:FlowExt-iosx64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-iosarm64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-iosarm32:0.0.6")
+implementation("io.github.hoc081098:FlowExt-watchosx86:0.0.6")
+implementation("io.github.hoc081098:FlowExt-watchosx64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-watchosarm64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-watchosarm32:0.0.6")
+implementation("io.github.hoc081098:FlowExt-tvosx64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-tvosxarm64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-macosx64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-mingwx64:0.0.6")
+implementation("io.github.hoc081098:FlowExt-linuxx64:0.0.6")
+```
 
 ## License
 
