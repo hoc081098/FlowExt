@@ -20,6 +20,9 @@ class FlatMapFirstTest {
   fun warm() = warmTest()
 
   @Test
+  fun warm2() = warmTest()
+
+  @Test
   fun basic1() = suspendTest {
     flowOf("one", "two")
       .flatMapFirst { v ->

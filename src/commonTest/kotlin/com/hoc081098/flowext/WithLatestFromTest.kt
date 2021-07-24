@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.toList
 @ExperimentalCoroutinesApi
 class WithLatestFromTest {
   @Test
+  fun warm() = warmTest()
+
+  @Test
   fun basic() = suspendTest {
     val f1 = flowOf(1, 2, 3, 4)
     val f2 = flowOf("a", "b", "c", "d", "e")

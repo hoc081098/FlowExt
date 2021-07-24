@@ -21,6 +21,9 @@ class TakeUntilTest {
   fun warm() = warmTest()
 
   @Test
+  fun warm2() = warmTest()
+
+  @Test
   fun takeUntilSingle() = suspendTest {
     range(0, 10).takeUntil(flowOf(1)).test { expectComplete() }
     flowOf(1).takeUntil(flowOf(1)).test { expectComplete() }
