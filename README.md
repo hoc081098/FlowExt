@@ -3,7 +3,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.hoc081098/FlowExt?style=flat)](https://search.maven.org/search?q=io.github.hoc081098)
 [![CI](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.5.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin version](https://img.shields.io/badge/kotlin-1.5.20-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
 ![badge][badge-jvm]
 ![badge][badge-android]
 ![badge][badge-ios]
