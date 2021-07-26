@@ -46,8 +46,20 @@ kotlin {
         compilations.all {
             kotlinOptions.moduleKind = "commonjs"
         }
-        browser()
-        nodejs()
+        browser() {
+            testTask {
+                useMocha {
+                    timeout = "5s"
+                }
+            }
+        }
+        nodejs() {
+            testTask {
+                useMocha {
+                    timeout = "5s"
+                }
+            }
+        }
     }
 
     iosArm64()

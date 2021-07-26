@@ -8,5 +8,6 @@ import kotlinx.coroutines.flow.transform
  *
  * @param value The value to map each source value to.
  */
+@Suppress("NOTHING_TO_INLINE")
 public inline fun <T, R> Flow<T>.mapTo(value: R): Flow<R> =
   transform { return@transform emit(value) }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 private object NULL {
-  @Suppress("UNCHECKED_CAST")
+  @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
   inline fun <T> unbox(v: Any?): T = if (this === v) null as T else v as T
 }
 
