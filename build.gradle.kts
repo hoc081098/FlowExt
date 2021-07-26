@@ -44,16 +44,20 @@ kotlin {
     }
     js(BOTH) {
         compilations.all {
-            kotlinOptions.moduleKind = "commonjs"
+            kotlinOptions {
+                sourceMap = true
+                moduleKind = "umd"
+                metaInfo = true
+            }
         }
-        browser() {
+        browser {
             testTask {
                 useMocha {
                     timeout = "5s"
                 }
             }
         }
-        nodejs() {
+        nodejs {
             testTask {
                 useMocha {
                     timeout = "5s"
@@ -165,6 +169,10 @@ spotless {
                 "kotlin_imports_layout" to "ascii",
             )
         )
+    }
+
+    kotlinGradle {
+        target("**/*.kts")
     }
 }
 
