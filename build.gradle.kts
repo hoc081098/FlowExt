@@ -93,7 +93,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("app.cash.turbine:turbine:0.6.1")
+                implementation("app.cash.turbine:turbine:0.7.0")
             }
         }
         val jvmMain by getting
