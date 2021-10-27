@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 plugins {
     kotlin("multiplatform") version "1.5.31"
     jacoco
-    id("com.diffplug.spotless") version "5.17.0"
+    id("com.diffplug.spotless") version "5.17.1"
     id("maven-publish")
     id("com.vanniktech.maven.publish") version "0.18.0"
 }
