@@ -8,6 +8,7 @@ import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
@@ -27,6 +28,7 @@ class TakeUntilTest {
   fun takeUntilSingle() = suspendTest {
     range(0, 10).takeUntil(flowOf(1)).test { expectComplete() }
     flowOf(1).takeUntil(flowOf(1)).test { expectComplete() }
+    flowOf(1).takeUntil(emptyFlow<Nothing>()).test { expectComplete() }
   }
 
   @Test
