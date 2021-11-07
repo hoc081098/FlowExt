@@ -1,16 +1,16 @@
 package com.hoc081098.flowext
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @FlowPreview
 class GroupByTest {
@@ -74,12 +74,10 @@ class GroupByTest {
 
 suspend fun <T> Flow<T>.assertResultSet(vararg values: T) {
   val set = HashSet<T>()
+  collect { set.add(it) }
 
-  collect {
-    set.add(it)
-  }
-
+  println(set)
+  println(values.contentToString())
   assertEquals(values.size, set.size, "Number of values differ")
-
   values.forEach { assertTrue(set.contains(it), "Missing: $it") }
 }

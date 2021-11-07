@@ -1,6 +1,7 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.AbstractFlow
@@ -8,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 
 /**
  * Represents a Flow of values that have a common key.
@@ -34,13 +34,17 @@ public fun <T, K> Flow<T>.groupBy(
 @FlowPreview
 internal class GroupedFlowImpl<K, T>(
   override val key: K,
-  val channel: Channel<T>
+  internal val channel: Channel<T>
 ) : GroupedFlow<K, T>, AbstractFlow<T>() {
-  override suspend fun collectSafely(collector: FlowCollector<T>) {
-    channel.consumeAsFlow().collect { collector.emit(it) }
-  }
+  private val flow = channel.consumeAsFlow()
+
+  override suspend fun collectSafely(collector: FlowCollector<T>) =
+    flow.collect { collector.emit(it) }
+
+  override fun toString() = "GroupedFlow(key=$key)"
 }
 
+@ExperimentalCoroutinesApi
 @FlowPreview
 internal class GroupByFlow<T, K, V>(
   private val source: Flow<T>,
@@ -49,24 +53,39 @@ internal class GroupByFlow<T, K, V>(
 ) : AbstractFlow<GroupedFlow<K, V>>() {
   override suspend fun collectSafely(collector: FlowCollector<GroupedFlow<K, V>>) {
     val groups = hashMapOf<K, GroupedFlowImpl<K, V>>()
+    var throwable = null as Throwable?
 
     try {
       source.collect { v ->
         val key = keySelector(v)
         val value = valueSelector(v)
 
-        groups.getOrPut(key) {
-          GroupedFlowImpl(key, Channel<V>(1)).also {
-            collector.emit(it)
-          }
-        }.channel.send(value)
+        val group = groups[key]
+        val channel = if (group === null) {
+          val g = GroupedFlowImpl<K, V>(key, Channel())
+          groups[key] = g
+          collector.emit(g)
+          g.channel
+        } else {
+          group.channel
+        }
+
+        println("$key -> $channel ${channel.isEmpty} ${channel.isClosedForReceive} ${channel.isClosedForSend}")
+        channel.send(value)
+        println("send $key -> $value\n")
       }
     } catch (t: Throwable) {
-      if (t is CancellationException) throw t
-      groups.values.forEach { it.channel.close(t) }
-      return
-    }
+      throwable = t
+    } finally {
+      println("Finally $throwable")
 
-    groups.values.forEach { it.channel.close() }
+      if (throwable is CancellationException) {
+        groups.clear()
+        throw throwable
+      } else {
+        groups.values.forEach { it.channel.close(throwable) }
+        groups.clear()
+      }
+    }
   }
 }
