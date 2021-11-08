@@ -28,7 +28,7 @@ tasks.withType<JacocoReport> {
     dependsOn(tasks.withType<Test>())
 }
 
-val kotlinCoroutinesVersion = "1.5.2-native-mt"
+val kotlinCoroutinesVersion = "1.5.2"
 val ktlintVersion = "0.43.0"
 
 kotlin {

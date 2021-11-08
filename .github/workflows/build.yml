@@ -19,7 +19,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest, ubuntu-latest]
+        os: [ macOS-latest ]
 
     # The type of runner that the job will run on
     runs-on: ${{matrix.os}}
@@ -48,8 +48,28 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ github.job }}-
 
+      - name: Cache konan
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.konan/cache
+            ~/.konan/dependencies
+            ~/.konan/kotlin-native-macos*
+            ~/.konan/kotlin-native-mingw*
+            ~/.konan/kotlin-native-prebuilt-macos-*
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-konan-
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
       - name: Build
         run: ./gradlew build --stacktrace
+
+      - name: Upload test report artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-report
+          path: /build/reports/tests/allTests/
