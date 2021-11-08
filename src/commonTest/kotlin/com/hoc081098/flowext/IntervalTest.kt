@@ -1,18 +1,17 @@
 package com.hoc081098.flowext
 
-import kotlin.test.Test
-import kotlin.time.ExperimentalTime
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.take
+import kotlin.test.Test
 
-@ExperimentalTime
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class IntervalTest {
   @Test
-  fun warm() = warmTest()
-
-  @Test
   fun run() = suspendTest {
-    interval(100, 200).take(20)
-      .collect { println(it) }
+    interval(100, 200)
+      .take(20)
+      .test((0L until 20).map { Event.Value(it) } + Event.Complete)
   }
 }

@@ -3,8 +3,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     kotlin("multiplatform") version "1.5.31"
-    jacoco
-    id("com.diffplug.spotless") version "5.17.0"
+    id("com.diffplug.spotless") version "5.17.1"
     id("maven-publish")
     id("com.vanniktech.maven.publish") version "0.18.0"
 }
@@ -15,20 +14,11 @@ version = "0.0.7-SNAPSHOT"
 repositories {
     google()
     mavenCentral()
-}
-
-jacoco {
-    toolVersion = "0.8.6"
-}
-
-tasks.withType<JacocoReport> {
-    reports {
-        xml.isEnabled = true
-    }
-    dependsOn(tasks.withType<Test>())
+    gradlePluginPortal()
 }
 
 val kotlinCoroutinesVersion = "1.5.2"
+val ktlintVersion = "0.43.0"
 
 kotlin {
     explicitApi()
@@ -36,10 +26,6 @@ kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
-        }
-        testRuns["test"].executionTask.configure {
-            useJUnit()
-            finalizedBy(tasks.withType<JacocoReport>())
         }
     }
     js(BOTH) {
@@ -82,7 +68,6 @@ kotlin {
     watchosX64()
     watchosX86()
 
-
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -93,10 +78,12 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("app.cash.turbine:turbine:0.6.1")
+                implementation("org.jetbrains.kotlinx:atomicfu:0.16.3")
             }
         }
-        val jvmMain by getting
+        val jvmMain by getting {
+            dependsOn(commonMain)
+        }
         val jvmTest by getting {
             dependsOn(commonTest)
 
@@ -104,7 +91,9 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
-        val jsMain by getting
+        val jsMain by getting {
+            dependsOn(commonMain)
+        }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
@@ -113,6 +102,13 @@ kotlin {
 
         val nativeMain by creating {
             dependsOn(commonMain)
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion") {
+                    version {
+                        strictly(kotlinCoroutinesVersion)
+                    }
+                }
+            }
         }
         val nativeTest by creating {
             dependsOn(commonTest)
@@ -162,17 +158,32 @@ spotless {
     kotlin {
         target("**/*.kt")
 
-        ktlint("0.37.2").userData(
+        ktlint(ktlintVersion).userData(
             mapOf(
                 // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
                 "indent_size" to "2",
-                "kotlin_imports_layout" to "ascii",
+                "ij_kotlin_imports_layout" to "*",
             )
         )
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
     }
 
     kotlinGradle {
         target("**/*.kts")
+
+        ktlint(ktlintVersion).userData(
+            mapOf(
+                "indent_size" to "4",
+                "ij_kotlin_imports_layout" to "*",
+            )
+        )
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
     }
 }
 

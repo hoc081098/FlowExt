@@ -1,15 +1,15 @@
 package com.hoc081098.flowext
 
-import app.cash.turbine.test
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
-import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-@ExperimentalTime
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class MapToTest {
   @Test
   fun basic() = suspendTest {
@@ -19,8 +19,10 @@ class MapToTest {
 
   @Test
   fun upstreamError() = suspendTest {
-    flow<Nothing> { throw RuntimeException() }
+    val throwable = RuntimeException()
+
+    flow<Nothing> { throw throwable }
       .mapTo(2)
-      .test { assertIs<RuntimeException>(expectError()) }
+      .test(listOf(Event.Error(throwable)))
   }
 }

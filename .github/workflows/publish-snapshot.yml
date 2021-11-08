@@ -33,6 +33,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ github.job }}-
 
+      - name: Cache konan
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.konan/cache
+            ~/.konan/dependencies
+            ~/.konan/kotlin-native-macos*
+            ~/.konan/kotlin-native-mingw*
+            ~/.konan/kotlin-native-prebuilt-macos*
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-konan-
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 

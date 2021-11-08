@@ -1,28 +1,29 @@
 package com.hoc081098.flowext
 
-import app.cash.turbine.test
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class RangeTest {
   @Test
   fun empty() = suspendTest {
-    range(0, 0).test { expectComplete() }
-
-    range(0, -2).test { expectComplete() }
+    range(0, 0).test(listOf(Event.Complete))
+    range(0, -2).test(listOf(Event.Complete))
   }
 
   @Test
   fun emitsRangeOfIntegers() = suspendTest {
-    range(0, 5).test {
-      assertEquals(0, expectItem())
-      assertEquals(1, expectItem())
-      assertEquals(2, expectItem())
-      assertEquals(3, expectItem())
-      assertEquals(4, expectItem())
-      expectComplete()
-    }
+    range(0, 5).test(
+      listOf(
+        Event.Value(0),
+        Event.Value(1),
+        Event.Value(2),
+        Event.Value(3),
+        Event.Value(4),
+        Event.Complete,
+      )
+    )
   }
 }

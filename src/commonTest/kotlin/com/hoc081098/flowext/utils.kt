@@ -1,33 +1,27 @@
 package com.hoc081098.flowext
 
-import kotlin.test.assertEquals
-import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
+import com.hoc081098.flowext.kotlinx_coroutines_test.TestCoroutineDispatcher
+import com.hoc081098.flowext.kotlinx_coroutines_test.runBlockingTest
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlin.test.assertContentEquals
 
-expect fun suspendTest(block: suspend CoroutineScope.() -> Unit)
-
-fun unreached() {
-  throw RuntimeException("Should not reach here!")
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
+fun suspendTest(block: suspend CoroutineScope.() -> Unit) {
+  val testCoroutineDispatcher = TestCoroutineDispatcher()
+  testCoroutineDispatcher.runBlockingTest(block)
+  testCoroutineDispatcher.cleanupTestCoroutines()
 }
 
-@ExperimentalTime
-fun warmTest() = suspendTest {
-  assertEquals(1, 1)
-
-  delay(100)
-  timer(
-    Unit,
-    Duration.milliseconds(100)
-  ).collect()
-
-  assertEquals(2, 2)
-
-  delay(300)
-  timer(
-    Unit,
-    Duration.milliseconds(300)
-  ).collect()
+suspend fun <T> Flow<T>.test(
+  expected: List<Event<T>>?,
+  expectation: (suspend (List<Event<T>>) -> Unit)? = null,
+) {
+  val events = materialize().toList()
+  expected?.let { assertContentEquals(it, events) }
+  expectation?.invoke(events)
 }
