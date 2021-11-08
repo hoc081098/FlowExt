@@ -12,6 +12,6 @@ class IntervalTest {
   fun run() = suspendTest {
     interval(100, 200)
       .take(20)
-      .test((0 until 20).map { Event.Value(it) } + Event.Complete)
+      .test((0L until 20).map { Event.Value(it) } + Event.Complete)
   }
 }
