@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 plugins {
     kotlin("multiplatform") version "1.5.31"
     jacoco
-    id("com.diffplug.spotless") version "5.17.0"
+    id("com.diffplug.spotless") version "5.17.1"
     id("maven-publish")
     id("com.vanniktech.maven.publish") version "0.18.0"
 }
@@ -28,7 +28,7 @@ tasks.withType<JacocoReport> {
     dependsOn(tasks.withType<Test>())
 }
 
-val kotlinCoroutinesVersion = "1.5.2"
+val kotlinCoroutinesVersion = "1.5.2-native-mt"
 
 kotlin {
     explicitApi()
@@ -93,10 +93,11 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                implementation("app.cash.turbine:turbine:0.6.1")
             }
         }
-        val jvmMain by getting
+        val jvmMain by getting {
+            dependsOn(commonMain)
+        }
         val jvmTest by getting {
             dependsOn(commonTest)
 
@@ -104,7 +105,9 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
-        val jsMain by getting
+        val jsMain by getting {
+            dependsOn(commonMain)
+        }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
@@ -113,6 +116,13 @@ kotlin {
 
         val nativeMain by creating {
             dependsOn(commonMain)
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion") {
+                    version {
+                        strictly(kotlinCoroutinesVersion)
+                    }
+                }
+            }
         }
         val nativeTest by creating {
             dependsOn(commonTest)

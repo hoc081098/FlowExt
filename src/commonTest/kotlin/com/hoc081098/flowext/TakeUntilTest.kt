@@ -1,6 +1,6 @@
 package com.hoc081098.flowext
 
-import app.cash.turbine.test
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -17,35 +17,40 @@ import kotlinx.coroutines.flow.take
 @ExperimentalTime
 @ExperimentalCoroutinesApi
 class TakeUntilTest {
-  @Test
+  @BeforeTest
   fun warm() = warmTest()
 
   @Test
-  fun warm2() = warmTest()
-
-  @Test
   fun takeUntilSingle() = suspendTest {
-    range(0, 10).takeUntil(flowOf(1)).test { expectComplete() }
-    flowOf(1).takeUntil(flowOf(1)).test { expectComplete() }
+    range(0, 10)
+      .takeUntil(flowOf(1))
+      .test(listOf(Event.Complete))
+
+    flowOf(1)
+      .takeUntil(flowOf(1))
+      .test(listOf(Event.Complete))
   }
 
   @Test
   fun sourceCompletesAfterNotifier() = suspendTest {
     range(0, 10)
-      .onEach { delay(140) }
+      .onEach { delay(100) }
       .onCompletion { println(it) }
       .takeUntil(
         timer(
           Unit,
-          Duration.milliseconds(490)
+          Duration.milliseconds(470)
         )
       )
-      .test {
-        assertEquals(0, expectItem())
-        assertEquals(1, expectItem())
-        assertEquals(2, expectItem())
-        expectComplete()
-      }
+      .test(
+        listOf(
+          Event.Value(0),
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete,
+        )
+      )
   }
 
   @Test
@@ -58,28 +63,29 @@ class TakeUntilTest {
           Duration.seconds(10)
         )
       )
-      .test {
-        (0 until 10).forEach {
-          assertEquals(it, expectItem())
-        }
-        expectComplete()
-      }
+      .test(
+        (0 until 10).map { Event.Value(it) } +
+          Event.Complete
+      )
   }
 
   @Test
   fun upstreamError() = suspendTest {
     flow<Nothing> { throw RuntimeException() }
       .takeUntil(timer(Unit, 100))
-      .test { assertIs<RuntimeException>(expectError()) }
+      .test(null) {
+        assertIs<RuntimeException>(it.single().throwableOrThrow())
+      }
 
     flow {
       emit(1)
       throw RuntimeException()
     }
       .takeUntil(timer(Unit, 100))
-      .test {
-        assertEquals(1, expectItem())
-        assertIs<RuntimeException>(expectError())
+      .test(null) {
+        assertEquals(2, it.size)
+        assertEquals(1, it[0].valueOrThrow())
+        assertIs<RuntimeException>(it[1].throwableOrThrow())
       }
   }
 
@@ -88,9 +94,11 @@ class TakeUntilTest {
     flowOf(1, 2, 3)
       .takeUntil(timer(Unit, 100))
       .take(1)
-      .test {
-        assertEquals(1, expectItem())
-        expectComplete()
-      }
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Complete,
+        )
+      )
   }
 }

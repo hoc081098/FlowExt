@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.take
@@ -32,5 +31,3 @@ public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
     if (e.owner !== this) throw e
   }
 }
-
-private class ClosedException(val owner: FlowCollector<*>) : Exception("Flow was aborted, no more elements needed")
