@@ -1,5 +1,6 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -11,7 +12,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.produceIn
 import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Projects each source value to a [Flow] which is merged in the output [Flow] only if the previous projected [Flow] has completed.
