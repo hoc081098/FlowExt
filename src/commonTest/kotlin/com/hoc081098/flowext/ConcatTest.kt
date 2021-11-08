@@ -1,8 +1,8 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.flow.flowOf
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlinx.coroutines.flow.flowOf
 
 class ConcatTest {
   @BeforeTest

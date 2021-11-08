@@ -1,8 +1,8 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.flow.take
 import kotlin.test.BeforeTest
 import kotlin.test.Test
-import kotlinx.coroutines.flow.take
 
 class IntervalTest {
   @BeforeTest
@@ -12,6 +12,6 @@ class IntervalTest {
   fun run() = suspendTest {
     interval(100, 200)
       .take(20)
-      .test((0 until 20).map { Event.Value(it) })
+      .test((0 until 20).map { Event.Value(it) } + Event.Complete)
   }
 }

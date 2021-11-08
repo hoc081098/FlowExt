@@ -29,6 +29,7 @@ tasks.withType<JacocoReport> {
 }
 
 val kotlinCoroutinesVersion = "1.5.2-native-mt"
+val ktlintVersion = "0.43.0"
 
 kotlin {
     explicitApi()
@@ -81,7 +82,6 @@ kotlin {
     watchosArm64()
     watchosX64()
     watchosX86()
-
 
     sourceSets {
         val commonMain by getting {
@@ -172,17 +172,32 @@ spotless {
     kotlin {
         target("**/*.kt")
 
-        ktlint("0.37.2").userData(
+        ktlint(ktlintVersion).userData(
             mapOf(
                 // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
                 "indent_size" to "2",
-                "kotlin_imports_layout" to "ascii",
+                "ij_kotlin_imports_layout" to "*",
             )
         )
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
     }
 
     kotlinGradle {
         target("**/*.kts")
+
+        ktlint(ktlintVersion).userData(
+            mapOf(
+                "indent_size" to "4",
+                "ij_kotlin_imports_layout" to "*",
+            )
+        )
+
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
     }
 }
 

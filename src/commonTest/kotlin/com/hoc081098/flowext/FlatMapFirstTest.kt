@@ -1,8 +1,5 @@
 package com.hoc081098.flowext
 
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
@@ -10,6 +7,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.yield
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 class FlatMapFirstTest {
@@ -83,19 +85,29 @@ class FlatMapFirstTest {
 
   @Test
   fun testFailureTransform() = suspendTest {
-    val original = RuntimeException("Broken!")
-
     flowOf(1, 2, 3).flatMapFirst { v ->
       if (v == 2) {
-        throw original
+        throw RuntimeException("Broken!")
       } else {
         flowOf(v)
       }
-    }.test(
-      listOf(
-        Event.Value(1),
-        Event.Error(original),
-      )
-    )
+    }.test(null) {
+      assertIs<RuntimeException>(it.single().throwableOrThrow())
+    }
+  }
+
+  @Test
+  fun testFailureFlow() = suspendTest {
+    flowOf(1, 2, 3).flatMapFirst { v ->
+      if (v == 2) {
+        flow { yield(); throw RuntimeException("Broken!") }
+      } else {
+        flowOf(v)
+      }
+    }.test(null) {
+      assertEquals(2, it.size)
+      assertEquals(1, it[0].valueOrThrow())
+      assertIs<RuntimeException>(it[1].throwableOrThrow())
+    }
   }
 }
