@@ -5,7 +5,11 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
 
-actual fun suspendTest(block: suspend CoroutineScope.() -> Unit) = runBlocking(
-  context = Executors.newSingleThreadExecutor().asCoroutineDispatcher(),
-  block = block
-)
+val testCoroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+
+actual fun suspendTest(block: suspend CoroutineScope.() -> Unit) {
+  runBlocking(
+    context = testCoroutineDispatcher,
+    block = block
+  )
+}

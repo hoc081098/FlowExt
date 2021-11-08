@@ -76,11 +76,11 @@ class FlatMapFirstTest {
 
   @Test
   fun testFailureUpstream() = suspendTest {
-    val original = RuntimeException("Broken!")
-
-    flow<Int> { throw original }
+    flow<Int> { throw RuntimeException("Broken!") }
       .flatMapFirst { emptyFlow<Int>() }
-      .test(listOf(Event.Error(original)))
+      .test(null) {
+        assertIs<RuntimeException>(it.single().throwableOrThrow())
+      }
   }
 
   @Test
