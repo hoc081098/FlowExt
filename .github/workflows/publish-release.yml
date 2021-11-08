@@ -30,9 +30,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-${{ github.job }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+          key: ${{ matrix.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ github.job }}-
+            ${{ matrix.os }}-gradle-
 
       - name: Cache konan
         uses: actions/cache@v2
@@ -43,9 +43,9 @@ jobs:
             ~/.konan/kotlin-native-macos*
             ~/.konan/kotlin-native-mingw*
             ~/.konan/kotlin-native-prebuilt-macos*
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}
+          key: ${{ matrix.os }}-konan-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
-            ${{ runner.os }}-konan-
+            ${{ matrix.os }}-konan-
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
