@@ -1,13 +1,13 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class ConcatTest {
-  @BeforeTest
-  fun warm() = warmTest()
-
   @Test
   fun run() = suspendTest {
     flowOf(1, 2, 3)

@@ -1,12 +1,12 @@
 package com.hoc081098.flowext
 
-import kotlin.test.BeforeTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlin.test.Test
 
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class RangeTest {
-  @BeforeTest
-  fun warm() = warmTest()
-
   @Test
   fun empty() = suspendTest {
     range(0, 0).test(listOf(Event.Complete))

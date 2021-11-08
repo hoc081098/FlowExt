@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     kotlin("multiplatform") version "1.5.31"
-    jacoco
     id("com.diffplug.spotless") version "5.17.1"
     id("maven-publish")
     id("com.vanniktech.maven.publish") version "0.18.0"
@@ -15,17 +14,7 @@ version = "0.0.7-SNAPSHOT"
 repositories {
     google()
     mavenCentral()
-}
-
-jacoco {
-    toolVersion = "0.8.6"
-}
-
-tasks.withType<JacocoReport> {
-    reports {
-        xml.isEnabled = true
-    }
-    dependsOn(tasks.withType<Test>())
+    gradlePluginPortal()
 }
 
 val kotlinCoroutinesVersion = "1.5.2"
@@ -37,10 +26,6 @@ kotlin {
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
-        }
-        testRuns["test"].executionTask.configure {
-            useJUnit()
-            finalizedBy(tasks.withType<JacocoReport>())
         }
     }
     js(BOTH) {
@@ -93,6 +78,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation("org.jetbrains.kotlinx:atomicfu:0.16.3")
             }
         }
         val jvmMain by getting {

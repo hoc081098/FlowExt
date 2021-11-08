@@ -1,6 +1,7 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
@@ -8,16 +9,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.yield
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
+@InternalCoroutinesApi
 class FlatMapFirstTest {
-  @BeforeTest
-  fun warm() = warmTest()
-
   @Test
   fun basic1() = suspendTest {
     flowOf("one", "two")
@@ -92,7 +90,9 @@ class FlatMapFirstTest {
         flowOf(v)
       }
     }.test(null) {
-      assertIs<RuntimeException>(it.single().throwableOrThrow())
+      assertEquals(2, it.size)
+      assertEquals(1, it[0].valueOrThrow())
+      assertIs<RuntimeException>(it[1].throwableOrThrow())
     }
   }
 

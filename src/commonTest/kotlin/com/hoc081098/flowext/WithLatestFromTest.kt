@@ -1,19 +1,17 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class WithLatestFromTest {
-  @BeforeTest
-  fun warm() = warmTest()
-
   @Test
   fun basic() = suspendTest {
     val f1 = flowOf(1, 2, 3, 4)

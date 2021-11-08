@@ -1,25 +1,23 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
+@InternalCoroutinesApi
 @ExperimentalTime
 @ExperimentalCoroutinesApi
 class TakeUntilTest {
-  @BeforeTest
-  fun warm() = warmTest()
-
   @Test
   fun takeUntilSingle() = suspendTest {
     range(0, 10)
