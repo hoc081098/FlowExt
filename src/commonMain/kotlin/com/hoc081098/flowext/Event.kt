@@ -14,7 +14,7 @@ public sealed interface Event<out T> {
   }
 }
 
-public fun <T, R> Event<T>.map(transform: (T) -> R): Event<R> = when (this) {
+public inline fun <T, R> Event<T>.map(transform: (T) -> R): Event<R> = when (this) {
   Event.Complete -> Event.Complete
   is Event.Error -> this
   is Event.Value -> Event.Value(transform(value))
