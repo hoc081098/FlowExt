@@ -23,7 +23,7 @@ Extensions to the Kotlin Flow library.
 
 # API
 
--   **bufferCount** (similar to [RxJS bufferCount](https://rxjs.dev/api/operators/bufferCount), [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-))
+-   **`bufferCount`** (similar to [RxJS bufferCount](https://rxjs.dev/api/operators/bufferCount), [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-))
     > Buffers the source Flow values until the size hits the maximum [bufferSize] given.
 
 -   **`flatMapFirst`**/**`exhaustMap`** (similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap), [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/b48f2e9536cd985d912126709b97bd743e58c8fc/RxSwift/Observables/Merge.swift#L37))
