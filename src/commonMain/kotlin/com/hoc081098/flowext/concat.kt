@@ -21,7 +21,12 @@ public fun <T> concat(flow1: Flow<T>, flow2: Flow<T>, flow3: Flow<T>): Flow<T> =
   emitAll(flow3)
 }
 
-public fun <T> concat(flow1: Flow<T>, flow2: Flow<T>, flow3: Flow<T>, flow4: Flow<T>): Flow<T> =
+public fun <T> concat(
+  flow1: Flow<T>,
+  flow2: Flow<T>,
+  flow3: Flow<T>,
+  flow4: Flow<T>
+): Flow<T> =
   flow {
     emitAll(flow1)
     emitAll(flow2)
