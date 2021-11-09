@@ -50,9 +50,9 @@ public fun <T> concat(
   }
 
 public fun <T> concat(vararg flows: Flow<T>): Flow<T> {
-  return when {
-    flows.isEmpty() -> emptyFlow()
-    flows.size == 1 -> flows[0]
+  return when (flows.size) {
+    0 -> emptyFlow()
+    1 -> flows[0]
     else -> flow { flows.forEach { emitAll(it) } }
   }
 }
