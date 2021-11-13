@@ -4,6 +4,9 @@ on:
   release:
     types: [ published ]
 
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
+
 jobs:
   publish:
     strategy:
@@ -51,7 +54,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Upload release
-        run: ./gradlew publish --no-daemon --no-parallel
+        run: ./gradlew build publish --no-daemon --no-parallel
         if: matrix.os == 'macos-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
@@ -60,7 +63,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
       - name: Upload release (Windows)
-        run: ./gradlew publishMingwX64PublicationToMavenCentralRepository --no-daemon --no-parallel
+        run: ./gradlew build publishMingwX64PublicationToMavenCentralRepository --no-daemon --no-parallel
         if: matrix.os == 'windows-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
