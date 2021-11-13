@@ -2,8 +2,11 @@ package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -85,6 +88,62 @@ class ConcatTest {
       flow,
       flow,
     ).test(events * 6 + Event.Complete)
+  }
+
+  @Test
+  fun testConcat_firstFailureUpstream() = suspendTest {
+    val flow = flowOf(1, 2, 3)
+    val failureFlow = flow<Nothing> { throw RuntimeException("Crash!") }
+
+    concat(
+      flow1 = failureFlow,
+      flow2 = flow,
+    ).test(null) { events ->
+      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
+      assertEquals("Crash!", message)
+    }
+
+    concat(
+      flow1 = failureFlow,
+      flow2 = flow,
+      flow3 = flow,
+    ).test(null) { events ->
+      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
+      assertEquals("Crash!", message)
+    }
+
+    concat(
+      flow1 = failureFlow,
+      flow2 = flow,
+      flow3 = flow,
+      flow4 = flow,
+    ).test(null) { events ->
+      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
+      assertEquals("Crash!", message)
+    }
+
+    concat(
+      flow1 = failureFlow,
+      flow2 = flow,
+      flow3 = flow,
+      flow4 = flow,
+      flow5 = flow,
+    ).test(null) { events ->
+      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
+      assertEquals("Crash!", message)
+    }
+
+    concat(
+      failureFlow,
+      flow,
+      flow,
+      flow,
+      flow,
+      flow,
+    ).test(null) { events ->
+      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
+      assertEquals("Crash!", message)
+    }
   }
 }
 
