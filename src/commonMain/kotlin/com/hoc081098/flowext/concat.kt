@@ -97,32 +97,24 @@ public fun <T> concat(flows: Sequence<Flow<T>>): Flow<T> {
 //
 
 /**
- * Emits all of the values from the source [Flow], then, once it completes,
- * collects each [Flow] source provided, one at a time, emitting all of their values,
- * and not subscribing to the next one until it completes.
+ * Returns a [Flow] that emits the items emitted from the current [Flow], then the next, one after the other, without interleaving them.
  */
 public fun <T> Flow<T>.concatWith(flow: Flow<T>): Flow<T> = concat(this, flow)
 
 /**
- * Emits all of the values from the source [Flow], then, once it completes,
- * collects each [Flow] source provided, one at a time, emitting all of their values,
- * and not subscribing to the next one until it completes.
+ * Returns a [Flow] that emits the items emitted from the current [Flow], then the next, one after the other, without interleaving them.
  */
 public fun <T> Flow<T>.concatWith(flow1: Flow<T>, flow2: Flow<T>): Flow<T> =
   concat(this, flow1, flow2)
 
 /**
- * Emits all of the values from the source [Flow], then, once it completes,
- * collects each [Flow] source provided, one at a time, emitting all of their values,
- * and not subscribing to the next one until it completes.
+ * Returns a [Flow] that emits the items emitted from the current [Flow], then the next, one after the other, without interleaving them.
  */
 public fun <T> Flow<T>.concatWith(flow1: Flow<T>, flow2: Flow<T>, flow3: Flow<T>): Flow<T> =
   concat(this, flow1, flow2, flow3)
 
 /**
- * Emits all of the values from the source [Flow], then, once it completes,
- * collects each [Flow] source provided, one at a time, emitting all of their values,
- * and not subscribing to the next one until it completes.
+ * Returns a [Flow] that emits the items emitted from the current [Flow], then the next, one after the other, without interleaving them.
  */
 public fun <T> Flow<T>.concatWith(
   flow1: Flow<T>,
@@ -133,17 +125,13 @@ public fun <T> Flow<T>.concatWith(
   concat(this, flow1, flow2, flow3, flow4)
 
 /**
- * Emits all of the values from the source [Flow], then, once it completes,
- * collects each [Flow] source provided, one at a time, emitting all of their values,
- * and not subscribing to the next one until it completes.
+ * Returns a [Flow] that emits the items emitted from the current [Flow], then the next, one after the other, without interleaving them.
  */
 public fun <T> Flow<T>.concatWith(flow: Flow<T>, vararg others: Flow<T>): Flow<T> =
   concat(this, flow, *others)
 
 /**
- * Emits all of the values from the source [Flow], then, once it completes,
- * collects each [Flow] source provided, one at a time, emitting all of their values,
- * and not subscribing to the next one until it completes.
+ * Returns a [Flow] that emits the items emitted from the current [Flow], then the next, one after the other, without interleaving them.
  */
 public fun <T> Flow<T>.concatWith(others: Iterable<Flow<T>>): Flow<T> {
   return flow {
@@ -153,9 +141,7 @@ public fun <T> Flow<T>.concatWith(others: Iterable<Flow<T>>): Flow<T> {
 }
 
 /**
- * Emits all of the values from the source [Flow], then, once it completes,
- * collects each [Flow] source provided, one at a time, emitting all of their values,
- * and not subscribing to the next one until it completes.
+ * Returns a [Flow] that emits the items emitted from the current [Flow], then the next, one after the other, without interleaving them.
  */
 public fun <T> Flow<T>.concatWith(others: Sequence<Flow<T>>): Flow<T> {
   return flow {

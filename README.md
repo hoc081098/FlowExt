@@ -27,30 +27,17 @@ Extensions to the Kotlin Flow library.
 ### Snapshot docs: https://hoc081098.github.io/FlowExt/docs/latest
 
 -   **`bufferCount`** (similar to [RxJS bufferCount](https://rxjs.dev/api/operators/bufferCount), [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-))
-    > Buffers the source Flow values until the size hits the maximum [bufferSize] given.
-
+-   **`concat`** (similar to [RxJS concat](https://rxjs.dev/api/index/function/concat), [RxJava concat](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concat-java.lang.Iterable-))
+-   **`concatWith`** (similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith), [RxJava concatWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatWith-org.reactivestreams.Publisher-))
+-   **`startWith`** (similar to [RxJS startWith](https://rxjs.dev/api/operators/startWith), [RxJava startWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#startWithItem-T-))
 -   **`flatMapFirst`**/**`exhaustMap`** (similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap), [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/b48f2e9536cd985d912126709b97bd743e58c8fc/RxSwift/Observables/Merge.swift#L37))
-    > Projects each source value to a Flow which is merged in the output Flow only if the previous projected Flow has completed.
-    > If value is received while there is some projected Flow sequence being merged it will simply be ignored.
-
+-   **`interval`** (similar to [RxJS interval](https://rxjs.dev/api/index/function/interval))
 -   **`flattenFirst`**/**`exhaustAll`** (similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll))
-    > Converts a higher-order Flow into a first-order Flow by dropping inner Flow while the previous inner Flow has not yet completed.
-
 -   **`mapTo`** (similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))
-    > Emits the given constant value on the output Flow every time the source Flow emits a value.
-
 -   **`range`** (http://reactivex.io/documentation/operators/range.html) (similar to [RxJS range](https://rxjs.dev/api/index/function/range))
-    > Creates a Flow that emits a sequence of numbers within a specified range.
-
 -   **`takeUntil`** (http://reactivex.io/documentation/operators/takeuntil.html) (similar to [RxJS takeUntil](https://rxjs.dev/api/operators/takeUntil))
-    > Emits the values emitted by the source Flow until a notifier Flow emits a value or completes.
-
 -   **`timer`** (http://reactivex.io/documentation/operators/timer.html) (similar to [RxJS timer](https://rxjs.dev/api/index/function/timer))
-    > Creates a Flow that will wait for a specified time, before emitting the given value.
-
 -   **`withLatestFrom`** (https://rxmarbles.com/#withLatestFrom) (similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom))
-    > Merges two Flows into one Flow by combining each value from self with the latest value from the second Flow, if any.
-    > Values emitted by self before the second Flow has emitted any values will be omitted.
 
 ## Installation
 
