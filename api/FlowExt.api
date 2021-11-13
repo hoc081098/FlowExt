@@ -93,6 +93,10 @@ public final class com/hoc081098/flowext/NULL_Value {
 	public final fun unbox (Ljava/lang/Object;)Ljava/lang/Object;
 }
 
+public final class com/hoc081098/flowext/NeverFlowKt {
+	public static final fun neverFlow ()Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/RangeKt {
 	public static final fun range (II)Lkotlinx/coroutines/flow/Flow;
 }
