@@ -43,7 +43,7 @@ public final class com/hoc081098/flowext/Event$Error : com/hoc081098/flowext/Eve
 	public final fun copy (Ljava/lang/Throwable;)Lcom/hoc081098/flowext/Event$Error;
 	public static synthetic fun copy$default (Lcom/hoc081098/flowext/Event$Error;Ljava/lang/Throwable;ILjava/lang/Object;)Lcom/hoc081098/flowext/Event$Error;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getThrowable ()Ljava/lang/Throwable;
+	public final fun getError ()Ljava/lang/Throwable;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -60,9 +60,9 @@ public final class com/hoc081098/flowext/Event$Value : com/hoc081098/flowext/Eve
 }
 
 public final class com/hoc081098/flowext/EventKt {
+	public static final fun errorOrNull (Lcom/hoc081098/flowext/Event;)Ljava/lang/Throwable;
+	public static final fun errorOrThrow (Lcom/hoc081098/flowext/Event;)Ljava/lang/Throwable;
 	public static final fun map (Lcom/hoc081098/flowext/Event;Lkotlin/jvm/functions/Function1;)Lcom/hoc081098/flowext/Event;
-	public static final fun throwableOrNull (Lcom/hoc081098/flowext/Event;)Ljava/lang/Throwable;
-	public static final fun throwableOrThrow (Lcom/hoc081098/flowext/Event;)Ljava/lang/Throwable;
 	public static final fun valueOrNull (Lcom/hoc081098/flowext/Event;)Ljava/lang/Object;
 	public static final fun valueOrThrow (Lcom/hoc081098/flowext/Event;)Ljava/lang/Object;
 }
