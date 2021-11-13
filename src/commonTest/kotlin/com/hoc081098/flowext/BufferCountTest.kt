@@ -64,13 +64,13 @@ class BufferCountTest {
     flow<Int> { throw RuntimeException("Broken!") }
       .bufferCount(2)
       .test(null) {
-        assertIs<RuntimeException>(it.single().throwableOrThrow())
+        assertIs<RuntimeException>(it.single().errorOrThrow())
       }
 
     flow<Int> { throw RuntimeException("Broken!") }
       .bufferCount(2, 1)
       .test(null) {
-        assertIs<RuntimeException>(it.single().throwableOrThrow())
+        assertIs<RuntimeException>(it.single().errorOrThrow())
       }
   }
 

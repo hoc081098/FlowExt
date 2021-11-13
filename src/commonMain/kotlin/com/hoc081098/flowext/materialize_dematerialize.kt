@@ -18,7 +18,7 @@ public fun <T> Flow<Event<T>>.dematerialize(): Flow<T> = flow {
     collect {
       when (it) {
         Event.Complete -> throw ClosedException(this)
-        is Event.Error -> throw it.throwable
+        is Event.Error -> throw it.error
         is Event.Value -> emit(it.value)
       }
     }

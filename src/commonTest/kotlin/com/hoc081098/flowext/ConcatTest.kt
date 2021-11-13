@@ -139,7 +139,7 @@ class ConcatTest {
     val flow = flowOf(1, 2, 3)
     val failureFlow = flow<Nothing> { throw RuntimeException("Crash!") }
     val expectation: suspend (List<Event<Int>>) -> Unit = { events ->
-      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
+      val message = assertIs<RuntimeException>(events.single().errorOrThrow()).message
       assertEquals("Crash!", message)
     }
 

@@ -72,7 +72,7 @@ class TakeUntilTest {
     flow<Nothing> { throw RuntimeException() }
       .takeUntil(timer(Unit, 100))
       .test(null) {
-        assertIs<RuntimeException>(it.single().throwableOrThrow())
+        assertIs<RuntimeException>(it.single().errorOrThrow())
       }
 
     flow {
@@ -83,7 +83,7 @@ class TakeUntilTest {
       .test(null) {
         assertEquals(2, it.size)
         assertEquals(1, it[0].valueOrThrow())
-        assertIs<RuntimeException>(it[1].throwableOrThrow())
+        assertIs<RuntimeException>(it[1].errorOrThrow())
       }
   }
 

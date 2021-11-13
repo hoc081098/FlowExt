@@ -77,7 +77,7 @@ class FlatMapFirstTest {
     flow<Int> { throw RuntimeException("Broken!") }
       .flatMapFirst { emptyFlow<Int>() }
       .test(null) {
-        assertIs<RuntimeException>(it.single().throwableOrThrow())
+        assertIs<RuntimeException>(it.single().errorOrThrow())
       }
   }
 
@@ -92,7 +92,7 @@ class FlatMapFirstTest {
     }.test(null) {
       assertEquals(2, it.size)
       assertEquals(1, it[0].valueOrThrow())
-      assertIs<RuntimeException>(it[1].throwableOrThrow())
+      assertIs<RuntimeException>(it[1].errorOrThrow())
     }
   }
 
@@ -107,7 +107,7 @@ class FlatMapFirstTest {
     }.test(null) {
       assertEquals(2, it.size)
       assertEquals(1, it[0].valueOrThrow())
-      assertIs<RuntimeException>(it[1].throwableOrThrow())
+      assertIs<RuntimeException>(it[1].errorOrThrow())
     }
   }
 }
