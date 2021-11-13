@@ -7,7 +7,13 @@
 3. Update the `README.md` so the "Download" section reflects the new release version and the
    snapshot section reflects the next "SNAPSHOT" version.
 
-4. Publish release on Github.
+4. Commit
+
+   ```
+   $ git commit -am "Prepare version X.Y.Z"
+   ```
+
+5. Publish release on Github.
 
 6. Update the `VERSION_NAME` in `gradle.properties` to the next "SNAPSHOT" version.
 
