@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
@@ -197,5 +199,22 @@ allprojects {
     mavenPublish {
       sonatypeHost = com.vanniktech.maven.publish.SonatypeHost.S01
     }
+  }
+}
+
+tasks.withType<Test> {
+  testLogging {
+    showExceptions = true
+    showCauses = true
+    showStackTraces = true
+    showStandardStreams = true
+    events = setOf(
+      TestLogEvent.PASSED,
+      TestLogEvent.FAILED,
+      TestLogEvent.SKIPPED,
+      TestLogEvent.STANDARD_OUT,
+      TestLogEvent.STANDARD_ERROR
+    )
+    exceptionFormat = TestExceptionFormat.FULL
   }
 }
