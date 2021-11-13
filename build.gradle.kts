@@ -11,7 +11,7 @@ plugins {
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.18.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
-  id("org.jetbrains.dokka") version "1.5.30"
+  id("org.jetbrains.dokka") version "1.5.31"
 }
 
 group = "io.github.hoc081098"
