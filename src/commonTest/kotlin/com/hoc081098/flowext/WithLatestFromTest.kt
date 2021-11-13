@@ -3,11 +3,14 @@ package com.hoc081098.flowext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
@@ -56,5 +59,20 @@ class WithLatestFromTest {
         "e" to 1,
       )
     )
+  }
+
+  @Test
+  fun testWithLatestFrom_failureUpStream() = suspendTest {
+    assertFailsWith<RuntimeException> {
+      flow<Int> { throw RuntimeException() }
+        .withLatestFrom(neverFlow())
+        .collect()
+    }
+
+    assertFailsWith<RuntimeException> {
+      neverFlow()
+        .withLatestFrom(flow<Int> { throw RuntimeException() })
+        .collect()
+    }
   }
 }
