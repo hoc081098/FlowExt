@@ -1,5 +1,7 @@
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.internal.ClosedException
+import com.hoc081098.flowext.internal.checkOwnership
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -21,6 +23,6 @@ public fun <T> Flow<Event<T>>.dematerialize(): Flow<T> = flow {
       }
     }
   } catch (e: ClosedException) {
-    if (e.owner !== this) throw e
+    e.checkOwnership(this@flow)
   }
 }

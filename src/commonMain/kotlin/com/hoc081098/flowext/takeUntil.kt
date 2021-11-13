@@ -1,5 +1,7 @@
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.internal.ClosedException
+import com.hoc081098.flowext.internal.checkOwnership
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
@@ -28,6 +30,6 @@ public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
       job.cancel()
     }
   } catch (e: ClosedException) {
-    if (e.owner !== this) throw e
+    e.checkOwnership(this@flow)
   }
 }
