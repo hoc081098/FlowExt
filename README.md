@@ -23,6 +23,9 @@ Extensions to the Kotlin Flow library.
 
 # API
 
+## Docs: https://hoc081098.github.io/FlowExt/docs/0.x
+## Snapshot docs: https://hoc081098.github.io/FlowExt/docs/latest
+
 -   **`bufferCount`** (similar to [RxJS bufferCount](https://rxjs.dev/api/operators/bufferCount), [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-))
     > Buffers the source Flow values until the size hits the maximum [bufferSize] given.
 
@@ -110,7 +113,7 @@ dependencies {
 allprojects {
   repositories {
     ...
-    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" } 
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
   }
 }
 
