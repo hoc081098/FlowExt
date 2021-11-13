@@ -22,7 +22,7 @@
           </div>
           <div class="cover ">
             <h1 class="cover"><span><span>Event</span></span></h1>
-            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">interface <a href="index.html">Event</a>&lt;out <a href="index.html">T</a>&gt;<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">interface <a href="index.html">Event</a>&lt;out <a href="index.html">T</a>&gt;<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Represents the reactive signal types: <code>value</code>, <code>error</code> and <code>complete</code>, and holds their parameter values (a value, a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>, nothing).</p><p class="paragraph">Sequence grammar: <code>value* (error | complete)</code></p></div></div>
           </div>
           <div class="tabbedcontent">
             <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Extensions">Extensions</button><button class="section-tab" data-togglable="Inheritors">Inheritors</button></div>
@@ -40,7 +40,7 @@
   <div>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">object <a href="-complete/index.html">Complete</a> : <a href="index.html">Event</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing/index.html">Nothing</a>&gt; <span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
-</div>
+<div class="brief "><p class="paragraph">Complete event.</p></div></div>
 </div>
                     </div>
                   </div>
@@ -55,9 +55,9 @@
                       <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
 
   <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">data class <a href="-error/index.html">Error</a>(throwable: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>) : <a href="index.html">Event</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing/index.html">Nothing</a>&gt; <span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">data class <a href="-error/index.html">Error</a>(error: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>) : <a href="index.html">Event</a>&lt;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-nothing/index.html">Nothing</a>&gt; <span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
-</div>
+<div class="brief "><p class="paragraph">A error event containing the <a href="-error/error.html">error</a>.</p></div></div>
 </div>
                     </div>
                   </div>
@@ -74,7 +74,7 @@
   <div>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">data class <a href="-value/index.html">Value</a>&lt;out <a href="-value/index.html">T</a>&gt;(value: <a href="-value/index.html">T</a>) : <a href="index.html">Event</a>&lt;<a href="-value/index.html">T</a>&gt; <span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
-</div>
+<div class="brief "><p class="paragraph">A value event containing the given <a href="-value/value.html">value</a>.</p></div></div>
 </div>
                     </div>
                   </div>
@@ -110,7 +110,41 @@
                 </div>
               </div>
               <h2 class="tabbedcontent">Extensions</h2>
-              <div class="table" data-togglable="Extensions"><a data-name="2046848617%2FExtensions%2F788909594" anchor-label="map" id="2046848617%2FExtensions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
+              <div class="table" data-togglable="Extensions"><a data-name="529953875%2FExtensions%2F788909594" anchor-label="errorOrNull" id="529953875%2FExtensions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../error-or-null.html"><span>error</span><wbr></wbr><span>Or</span><wbr></wbr><span><span>Null</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="529953875%2FExtensions%2F788909594"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">fun &lt;<a href="../error-or-null.html">T</a>&gt; <a href="index.html">Event</a>&lt;<a href="../error-or-null.html">T</a>&gt;.<a href="../error-or-null.html">errorOrNull</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>?<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<div class="brief "><p class="paragraph">Returns the encapsulated <a href="-error/error.html">error</a> if this <a href="index.html">Event</a> is an <a href="-error/index.html">Event.Error</a>, otherwise returns <code>null</code>.</p></div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1635941206%2FExtensions%2F788909594" anchor-label="errorOrThrow" id="1635941206%2FExtensions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../error-or-throw.html"><span>error</span><wbr></wbr><span>Or</span><wbr></wbr><span><span>Throw</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1635941206%2FExtensions%2F788909594"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">fun &lt;<a href="../error-or-throw.html">T</a>&gt; <a href="index.html">Event</a>&lt;<a href="../error-or-throw.html">T</a>&gt;.<a href="../error-or-throw.html">errorOrThrow</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<div class="brief "><p class="paragraph">Returns the encapsulated <a href="-error/error.html">error</a> if this <a href="index.html">Event</a> is an <a href="-error/index.html">Event.Error</a>. Otherwise, throws a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-no-such-element-exception/index.html">NoSuchElementException</a>.</p></div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2046848617%2FExtensions%2F788909594" anchor-label="map" id="2046848617%2FExtensions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
                 <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
                   <div class="main-subrow keyValue ">
                     <div class=""><span class="inline-flex"><a href="../map.html"><span><span>map</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2046848617%2FExtensions%2F788909594"></span>
@@ -122,41 +156,7 @@
   <div>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">inline fun &lt;<a href="../map.html">T</a>, <a href="../map.html">R</a>&gt; <a href="index.html">Event</a>&lt;<a href="../map.html">T</a>&gt;.<a href="../map.html">map</a>(transform: (<a href="../map.html">T</a>) -&gt; <a href="../map.html">R</a>): <a href="index.html">Event</a>&lt;<a href="../map.html">R</a>&gt;<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-406274789%2FExtensions%2F788909594" anchor-label="throwableOrNull" id="-406274789%2FExtensions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-                <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../throwable-or-null.html"><span>throwable</span><wbr></wbr><span>Or</span><wbr></wbr><span><span>Null</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-406274789%2FExtensions%2F788909594"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">fun &lt;<a href="../throwable-or-null.html">T</a>&gt; <a href="index.html">Event</a>&lt;<a href="../throwable-or-null.html">T</a>&gt;.<a href="../throwable-or-null.html">throwableOrNull</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>?<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="-1617343602%2FExtensions%2F788909594" anchor-label="throwableOrThrow" id="-1617343602%2FExtensions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-                <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="../throwable-or-throw.html"><span>throwable</span><wbr></wbr><span>Or</span><wbr></wbr><span><span>Throw</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1617343602%2FExtensions%2F788909594"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">fun &lt;<a href="../throwable-or-throw.html">T</a>&gt; <a href="index.html">Event</a>&lt;<a href="../throwable-or-throw.html">T</a>&gt;.<a href="../throwable-or-throw.html">throwableOrThrow</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
+<div class="brief "><p class="paragraph">When this <a href="index.html">Event</a> is a <a href="-value/index.html">Event.Value</a>, return a <a href="-value/index.html">Event.Value</a> containing transformed value using <a href="../map.html">transform</a>. Otherwise, returns itself.</p></div></div>
 </div>
                     </div>
                   </div>
@@ -173,7 +173,7 @@
   <div>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">fun &lt;<a href="../value-or-null.html">T</a>&gt; <a href="index.html">Event</a>&lt;<a href="../value-or-null.html">T</a>&gt;.<a href="../value-or-null.html">valueOrNull</a>(): <a href="../value-or-null.html">T</a>?<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
-</div>
+<div class="brief "><p class="paragraph">Returns the encapsulated <a href="-value/value.html">value</a> if this <a href="index.html">Event</a> is a <a href="-value/index.html">Event.Value</a>, otherwise returns <code>null</code>.</p></div></div>
 </div>
                     </div>
                   </div>
@@ -190,7 +190,7 @@
   <div>
     <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace">fun &lt;<a href="../value-or-throw.html">T</a>&gt; <a href="index.html">Event</a>&lt;<a href="../value-or-throw.html">T</a>&gt;.<a href="../value-or-throw.html">valueOrThrow</a>(): <a href="../value-or-throw.html">T</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
   </div>
-</div>
+<div class="brief "><p class="paragraph">Returns the encapsulated value if this <a href="index.html">Event</a> is a <a href="-value/index.html">Event.Value</a>. If this is <a href="-error/index.html">Event.Error</a>, throws the encapsulated <a href="-error/error.html">error</a>. Otherwise, throws a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-no-such-element-exception/index.html">NoSuchElementException</a>.</p></div></div>
 </div>
                     </div>
                   </div>
