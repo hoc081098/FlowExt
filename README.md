@@ -34,6 +34,8 @@ Extensions to the Kotlin Flow library.
 -   **`interval`** (similar to [RxJS interval](https://rxjs.dev/api/index/function/interval))
 -   **`flattenFirst`**/**`exhaustAll`** (similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll))
 -   **`mapTo`** (similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))
+-   **`materialize`** (similar to [RxJS materialize](https://rxjs.dev/api/operators/materialize), [RxJava materialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#materialize--))
+-   **`dematerialize`** (similar to [RxJS dematerialize](https://rxjs.dev/api/operators/dematerialize), [RxJava dematerialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#dematerialize--))
 -   **`range`** (http://reactivex.io/documentation/operators/range.html) (similar to [RxJS range](https://rxjs.dev/api/index/function/range))
 -   **`takeUntil`** (http://reactivex.io/documentation/operators/takeuntil.html) (similar to [RxJS takeUntil](https://rxjs.dev/api/operators/takeUntil))
 -   **`timer`** (http://reactivex.io/documentation/operators/timer.html) (similar to [RxJS timer](https://rxjs.dev/api/index/function/timer))

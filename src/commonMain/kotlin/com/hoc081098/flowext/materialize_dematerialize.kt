@@ -9,10 +9,16 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 
+/**
+ * Represents all of the notifications from the source [Flow] as `value` emissions marked with their original types within [Event] objects.
+ */
 public fun <T> Flow<T>.materialize(): Flow<Event<T>> = map<T, Event<T>> { Event.Value(it) }
   .onCompletion { if (it === null) emit(Event.Complete) }
   .catch { emit(Event.Error(it)) }
 
+/**
+ * Converts a [Flow] of [Event] objects into the emissions that they represent.
+ */
 public fun <T> Flow<Event<T>>.dematerialize(): Flow<T> = flow {
   try {
     collect {

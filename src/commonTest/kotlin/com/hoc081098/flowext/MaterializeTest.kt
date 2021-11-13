@@ -2,12 +2,15 @@ package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -24,6 +27,8 @@ class MaterializeTest {
       ),
       events,
     )
+
+    assertEquals(Event.Complete, emptyFlow<Int>().materialize().single())
   }
 
   @Test
@@ -45,7 +50,7 @@ class MaterializeTest {
     )
 
     val events2 = flowOf(1, 2, 3)
-      .startWithFlow(flow { throw ex })
+      .startWith(flow { throw ex })
       .materialize()
       .toList()
     assertContentEquals(
