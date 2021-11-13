@@ -1,7 +1,9 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import java.net.URL
 
 plugins {
   kotlin("multiplatform") version "1.5.31"
@@ -9,6 +11,7 @@ plugins {
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.18.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
+  id("org.jetbrains.dokka") version "1.5.30"
 }
 
 group = "io.github.hoc081098"
@@ -216,5 +219,15 @@ tasks.withType<Test> {
       TestLogEvent.STANDARD_ERROR
     )
     exceptionFormat = TestExceptionFormat.FULL
+  }
+}
+
+tasks.withType<DokkaTask>().configureEach {
+  dokkaSourceSets {
+    configureEach {
+      externalDocumentationLink {
+        url.set(URL("https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/"))
+      }
+    }
   }
 }
