@@ -47,6 +47,28 @@ class ConcatTest {
       flowOf(13, 14, 15),
       flowOf(16, 17, 18),
     ).test((1..18).map { Event.Value(it) } + Event.Complete)
+
+    concat(
+      listOf(
+        flowOf(1, 2, 3),
+        flowOf(4, 5, 6),
+        flowOf(7, 8, 9),
+        flowOf(10, 11, 12),
+        flowOf(13, 14, 15),
+        flowOf(16, 17, 18),
+      )
+    ).test((1..18).map { Event.Value(it) } + Event.Complete)
+
+    concat(
+      sequenceOf(
+        flowOf(1, 2, 3),
+        flowOf(4, 5, 6),
+        flowOf(7, 8, 9),
+        flowOf(10, 11, 12),
+        flowOf(13, 14, 15),
+        flowOf(16, 17, 18),
+      )
+    ).test((1..18).map { Event.Value(it) } + Event.Complete)
   }
 
   @Test
@@ -88,39 +110,56 @@ class ConcatTest {
       flow,
       flow,
     ).test(events * 6 + Event.Complete)
+
+    concat(
+      listOf(
+        flow,
+        flow,
+        flow,
+        flow,
+        flow,
+        flow,
+      )
+    ).test(events * 6 + Event.Complete)
+
+    concat(
+      sequenceOf(
+        flow,
+        flow,
+        flow,
+        flow,
+        flow,
+        flow,
+      )
+    ).test(events * 6 + Event.Complete)
   }
 
   @Test
   fun testConcat_firstFailureUpstream() = suspendTest {
     val flow = flowOf(1, 2, 3)
     val failureFlow = flow<Nothing> { throw RuntimeException("Crash!") }
+    val expectation: suspend (List<Event<Int>>) -> Unit = { events ->
+      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
+      assertEquals("Crash!", message)
+    }
 
     concat(
       flow1 = failureFlow,
       flow2 = flow,
-    ).test(null) { events ->
-      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
-      assertEquals("Crash!", message)
-    }
+    ).test(null, expectation)
 
     concat(
       flow1 = failureFlow,
       flow2 = flow,
       flow3 = flow,
-    ).test(null) { events ->
-      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
-      assertEquals("Crash!", message)
-    }
+    ).test(null, expectation)
 
     concat(
       flow1 = failureFlow,
       flow2 = flow,
       flow3 = flow,
       flow4 = flow,
-    ).test(null) { events ->
-      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
-      assertEquals("Crash!", message)
-    }
+    ).test(null, expectation)
 
     concat(
       flow1 = failureFlow,
@@ -128,10 +167,7 @@ class ConcatTest {
       flow3 = flow,
       flow4 = flow,
       flow5 = flow,
-    ).test(null) { events ->
-      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
-      assertEquals("Crash!", message)
-    }
+    ).test(null, expectation)
 
     concat(
       failureFlow,
@@ -140,10 +176,29 @@ class ConcatTest {
       flow,
       flow,
       flow,
-    ).test(null) { events ->
-      val message = assertIs<RuntimeException>(events.single().throwableOrThrow()).message
-      assertEquals("Crash!", message)
-    }
+    ).test(null, expectation)
+
+    concat(
+      listOf(
+        failureFlow,
+        flow,
+        flow,
+        flow,
+        flow,
+        flow,
+      )
+    ).test(null, expectation)
+
+    concat(
+      sequenceOf(
+        failureFlow,
+        flow,
+        flow,
+        flow,
+        flow,
+        flow,
+      )
+    ).test(null, expectation)
   }
 }
 
