@@ -1,3 +1,8 @@
+## 0.2.0-SNAPSHOT
+
+-   Update
+    -   `Kotlin` to `1.6.0`.
+
 ## 0.1.0 - Nov 13, 2021
 
 -   Update
