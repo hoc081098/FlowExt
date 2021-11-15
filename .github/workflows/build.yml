@@ -62,6 +62,7 @@ jobs:
 
   publish:
     needs: [ build ]
+    if: ${{ github.ref == 'refs/heads/master' && github.repository == 'hoc081098/FlowExt' }}
     strategy:
       matrix:
         os: [ macos-latest, windows-latest ]
