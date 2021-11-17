@@ -84,7 +84,7 @@ kotlin {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        implementation("org.jetbrains.kotlinx:atomicfu:0.16.3")
+        implementation("org.jetbrains.kotlinx:atomicfu:0.17.0")
       }
     }
     val jvmMain by getting {
