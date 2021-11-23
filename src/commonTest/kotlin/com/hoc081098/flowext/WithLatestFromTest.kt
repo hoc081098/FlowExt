@@ -1,9 +1,11 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
@@ -74,5 +76,31 @@ class WithLatestFromTest {
         .withLatestFrom(flow<Int> { throw RuntimeException() })
         .collect()
     }
+  }
+
+  @Test
+  fun testWithLatestFrom_cancellation() = suspendTest {
+    assertFailsWith<CancellationException> {
+      flow {
+        emit(1)
+        throw CancellationException("")
+      }
+        .withLatestFrom(emptyFlow<Nothing>())
+        .collect()
+    }
+
+    flowOf(1)
+      .withLatestFrom(
+        flow {
+          emit(2)
+          throw CancellationException("")
+        }
+      )
+      .test(
+        listOf(
+          Event.Value(1 to 2),
+          Event.Complete
+        )
+      )
   }
 }

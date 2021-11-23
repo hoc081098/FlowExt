@@ -1,5 +1,6 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -109,5 +110,29 @@ class FlatMapFirstTest {
       assertEquals(1, it[0].valueOrThrow())
       assertIs<RuntimeException>(it[1].errorOrThrow())
     }
+  }
+
+  @Test
+  fun testCancellation() = suspendTest {
+    flow {
+      repeat(5) {
+        emit(
+          flow {
+            if (it == 2) throw CancellationException("")
+            emit(1)
+          }
+        )
+      }
+    }
+      .flattenFirst()
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(1),
+          Event.Value(1),
+          Event.Value(1),
+          Event.Complete,
+        )
+      )
   }
 }

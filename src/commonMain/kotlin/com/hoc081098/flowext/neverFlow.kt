@@ -6,4 +6,7 @@ import kotlinx.coroutines.flow.flow
 
 private object NeverFlow : Flow<Nothing> by (flow { awaitCancellation() })
 
+/**
+ * Returns a [Flow] that never emits any values.
+ */
 public fun neverFlow(): Flow<Nothing> = NeverFlow

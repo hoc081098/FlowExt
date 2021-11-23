@@ -11,7 +11,7 @@ plugins {
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.18.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
-  id("org.jetbrains.dokka") version "1.5.31"
+  id("org.jetbrains.dokka") version "1.6.0"
 }
 
 group = "io.github.hoc081098"
@@ -23,7 +23,7 @@ repositories {
   gradlePluginPortal()
 }
 
-val kotlinCoroutinesVersion = "1.5.2"
+val kotlinCoroutinesVersion = "1.6.0-RC"
 val ktlintVersion = "0.43.0"
 
 kotlin {

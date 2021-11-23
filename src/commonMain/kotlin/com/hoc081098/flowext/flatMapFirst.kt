@@ -1,9 +1,7 @@
 package com.hoc081098.flowext
 
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
@@ -35,7 +33,6 @@ public fun <T, R> Flow<T>.flatMapFirst(transform: suspend (value: T) -> Flow<R>)
  */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<Flow<T>>.flattenFirst(): Flow<T> = channelFlow {
-  val outerScope = this
   val busy = AtomicBoolean(false)
 
   collect { inner ->
@@ -43,11 +40,9 @@ public fun <T> Flow<Flow<T>>.flattenFirst(): Flow<T> = channelFlow {
       // Do not pay for dispatch here, it's never necessary
       launch(start = CoroutineStart.UNDISPATCHED) {
         try {
-          inner.collect { outerScope.send(it) }
+          inner.collect { send(it) }
+        } finally {
           busy.value = false
-        } catch (e: CancellationException) {
-          // cancel outer scope on cancellation exception, too
-          outerScope.cancel(e)
         }
       }
     }
