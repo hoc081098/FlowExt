@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ macOS-latest, ubuntu-latest, windows-latest ]
+        os: [ macos-11, ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -128,7 +128,7 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
       - name: Deploy docs 🚀 to website
-        if: ${{ github.ref == 'refs/heads/master' && github.repository == 'hoc081098/FlowExt' && matrix.os == 'macOS-latest' }}
+        if: ${{ github.ref == 'refs/heads/master' && github.repository == 'hoc081098/FlowExt' && matrix.os == 'macos-latest' }}
         uses: JamesIves/github-pages-deploy-action@4.1.6
         with:
           branch: gh-pages # The branch the action should deploy to.

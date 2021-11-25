@@ -1,7 +1,6 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.channelFlow
@@ -24,14 +23,12 @@ import kotlinx.coroutines.launch
  *
  * @param transform A transform function to apply to value that was observed while no Flow is executing in parallel.
  */
-@ExperimentalCoroutinesApi
 public fun <T, R> Flow<T>.flatMapFirst(transform: suspend (value: T) -> Flow<R>): Flow<R> =
   map(transform).flattenFirst()
 
 /**
  * Converts a higher-order [Flow] into a first-order [Flow] by dropping inner [Flow] while the previous inner [Flow] has not yet completed.
  */
-@ExperimentalCoroutinesApi
 public fun <T> Flow<Flow<T>>.flattenFirst(): Flow<T> = channelFlow {
   val busy = AtomicBoolean(false)
 
@@ -52,13 +49,11 @@ public fun <T> Flow<Flow<T>>.flattenFirst(): Flow<T> = channelFlow {
 /**
  * This function is an alias to [flatMapFirst] operator.
  */
-@ExperimentalCoroutinesApi
 public fun <T, R> Flow<T>.exhaustMap(transform: suspend (value: T) -> Flow<R>): Flow<R> =
   flatMapFirst(transform)
 
 /**
  * This function is an alias to [flattenFirst] operator.
  */
-@ExperimentalCoroutinesApi
 @Suppress("NOTHING_TO_INLINE")
 public inline fun <T> Flow<Flow<T>>.exhaustAll(): Flow<T> = flattenFirst()

@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.take
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 @InternalCoroutinesApi
@@ -34,12 +35,7 @@ class TakeUntilTest {
     range(0, 10)
       .onEach { delay(100) }
       .onCompletion { println(it) }
-      .takeUntil(
-        timer(
-          Unit,
-          Duration.milliseconds(470)
-        )
-      )
+      .takeUntil(timer(Unit, 470.milliseconds))
       .test(
         listOf(
           Event.Value(0),
@@ -55,12 +51,7 @@ class TakeUntilTest {
   fun sourceCompletesBeforeNotifier() = suspendTest {
     range(0, 10)
       .onEach { delay(30) }
-      .takeUntil(
-        timer(
-          Unit,
-          Duration.seconds(10)
-        )
-      )
+      .takeUntil(timer(Unit, 10.seconds))
       .test(
         (0 until 10).map { Event.Value(it) } +
           Event.Complete
