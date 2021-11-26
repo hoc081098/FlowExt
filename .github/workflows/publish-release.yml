@@ -11,7 +11,7 @@ jobs:
   publish:
     strategy:
       matrix:
-        os: [ macos-latest, windows-latest ]
+        os: [ macos-11, windows-latest ]
       # run sequentially to avoid conflicts for closeAndReleaseRepository
       max-parallel: 1
 
@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload release
         run: ./gradlew build publish --no-daemon --no-parallel
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-11'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
@@ -79,7 +79,7 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
       - name: Deploy docs 🚀 to website
-        if: ${{ matrix.os == 'macOS-latest' }}
+        if: ${{ matrix.os == 'macos-11' }}
         uses: JamesIves/github-pages-deploy-action@4.1.6
         with:
           branch: gh-pages # The branch the action should deploy to.
