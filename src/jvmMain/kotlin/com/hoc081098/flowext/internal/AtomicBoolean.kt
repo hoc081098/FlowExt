@@ -1,4 +1,4 @@
-package com.hoc081098.flowext
+package com.hoc081098.flowext.internal
 
 import java.util.concurrent.atomic.AtomicBoolean as JavaAtomicBoolean
 

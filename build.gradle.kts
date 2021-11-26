@@ -18,8 +18,8 @@ group = "io.github.hoc081098"
 version = "0.2.0-SNAPSHOT"
 
 repositories {
-  google()
   mavenCentral()
+  google()
   gradlePluginPortal()
 }
 
@@ -108,13 +108,6 @@ kotlin {
 
     val nativeMain by creating {
       dependsOn(commonMain)
-      dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion") {
-          version {
-            strictly(kotlinCoroutinesVersion)
-          }
-        }
-      }
     }
     val nativeTest by creating {
       dependsOn(commonTest)
@@ -205,7 +198,7 @@ allprojects {
   }
 }
 
-tasks.withType<Test> {
+tasks.withType<AbstractTestTask> {
   testLogging {
     showExceptions = true
     showCauses = true

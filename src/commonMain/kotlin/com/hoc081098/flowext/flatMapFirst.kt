@@ -1,5 +1,6 @@
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.internal.AtomicBoolean
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer

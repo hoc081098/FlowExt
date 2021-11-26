@@ -1,4 +1,4 @@
-package com.hoc081098.flowext
+package com.hoc081098.flowext.internal
 
 import kotlin.native.concurrent.AtomicInt
 

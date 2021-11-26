@@ -1,5 +1,6 @@
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.internal.AtomicBoolean
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
