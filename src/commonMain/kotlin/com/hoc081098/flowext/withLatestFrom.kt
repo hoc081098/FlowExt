@@ -25,7 +25,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
       val otherValues = Channel<Any>(Channel.CONFLATED)
       launch(start = CoroutineStart.UNDISPATCHED) {
         other.collect {
-          return@collect otherValues.send(it ?: NULL_Value)
+          return@collect otherValues.send(it ?: NullValue)
         }
       }
 
@@ -38,7 +38,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
         emit(
           transform(
             value,
-            NULL_Value.unbox(lastValue ?: return@collect)
+            NullValue.unbox(lastValue ?: return@collect)
           ),
         )
       }
