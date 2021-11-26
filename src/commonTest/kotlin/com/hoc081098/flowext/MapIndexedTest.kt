@@ -1,9 +1,9 @@
 package com.hoc081098.flowext
 
-import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlin.test.Test
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
