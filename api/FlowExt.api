@@ -79,6 +79,10 @@ public final class com/hoc081098/flowext/IntervalKt {
 	public static final fun interval-QTBD994 (JJ)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/MapIndexedKt {
+	public static final fun mapIndexed (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/MapToKt {
 	public static final fun mapTo (Lkotlinx/coroutines/flow/Flow;Ljava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }

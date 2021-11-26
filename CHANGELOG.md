@@ -11,6 +11,8 @@
 
 -   Rename `NULL_Value` to `NullValue`.
 
+-   Add `Flow.mapIndexed`.
+
 ## 0.1.0 - Nov 13, 2021
 
 -   Update
