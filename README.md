@@ -41,6 +41,8 @@ Extensions to the Kotlin Flow library.
 -   **`timer`** (http://reactivex.io/documentation/operators/timer.html) (similar to [RxJS timer](https://rxjs.dev/api/index/function/timer))
 -   **`withLatestFrom`** (https://rxmarbles.com/#withLatestFrom) (similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom))
 
+... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
+
 ## Installation
 
 ```groovy
