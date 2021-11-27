@@ -1,12 +1,48 @@
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.fold
 import kotlin.math.pow
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
 
-class RetryWhenWithDelayStrategyTest
+@ExperimentalTime
+@ExperimentalCoroutinesApi
+@InternalCoroutinesApi
+class RetryWhenWithDelayStrategyTest {
+
+  @Test
+  fun test() = suspendTest {
+    var count = 0
+    val retries = 3
+    val flow = flow {
+      emit(1)
+      throw RuntimeException((count++).toString())
+    }
+
+    val sum =
+      flow.retryWhenWithDelayStrategy(DelayStrategy.Constant(100.milliseconds)) { cause, attempt ->
+        assertEquals(
+          attempt.toString(),
+          assertIs<RuntimeException>(cause).message,
+        )
+        attempt < retries
+      }.catch { cause ->
+        assertEquals(
+          retries.toString(),
+          assertIs<RuntimeException>(cause).message,
+        )
+      }.fold(0, Int::plus)
+    assertEquals(4, sum)
+  }
+}
 
 class DelayStrategyTest {
   private val cause = RuntimeException()
