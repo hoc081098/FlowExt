@@ -71,13 +71,9 @@ public fun interface DelayStrategy {
     private val factor: Double,
     private val maxDelay: Duration,
   ) : DelayStrategy {
-    override fun duration(cause: Throwable, attempt: Long): Duration = (
-      if (attempt == 0L) {
-        initialDelay
-      } else {
-        initialDelay * factor.pow(attempt.toDouble())
-      }
-      ).coerceAtLeast(maxDelay)
+    override fun duration(cause: Throwable, attempt: Long): Duration =
+      (if (attempt <= 0L) initialDelay else initialDelay * factor.pow(attempt.toDouble()))
+        .coerceAtMost(maxDelay)
   }
 }
 
