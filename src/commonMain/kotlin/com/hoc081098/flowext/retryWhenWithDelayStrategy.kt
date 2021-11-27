@@ -43,6 +43,21 @@ public fun interface DelayStrategy {
 }
 
 @ExperimentalTime
+public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
+  initialDelay: Duration,
+  factor: Double,
+  maxDelay: Duration = Duration.INFINITE,
+  predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean
+): Flow<T> = retryWhenWithDelayStrategy(
+  strategy = DelayStrategy.Exponential(
+    initialDelay = initialDelay,
+    factor = factor,
+    maxDelay = maxDelay,
+  ),
+  predicate = predicate,
+)
+
+@ExperimentalTime
 public fun <T> Flow<T>.retryWithExponentialBackoff(
   initialDelay: Duration,
   factor: Double,
@@ -58,18 +73,3 @@ public fun <T> Flow<T>.retryWithExponentialBackoff(
     maxDelay = maxDelay
   ) { cause, attempt -> attempt < maxAttempt && predicate(cause) }
 }
-
-@ExperimentalTime
-public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
-  initialDelay: Duration,
-  factor: Double,
-  maxDelay: Duration = Duration.INFINITE,
-  predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean
-): Flow<T> = retryWhenWithDelayStrategy(
-  strategy = DelayStrategy.Exponential(
-    initialDelay = initialDelay,
-    factor = factor,
-    maxDelay = maxDelay,
-  ),
-  predicate = predicate,
-)
