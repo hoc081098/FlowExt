@@ -8,41 +8,6 @@ import kotlin.math.pow
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
-// @ExperimentalTime
-// public fun <T> Flow<T>.retryWithExponentialBackoff(
-//  initialDelay: Duration,
-//  factor: Double,
-//  maxAttempt: Long = Long.MAX_VALUE,
-//  maxDelay: Duration = Duration.INFINITE,
-//  predicate: suspend (cause: Throwable) -> Boolean = { true }
-// ): Flow<T> {
-//  require(maxAttempt > 0) { "Expected positive amount of maxAttempt, but had $maxAttempt" }
-//  return retryWhenWithExponentialBackoff(
-//    initialDelay = initialDelay,
-//    factor = factor,
-//    maxDelay = maxDelay
-//  ) { cause, attempt -> attempt < maxAttempt && predicate(cause) }
-// }
-//
-// @ExperimentalTime
-// public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
-//  initialDelay: Duration,
-//  factor: Double,
-//  maxDelay: Duration = Duration.INFINITE,
-//  predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean
-// ): Flow<T> = flow {
-//  var currentDelay = initialDelay
-//
-//  retryWhen { cause, attempt ->
-//    predicate(cause, attempt).also {
-//      if (it) {
-//        delay(currentDelay)
-//        currentDelay = (currentDelay * factor).coerceAtMost(maxDelay)
-//      }
-//    }
-//  }.let { emitAll(it) }
-// }
-
 @ExperimentalTime
 public fun <T> Flow<T>.retryWhenWithDelayStrategy(
   strategy: DelayStrategy,
