@@ -23,7 +23,7 @@ repositories {
   gradlePluginPortal()
 }
 
-val kotlinCoroutinesVersion = "1.6.0-RC"
+val kotlinCoroutinesVersion = "1.6.0-RC2"
 val ktlintVersion = "0.43.0"
 
 kotlin {
