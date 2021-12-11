@@ -23,8 +23,8 @@ repositories {
   gradlePluginPortal()
 }
 
-val kotlinCoroutinesVersion = "1.6.0-RC"
-val ktlintVersion = "0.43.0"
+val kotlinCoroutinesVersion = "1.6.0-RC2"
+val ktlintVersion = "0.43.2"
 
 kotlin {
   explicitApi()

@@ -6,9 +6,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.retryWhen
 import kotlin.math.pow
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 public fun <T> Flow<T>.retryWhenWithDelayStrategy(
   strategy: DelayStrategy,
   predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean
@@ -42,7 +40,6 @@ public fun interface DelayStrategy {
   }
 }
 
-@ExperimentalTime
 public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
   initialDelay: Duration,
   factor: Double,
@@ -57,7 +54,6 @@ public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
   predicate = predicate,
 )
 
-@ExperimentalTime
 public fun <T> Flow<T>.retryWithExponentialBackoff(
   initialDelay: Duration,
   factor: Double,

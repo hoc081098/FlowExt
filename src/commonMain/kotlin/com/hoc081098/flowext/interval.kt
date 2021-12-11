@@ -4,7 +4,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 /**
  * Returns a [Flow] that emits a 0L after the [initialDelay] and ever-increasing numbers
@@ -13,7 +12,6 @@ import kotlin.time.ExperimentalTime
  * @param initialDelay must be greater than or equal to [Duration.ZERO]
  * @param period must be greater than or equal to [Duration.ZERO]
  */
-@ExperimentalTime
 public fun interval(
   initialDelay: Duration,
   period: Duration,

@@ -13,10 +13,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
 @InternalCoroutinesApi
-@ExperimentalTime
 @ExperimentalCoroutinesApi
 class TakeUntilTest {
   @Test

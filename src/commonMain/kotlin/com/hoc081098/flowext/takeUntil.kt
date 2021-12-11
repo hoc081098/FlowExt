@@ -3,6 +3,7 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.internal.ClosedException
 import com.hoc081098.flowext.internal.checkOwnership
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
  * @param notifier The [Flow] whose first emitted value or complete event
  * will cause the output [Flow] of [takeUntil] to stop emitting values from the source [Flow].
  */
+@InternalCoroutinesApi // TODO: Remove InternalCoroutinesApi (https://github.com/Kotlin/kotlinx.coroutines/issues/3078)
 public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
   try {
     coroutineScope {

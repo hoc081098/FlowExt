@@ -2,6 +2,7 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.ClosedException
 import com.hoc081098.flowext.internal.checkOwnership
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -19,6 +20,7 @@ public fun <T> Flow<T>.materialize(): Flow<Event<T>> = map<T, Event<T>> { Event.
 /**
  * Converts a [Flow] of [Event] objects into the emissions that they represent.
  */
+@InternalCoroutinesApi // TODO: Remove InternalCoroutinesApi (https://github.com/Kotlin/kotlinx.coroutines/issues/3078)
 public fun <T> Flow<Event<T>>.dematerialize(): Flow<T> = flow {
   try {
     collect {

@@ -2,14 +2,14 @@
 
 -   Update
     -   `Kotlin` to `1.6.0`.
-    -   `KotlinX Coroutines` to `1.6.0-RC`.
+    -   `KotlinX Coroutines` to `1.6.0-RC2`.
 
 -   Do not propagate cancellation to the upstream in Flow `flatMapFirst` operators
     (Related to https://github.com/Kotlin/kotlinx.coroutines/pull/2964).
 
 -   Remove unnecessary `@ExperimentalCoroutinesApi`.
 
--   Rename `NULL_Value` to `NullValue`.
+-   Rename `NULL_Value` to `NULL_VALUE`.
 
 -   Add `Flow.mapIndexed`.
 

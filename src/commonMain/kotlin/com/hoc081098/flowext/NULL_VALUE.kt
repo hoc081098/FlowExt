@@ -5,7 +5,8 @@ package com.hoc081098.flowext
  * This allows for writing faster generic code instead of using `Option`.
  * This is only used as an optimisation technique in low-level code.
  */
-public object NullValue {
+@Suppress("ClassName")
+public object NULL_VALUE {
   @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
   public inline fun <T> unbox(v: Any?): T = if (this === v) null as T else v as T
 }
