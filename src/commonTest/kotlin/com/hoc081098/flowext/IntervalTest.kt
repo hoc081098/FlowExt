@@ -3,8 +3,8 @@ package com.hoc081098.flowext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.take
-import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
+import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi

@@ -1,8 +1,8 @@
 package com.hoc081098.flowext
 
-import kotlin.test.assertContentEquals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
+import kotlin.test.assertContentEquals
 
 suspend fun <T> Flow<T>.test(
   expected: List<Event<T>>?,

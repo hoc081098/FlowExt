@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
-import kotlinx.coroutines.test.runTest
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
