@@ -91,15 +91,6 @@ class FlatMapFirstTest {
       } else {
         flowOf(v)
       }
-    }.test(null) { assertIs<RuntimeException>(it.single().errorOrThrow()) }
-
-    flowOf(1, 2, 3).flatMapFirst { v ->
-      if (v == 2) {
-        yield()
-        throw RuntimeException("Broken!")
-      } else {
-        flowOf(v)
-      }
     }.test(null) {
       assertEquals(2, it.size)
       assertEquals(1, it[0].valueOrThrow())
@@ -112,18 +103,6 @@ class FlatMapFirstTest {
     flowOf(1, 2, 3).flatMapFirst { v ->
       if (v == 2) {
         flow { yield(); throw RuntimeException("Broken!") }
-      } else {
-        flowOf(v)
-      }
-    }.test(null) {
-      assertEquals(2, it.size)
-      assertEquals(1, it[0].valueOrThrow())
-      assertIs<RuntimeException>(it[1].errorOrThrow())
-    }
-
-    flowOf(1, 2, 3).flatMapFirst { v ->
-      if (v == 2) {
-        flow { throw RuntimeException("Broken!") }
       } else {
         flowOf(v)
       }
