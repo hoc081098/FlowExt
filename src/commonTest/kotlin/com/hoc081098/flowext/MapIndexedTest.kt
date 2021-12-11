@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.take
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlinx.coroutines.test.runTest
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class MapIndexedTest {
   @Test
-  fun basic() = suspendTest {
+  fun basic() = runTest {
     flowOf(1, 2, 3, 4)
       .mapIndexed { index, value -> index to value }
       .test(
@@ -29,7 +30,7 @@ class MapIndexedTest {
   }
 
   @Test
-  fun upstreamError() = suspendTest {
+  fun upstreamError() = runTest {
     val throwable = RuntimeException()
 
     flow<Int> { throw throwable }
@@ -38,7 +39,7 @@ class MapIndexedTest {
   }
 
   @Test
-  fun cancellation() = suspendTest {
+  fun cancellation() = runTest {
     flow {
       repeat(5) {
         if (it == 2) throw CancellationException("")

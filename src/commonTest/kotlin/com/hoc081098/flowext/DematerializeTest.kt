@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
+import kotlinx.coroutines.test.runTest
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class DematerializeTest {
   @Test
-  fun testDematerialize_shouldDematerializeAHappyFlow() = suspendTest {
+  fun testDematerialize_shouldDematerializeAHappyFlow() = runTest {
     flowOf(1, 2, 3)
       .materialize()
       .dematerialize()
@@ -67,7 +68,7 @@ class DematerializeTest {
   }
 
   @Test
-  fun testDematerialize_shouldDematerializeASadFlow() = suspendTest {
+  fun testDematerialize_shouldDematerializeASadFlow() = runTest {
     val ex = RuntimeException()
 
     flowOf(1, 2, 3)
@@ -115,7 +116,7 @@ class DematerializeTest {
   }
 
   @Test
-  fun testDematerialize_testCancellation() = suspendTest {
+  fun testDematerialize_testCancellation() = runTest {
     flowOf(1, 2, 3)
       .materialize()
       .dematerialize()

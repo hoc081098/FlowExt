@@ -13,12 +13,13 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.test.runTest
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class TakeUntilTest {
   @Test
-  fun takeUntilSingle() = suspendTest {
+  fun takeUntilSingle() = runTest {
     range(0, 10)
       .takeUntil(flowOf(1))
       .test(listOf(Event.Complete))
@@ -29,7 +30,7 @@ class TakeUntilTest {
   }
 
   @Test
-  fun sourceCompletesAfterNotifier() = suspendTest {
+  fun sourceCompletesAfterNotifier() = runTest {
     range(0, 10)
       .onEach { delay(100) }
       .onCompletion { println(it) }
@@ -46,7 +47,7 @@ class TakeUntilTest {
   }
 
   @Test
-  fun sourceCompletesBeforeNotifier() = suspendTest {
+  fun sourceCompletesBeforeNotifier() = runTest {
     range(0, 10)
       .onEach { delay(30) }
       .takeUntil(timer(Unit, 10.seconds))
@@ -57,7 +58,7 @@ class TakeUntilTest {
   }
 
   @Test
-  fun upstreamError() = suspendTest {
+  fun upstreamError() = runTest {
     flow<Nothing> { throw RuntimeException() }
       .takeUntil(timer(Unit, 100))
       .test(null) {
@@ -77,7 +78,7 @@ class TakeUntilTest {
   }
 
   @Test
-  fun take() = suspendTest {
+  fun take() = runTest {
     flowOf(1, 2, 3)
       .takeUntil(timer(Unit, 100))
       .take(1)

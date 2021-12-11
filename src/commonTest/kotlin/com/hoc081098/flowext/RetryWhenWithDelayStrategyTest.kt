@@ -11,13 +11,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.test.runTest
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class RetryWhenWithDelayStrategyTest {
 
   @Test
-  fun test() = suspendTest {
+  fun test() = runTest {
     var count = 0
     val retries = 3
     val flow = flow {
