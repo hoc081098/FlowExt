@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -84,6 +85,7 @@ class FlatMapFirstTest {
   }
 
   @Test
+  @Ignore
   fun testFailureTransform() = runTest {
     flowOf(1, 2, 3).flatMapFirst { v ->
       if (v == 2) {
