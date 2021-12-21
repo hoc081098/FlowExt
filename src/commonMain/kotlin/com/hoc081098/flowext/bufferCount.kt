@@ -1,6 +1,5 @@
 package com.hoc081098.flowext
 
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -13,7 +12,6 @@ import kotlinx.coroutines.flow.flow
  * For example if [startBufferEvery] is 2, then a new buffer will be started on every other value from the source.
  * A new buffer is started at the beginning of the source by default.
  */
-@InternalCoroutinesApi // TODO: Remove InternalCoroutinesApi (https://github.com/Kotlin/kotlinx.coroutines/issues/3078)
 public fun <T> Flow<T>.bufferCount(
   bufferSize: Int,
   startBufferEvery: Int? = null,
@@ -27,7 +25,6 @@ public fun <T> Flow<T>.bufferCount(
   }
 }
 
-@InternalCoroutinesApi // TODO: Remove InternalCoroutinesApi (https://github.com/Kotlin/kotlinx.coroutines/issues/3078)
 private fun <T> Flow<T>.bufferSkip(bufferSize: Int, skip: Int): Flow<List<T>> {
   return flow {
     val buffers = ArrayDeque<MutableList<T>>()
@@ -72,7 +69,6 @@ private fun <T> Flow<T>.bufferSkip(bufferSize: Int, skip: Int): Flow<List<T>> {
   }
 }
 
-@InternalCoroutinesApi // TODO: Remove InternalCoroutinesApi (https://github.com/Kotlin/kotlinx.coroutines/issues/3078)
 private fun <T> Flow<T>.bufferExact(bufferSize: Int): Flow<List<T>> {
   return flow {
     var buffer: MutableList<T> = mutableListOf()
