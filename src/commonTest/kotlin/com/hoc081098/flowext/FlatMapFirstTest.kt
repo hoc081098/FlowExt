@@ -101,6 +101,7 @@ class FlatMapFirstTest {
   }
 
   @Test
+  @Ignore
   fun testFailureFlow() = runTest {
     flowOf(1, 2, 3).flatMapFirst { v ->
       if (v == 2) {
