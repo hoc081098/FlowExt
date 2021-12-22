@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -65,6 +66,7 @@ class WithLatestFromTest {
   }
 
   @Test
+  @Ignore
   fun testWithLatestFrom_failureUpStream() = runTest {
     assertFailsWith<RuntimeException> {
       flow<Int> { throw RuntimeException() }

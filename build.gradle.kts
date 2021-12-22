@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.6.0"
+  kotlin("multiplatform") version "1.6.10"
   id("com.diffplug.spotless") version "6.0.4"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.18.0"
@@ -23,7 +23,7 @@ repositories {
   gradlePluginPortal()
 }
 
-val kotlinCoroutinesVersion = "1.6.0-RC3"
+val kotlinCoroutinesVersion = "1.6.0"
 val ktlintVersion = "0.43.2"
 
 kotlin {
