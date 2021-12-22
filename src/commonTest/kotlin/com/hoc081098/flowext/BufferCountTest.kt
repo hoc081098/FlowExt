@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertIs
@@ -15,7 +18,7 @@ import kotlin.test.assertIs
 @InternalCoroutinesApi
 class BufferCountTest {
   @Test
-  fun testBufferCount_shouldEmitBuffersAtBufferSize() = suspendTest {
+  fun testBufferCount_shouldEmitBuffersAtBufferSize() = runTest {
     range(0, 10)
       .bufferCount(3)
       .test(
@@ -30,7 +33,7 @@ class BufferCountTest {
   }
 
   @Test
-  fun testBufferCount_shouldEmitBuffersAtBufferSizeWithStartBufferEvery() = suspendTest {
+  fun testBufferCount_shouldEmitBuffersAtBufferSizeWithStartBufferEvery() = runTest {
     range(0, 8)
       .bufferCount(3, 1)
       .test(
@@ -60,7 +63,7 @@ class BufferCountTest {
   }
 
   @Test
-  fun testBufferCount_shouldThrowExceptionWithFailureUpStream() = suspendTest {
+  fun testBufferCount_shouldThrowExceptionWithFailureUpStream() = runTest {
     flow<Int> { throw RuntimeException("Broken!") }
       .bufferCount(2)
       .test(null) {
@@ -75,7 +78,7 @@ class BufferCountTest {
   }
 
   @Test
-  fun testBufferCount_testCancellation() = suspendTest {
+  fun testBufferCount_testCancellation() = runTest {
     range(0, 10)
       .bufferCount(4)
       .take(2)
@@ -89,7 +92,7 @@ class BufferCountTest {
   }
 
   @Test
-  fun testBufferCount_testCancellationWithStartBufferEvery() = suspendTest {
+  fun testBufferCount_testCancellationWithStartBufferEvery() = runTest {
     range(0, 10)
       .bufferCount(4, 2)
       .take(2)
@@ -103,22 +106,27 @@ class BufferCountTest {
   }
 
   @Test
-  fun testBufferCount_shouldBufferProperly() = suspendTest {
+  fun testBufferCount_shouldBufferProperly() = runTest {
     val flow = MutableSharedFlow<Int>(extraBufferCapacity = 64)
 
     val results = mutableListOf<List<Int>>()
-    val job = flow.bufferCount(3, 1).onEach {
+    val job1 = flow.bufferCount(3, 1).onEach {
       results += it
       if (it == listOf(1, 2, 3)) {
         flow.tryEmit(4)
       }
     }.launchIn(this)
 
-    flow.tryEmit(1)
-    flow.tryEmit(2)
-    flow.tryEmit(3)
+    val job2 = launch {
+      flow.tryEmit(1)
+      flow.tryEmit(2)
+      flow.tryEmit(3)
+    }
 
-    job.cancel()
+    advanceUntilIdle()
+    job1.cancel()
+    job2.cancel()
+
     assertContentEquals(
       results,
       listOf(

@@ -5,6 +5,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.fold
+import kotlinx.coroutines.test.runTest
 import kotlin.math.pow
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,7 +18,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class RetryWhenWithDelayStrategyTest {
 
   @Test
-  fun test() = suspendTest {
+  fun test() = runTest {
     var count = 0
     val retries = 3
     val flow = flow {

@@ -4,6 +4,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -12,7 +13,7 @@ import kotlin.test.assertIs
 @InternalCoroutinesApi
 class ConcatTest {
   @Test
-  fun testConcat_shouldEmitValuesFromMultipleFlows() = suspendTest {
+  fun testConcat_shouldEmitValuesFromMultipleFlows() = runTest {
     concat(
       flow1 = flowOf(1, 2, 3),
       flow2 = flowOf(4, 5, 6),
@@ -72,7 +73,7 @@ class ConcatTest {
   }
 
   @Test
-  fun testConcat_shouldConcatTheSameColdFlowMultipleTimes() = suspendTest {
+  fun testConcat_shouldConcatTheSameColdFlowMultipleTimes() = runTest {
     val flow = flowOf(1, 2, 3)
     val events = (1..3).map { Event.Value(it) }
 
@@ -135,7 +136,7 @@ class ConcatTest {
   }
 
   @Test
-  fun testConcat_firstFailureUpstream() = suspendTest {
+  fun testConcat_firstFailureUpstream() = runTest {
     val flow = flowOf(1, 2, 3)
     val failureFlow = flow<Nothing> { throw RuntimeException("Crash!") }
     val expectation: suspend (List<Event<Int>>) -> Unit = { events ->

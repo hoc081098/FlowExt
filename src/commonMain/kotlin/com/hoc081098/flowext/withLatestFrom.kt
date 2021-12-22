@@ -1,7 +1,6 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.coroutineScope
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
  * @param other Second [Flow]
  * @param transform A transform function to apply to each value from self combined with the latest value from the second [Flow], if any.
  */
-@InternalCoroutinesApi // TODO: Remove InternalCoroutinesApi (https://github.com/Kotlin/kotlinx.coroutines/issues/3078)
 public fun <A, B, R> Flow<A>.withLatestFrom(
   other: Flow<B>,
   transform: suspend (A, B) -> R
@@ -47,7 +45,6 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
   }
 }
 
-@InternalCoroutinesApi // TODO: Remove InternalCoroutinesApi (https://github.com/Kotlin/kotlinx.coroutines/issues/3078)
 @Suppress("NOTHING_TO_INLINE")
 public inline fun <A, B> Flow<A>.withLatestFrom(other: Flow<B>): Flow<Pair<A, B>> =
   withLatestFrom(other) { a, b -> a to b }

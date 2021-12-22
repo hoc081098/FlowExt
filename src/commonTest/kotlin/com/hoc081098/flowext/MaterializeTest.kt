@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -16,7 +17,7 @@ import kotlin.test.assertEquals
 @InternalCoroutinesApi
 class MaterializeTest {
   @Test
-  fun testMaterialize_shouldMaterializeAHappyFlow() = suspendTest {
+  fun testMaterialize_shouldMaterializeAHappyFlow() = runTest {
     val events = flowOf(1, 2, 3).materialize().toList()
     assertContentEquals(
       listOf(
@@ -32,7 +33,7 @@ class MaterializeTest {
   }
 
   @Test
-  fun testMaterialize_shouldMaterializeASadFlow() = suspendTest {
+  fun testMaterialize_shouldMaterializeASadFlow() = runTest {
     val ex = RuntimeException()
 
     val events1 = flowOf(1, 2, 3)
@@ -77,7 +78,7 @@ class MaterializeTest {
   }
 
   @Test
-  fun testMaterialize_testCancellation() = suspendTest {
+  fun testMaterialize_testCancellation() = runTest {
     val events1 = flowOf(1, 2, 3).take(1).materialize().toList()
     assertContentEquals(
       listOf(

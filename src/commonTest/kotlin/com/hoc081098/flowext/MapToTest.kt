@@ -5,6 +5,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -12,13 +13,13 @@ import kotlin.test.assertEquals
 @InternalCoroutinesApi
 class MapToTest {
   @Test
-  fun basic() = suspendTest {
+  fun basic() = runTest {
     val values = flowOf(1, 2, 3).mapTo(4).toList()
     assertEquals(values, listOf(4, 4, 4))
   }
 
   @Test
-  fun upstreamError() = suspendTest {
+  fun upstreamError() = runTest {
     val throwable = RuntimeException()
 
     flow<Nothing> { throw throwable }
