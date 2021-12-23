@@ -17,14 +17,14 @@ plugins {
 group = "io.github.hoc081098"
 version = "0.2.0-SNAPSHOT"
 
+val coroutinesVersion = "1.6.0"
+val ktlintVersion = "0.43.2"
+
 repositories {
   mavenCentral()
   google()
   gradlePluginPortal()
 }
-
-val kotlinCoroutinesVersion = "1.6.0"
-val ktlintVersion = "0.43.2"
 
 kotlin {
   explicitApi()
@@ -77,14 +77,14 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
       }
     }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinCoroutinesVersion")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
       }
     }
     val jvmMain by getting {
