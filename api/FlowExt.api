@@ -1,6 +1,6 @@
 public final class com/hoc081098/flowext/BufferCountKt {
-	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;ILjava/lang/Integer;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun bufferCount$default (Lkotlinx/coroutines/flow/Flow;ILjava/lang/Integer;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/Flow;
+	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;II)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/ConcatKt {

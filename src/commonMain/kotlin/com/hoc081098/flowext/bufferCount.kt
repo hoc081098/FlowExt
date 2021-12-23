@@ -5,6 +5,12 @@ import kotlinx.coroutines.flow.flow
 
 /**
  * Buffers the source [Flow] values until the size hits the maximum [bufferSize] given.
+ * @param bufferSize The maximum size of the buffer emitted.
+ */
+public fun <T> Flow<T>.bufferCount(bufferSize: Int): Flow<List<T>> = bufferExact(bufferSize)
+
+/**
+ * Buffers the source [Flow] values until the size hits the maximum [bufferSize] given.
  *
  * @param bufferSize The maximum size of the buffer emitted.
  * @param startBufferEvery Optional. Default is null.
@@ -12,13 +18,10 @@ import kotlinx.coroutines.flow.flow
  * For example if [startBufferEvery] is 2, then a new buffer will be started on every other value from the source.
  * A new buffer is started at the beginning of the source by default.
  */
-public fun <T> Flow<T>.bufferCount(
-  bufferSize: Int,
-  startBufferEvery: Int? = null,
-): Flow<List<T>> {
-  // If no `startBufferEvery` value was supplied, then we're
+public fun <T> Flow<T>.bufferCount(bufferSize: Int, startBufferEvery: Int): Flow<List<T>> {
+  // If `startBufferEvery` is equals to `bufferSize`, then we're
   // opening and closing on the bufferSize itself.
-  return if (startBufferEvery == null || bufferSize == startBufferEvery) {
+  return if (startBufferEvery == bufferSize) {
     bufferExact(bufferSize)
   } else {
     bufferSkip(bufferSize, startBufferEvery)
