@@ -1,7 +1,8 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.hoc081098.flowext////PointingToDeclaration/-flow-ext/com.hoc081098.flowext/index.html
-$dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Int?/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
+$dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Int/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
+$dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
 $dokka.location:com.hoc081098.flowext//concat/#kotlin.collections.Iterable[kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/concat.html
 $dokka.location:com.hoc081098.flowext//concat/#kotlin.sequences.Sequence[kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/concat.html
 $dokka.location:com.hoc081098.flowext//concat/#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Array[kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/concat.html
