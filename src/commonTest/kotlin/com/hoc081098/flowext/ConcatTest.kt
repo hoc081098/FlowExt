@@ -4,14 +4,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class ConcatTest {
+class ConcatTest : BaseTest() {
   @Test
   fun testConcat_shouldEmitValuesFromMultipleFlows() = runTest {
     concat(

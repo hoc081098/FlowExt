@@ -2,12 +2,11 @@ package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class RangeTest {
+class RangeTest : BaseTest() {
   @Test
   fun empty() = runTest {
     range(0, 0).test(listOf(Event.Complete))

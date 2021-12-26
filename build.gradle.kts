@@ -44,16 +44,12 @@ kotlin {
     }
     browser {
       testTask {
-        useMocha {
-          timeout = "5s"
-        }
+        useMocha()
       }
     }
     nodejs {
       testTask {
-        useMocha {
-          timeout = "5s"
-        }
+        useMocha()
       }
     }
   }

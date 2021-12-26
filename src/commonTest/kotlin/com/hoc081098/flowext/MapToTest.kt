@@ -5,13 +5,12 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class MapToTest {
+class MapToTest : BaseTest() {
   @Test
   fun basic() = runTest {
     val values = flowOf(1, 2, 3).mapTo(4).toList()

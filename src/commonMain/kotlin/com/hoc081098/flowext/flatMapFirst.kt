@@ -1,6 +1,7 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.AtomicBoolean
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.buffer
@@ -38,7 +39,8 @@ public fun <T> Flow<Flow<T>>.flattenFirst(): Flow<T> = channelFlow {
       launch(start = CoroutineStart.UNDISPATCHED) {
         try {
           inner.collect { send(it) }
-        } finally {
+          busy.value = false
+        } catch (e: CancellationException) {
           busy.value = false
         }
       }
