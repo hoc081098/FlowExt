@@ -10,15 +10,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runTest
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
-class WithLatestFromTest {
+class WithLatestFromTest : BaseTest() {
   @Test
   fun basic() = runTest {
     val f1 = flowOf(1, 2, 3, 4)
@@ -66,7 +64,6 @@ class WithLatestFromTest {
   }
 
   @Test
-  @Ignore
   fun testWithLatestFrom_failureUpStream() = runTest {
     assertFailsWith<RuntimeException> {
       flow<Int> { throw RuntimeException() }

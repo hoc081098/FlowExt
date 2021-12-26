@@ -7,13 +7,12 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class DematerializeTest {
+class DematerializeTest : BaseTest() {
   @Test
   fun testDematerialize_shouldDematerializeAHappyFlow() = runTest {
     flowOf(1, 2, 3)

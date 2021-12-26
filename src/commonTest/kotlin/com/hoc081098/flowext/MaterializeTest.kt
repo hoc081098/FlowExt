@@ -8,14 +8,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class MaterializeTest {
+class MaterializeTest : BaseTest() {
   @Test
   fun testMaterialize_shouldMaterializeAHappyFlow() = runTest {
     val events = flowOf(1, 2, 3).materialize().toList()

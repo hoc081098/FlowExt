@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,7 +16,7 @@ import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class FlatMapFirstTest {
+class FlatMapFirstTest : BaseTest() {
   @Test
   fun basic1() = runTest {
     flowOf("one", "two")

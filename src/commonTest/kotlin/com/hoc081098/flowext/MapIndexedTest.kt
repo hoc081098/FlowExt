@@ -6,14 +6,13 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
-class MapIndexedTest {
+class MapIndexedTest : BaseTest() {
   @Test
   fun basic() = runTest {
     flowOf(1, 2, 3, 4)

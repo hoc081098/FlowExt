@@ -3,12 +3,11 @@ package com.hoc081098.flowext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class IntervalTest {
+class IntervalTest : BaseTest() {
   @Test
   fun run() = runTest {
     interval(100, 200)

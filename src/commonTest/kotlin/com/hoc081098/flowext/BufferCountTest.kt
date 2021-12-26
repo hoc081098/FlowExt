@@ -9,14 +9,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class BufferCountTest {
+class BufferCountTest : BaseTest() {
   @Test
   fun testBufferCount_shouldEmitBuffersAtBufferSize() = runTest {
     range(0, 10)
