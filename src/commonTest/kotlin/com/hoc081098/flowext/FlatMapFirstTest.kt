@@ -91,7 +91,9 @@ class FlatMapFirstTest : BaseTest() {
         flowOf(v)
       }
     }.test(null) {
-      assertIs<RuntimeException>(it.single().errorOrThrow())
+      assertEquals(2, it.size)
+      assertEquals(1, it[0].valueOrThrow())
+      assertIs<RuntimeException>(it[1].errorOrThrow())
     }
   }
 
