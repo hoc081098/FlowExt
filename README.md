@@ -57,28 +57,28 @@ allprojects {
 ### Multiplatform
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt:0.1.0")
+implementation("io.github.hoc081098:FlowExt:0.2.0")
 ```
 
 ### JVM / Android only
 ```groovy
-implementation("io.github.hoc081098:FlowExt-jvm:0.1.0")
+implementation("io.github.hoc081098:FlowExt-jvm:0.2.0")
 ```
 
 ### Native binaries
 ```groovy
-implementation("io.github.hoc081098:FlowExt-iosx64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-iosarm64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-iosarm32:0.1.0")
-implementation("io.github.hoc081098:FlowExt-watchosx86:0.1.0")
-implementation("io.github.hoc081098:FlowExt-watchosx64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-watchosarm64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-watchosarm32:0.1.0")
-implementation("io.github.hoc081098:FlowExt-tvosx64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-tvosxarm64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-macosx64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-mingwx64:0.1.0")
-implementation("io.github.hoc081098:FlowExt-linuxx64:0.1.0")
+implementation("io.github.hoc081098:FlowExt-iosx64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-iosarm64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-iosarm32:0.2.0")
+implementation("io.github.hoc081098:FlowExt-watchosx86:0.2.0")
+implementation("io.github.hoc081098:FlowExt-watchosx64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-watchosarm64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-watchosarm32:0.2.0")
+implementation("io.github.hoc081098:FlowExt-tvosx64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-tvosxarm64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-macosx64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-mingwx64:0.2.0")
+implementation("io.github.hoc081098:FlowExt-linuxx64:0.2.0")
 ```
 
 ### Snapshot
@@ -95,7 +95,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.2.0-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.3.0-SNAPSHOT")
 }
 ```
 
@@ -109,7 +109,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.2.0-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.3.0-SNAPSHOT")
 }
 ```
 
