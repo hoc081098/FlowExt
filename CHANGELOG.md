@@ -13,7 +13,11 @@
 
 -   Add `Flow.mapIndexed`.
 
--   Add `Flow.retryWhenWithDelayStrategy`, `Flow.retryWhenWithExponentialBackoff`, `Flow.retryWithExponentialBackoff`.
+-   Add
+    -   `DelayStrategy`.
+    -   `Flow.retryWhenWithDelayStrategy`.
+    -   `Flow.retryWhenWithExponentialBackoff`.
+    -   `Flow.retryWithExponentialBackoff`.
 
 ## 0.1.0 - Nov 13, 2021
 
