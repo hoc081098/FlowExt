@@ -115,7 +115,11 @@ public fun <T> Flow<T>.retryWhenWithDelayStrategy(
 }
 
 /**
+ * Retries collection of the given flow with exponential backoff delay strategy
+ * when an exception occurs in the upstream flow and the [predicate] returns true. When [predicate] returns true,
+ * the next retries will be delayed after a duration computed by [DelayStrategy.ExponentialBackoffDelayStrategy].
  *
+ * See [retryWhenWithDelayStrategy] and [DelayStrategy.ExponentialBackoffDelayStrategy] for more details.
  */
 public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
   initialDelay: Duration,
@@ -132,7 +136,11 @@ public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
 )
 
 /**
+ * Retries collection of the given flow with exponential backoff delay strategy
+ * when an exception occurs in the upstream flow and the [predicate] returns true. When [predicate] returns true,
+ * the next retries will be delayed after a duration computed by [DelayStrategy.ExponentialBackoffDelayStrategy].
  *
+ * See [retryWhenWithDelayStrategy] and [DelayStrategy.ExponentialBackoffDelayStrategy] for more details.
  */
 public fun <T> Flow<T>.retryWithExponentialBackoff(
   initialDelay: Duration,
