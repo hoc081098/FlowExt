@@ -50,7 +50,7 @@ class RetryWhenWithDelayStrategyTest : BaseTest() {
     }
 
     val sum =
-      flow.retryWhenWithDelayStrategy(DelayStrategy.Constant(100.milliseconds)) { cause, attempt ->
+      flow.retryWhenWithDelayStrategy(DelayStrategy.FixedTimeDelayStrategy(100.milliseconds)) { cause, attempt ->
         assertEquals(
           attempt.toString(),
           assertIs<RuntimeException>(cause).message,
@@ -75,7 +75,7 @@ class DelayStrategyTest {
     repeat(10) {
       assertEquals(
         Duration.ZERO,
-        DelayStrategy.Immediate.duration(cause, attempt)
+        DelayStrategy.NoDelayStrategy.nextDelay(cause, attempt)
       )
     }
   }
@@ -87,7 +87,7 @@ class DelayStrategyTest {
     repeat(10) {
       assertEquals(
         duration,
-        DelayStrategy.Constant(duration).duration(cause, attempt)
+        DelayStrategy.FixedTimeDelayStrategy(duration).nextDelay(cause, attempt)
       )
     }
   }
@@ -95,7 +95,7 @@ class DelayStrategyTest {
   @Test
   fun testExponential() {
     fun every(initialDelay: Duration, factor: Double, maxDelay: Duration) {
-      val strategy = DelayStrategy.Exponential(
+      val strategy = DelayStrategy.ExponentialBackoffDelayStrategy(
         initialDelay = initialDelay,
         factor = factor,
         maxDelay = maxDelay,
@@ -105,31 +105,31 @@ class DelayStrategyTest {
 
       assertEquals(
         initialDelay.coerce(),
-        strategy.duration(cause, 0),
+        strategy.nextDelay(cause, 0),
       )
       assertEquals(
         (initialDelay * factor).coerce(),
-        strategy.duration(cause, 1),
+        strategy.nextDelay(cause, 1),
       )
       assertEquals(
         (initialDelay * factor * factor).coerce(),
-        strategy.duration(cause, 2),
+        strategy.nextDelay(cause, 2),
       )
       assertEquals(
         (initialDelay * factor * factor * factor).coerce(),
-        strategy.duration(cause, 3),
+        strategy.nextDelay(cause, 3),
       )
       assertEquals(
         (initialDelay * factor * factor * factor * factor).coerce(),
-        strategy.duration(cause, 4),
+        strategy.nextDelay(cause, 4),
       )
       assertEquals(
         (initialDelay * factor * factor * factor * factor * factor).coerce(),
-        strategy.duration(cause, 5),
+        strategy.nextDelay(cause, 5),
       )
       assertEquals(
         (initialDelay * factor.pow(100)).coerce(),
-        strategy.duration(cause, 100),
+        strategy.nextDelay(cause, 100),
       )
     }
 
