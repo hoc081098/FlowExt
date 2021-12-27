@@ -7,7 +7,7 @@
 -   Do not propagate cancellation to the upstream in Flow `flatMapFirst` operators
     (Related to https://github.com/Kotlin/kotlinx.coroutines/pull/2964).
 
--   Remove unnecessary `@ExperimentalCoroutinesApi`.
+-   Remove unnecessary `@ExperimentalCoroutinesApi`s, `@ExperimentalTime`s.
 
 -   Rename `NULL_Value` to `NULL_VALUE`.
 

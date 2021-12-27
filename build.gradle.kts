@@ -166,6 +166,8 @@ spotless {
     trimTrailingWhitespace()
     indentWithSpaces()
     endWithNewline()
+
+    licenseHeaderFile(rootProject.file("spotless/license.txt"))
   }
 
   kotlinGradle {
