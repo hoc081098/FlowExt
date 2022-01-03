@@ -5,7 +5,7 @@ on:
     types: [ published ]
 
 env:
-  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.daemon=false -Dkotlin.incremental=false -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
 
 jobs:
   publish:
@@ -16,7 +16,6 @@ jobs:
       max-parallel: 1
 
     runs-on: ${{ matrix.os }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -53,8 +52,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Upload release
-        run: ./gradlew build publish --no-daemon --no-parallel
+      - name: Publish release
+        run: ./gradlew build publish --no-parallel --stacktrace
         if: matrix.os == 'macos-11'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
@@ -62,8 +61,8 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_PRIVATE_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
-      - name: Upload release (Windows)
-        run: ./gradlew build publishMingwX64PublicationToMavenCentralRepository --no-daemon --no-parallel
+      - name: Publish release (Windows)
+        run: ./gradlew build publishMingwX64PublicationToMavenCentralRepository --no-parallel --stacktrace
         if: matrix.os == 'windows-latest'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
@@ -72,9 +71,8 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
       - name: Publish release
-        run: ./gradlew closeAndReleaseRepository --no-daemon --no-parallel
+        run: ./gradlew closeAndReleaseRepository --no-parallel
         env:
-
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
