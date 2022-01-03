@@ -1,7 +1,8 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.hoc081098.flowext////PointingToDeclaration/-flow-ext/com.hoc081098.flowext/index.html
-$dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Int?/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
+$dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Int/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
+$dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
 $dokka.location:com.hoc081098.flowext//concat/#kotlin.collections.Iterable[kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/concat.html
 $dokka.location:com.hoc081098.flowext//concat/#kotlin.sequences.Sequence[kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/concat.html
 $dokka.location:com.hoc081098.flowext//concat/#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Array[kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/concat.html
@@ -26,10 +27,14 @@ $dokka.location:com.hoc081098.flowext//flattenFirst/kotlinx.coroutines.flow.Flow
 $dokka.location:com.hoc081098.flowext//interval/#kotlin.Long#kotlin.Long/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/interval.html
 $dokka.location:com.hoc081098.flowext//interval/#kotlin.time.Duration#kotlin.time.Duration/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/interval.html
 $dokka.location:com.hoc081098.flowext//map/com.hoc081098.flowext.Event[TypeParam(bounds=[kotlin.Any?])]#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/map.html
+$dokka.location:com.hoc081098.flowext//mapIndexed/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.coroutines.SuspendFunction2[kotlin.Int,TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/map-indexed.html
 $dokka.location:com.hoc081098.flowext//mapTo/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/map-to.html
 $dokka.location:com.hoc081098.flowext//materialize/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/materialize.html
 $dokka.location:com.hoc081098.flowext//neverFlow/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/never-flow.html
 $dokka.location:com.hoc081098.flowext//range/#kotlin.Int#kotlin.Int/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/range.html
+$dokka.location:com.hoc081098.flowext//retryWhenWithDelayStrategy/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#com.hoc081098.flowext.DelayStrategy#kotlin.coroutines.SuspendFunction3[kotlinx.coroutines.flow.FlowCollector[TypeParam(bounds=[kotlin.Any?])],kotlin.Throwable,kotlin.Long,kotlin.Boolean]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/retry-when-with-delay-strategy.html
+$dokka.location:com.hoc081098.flowext//retryWhenWithExponentialBackoff/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.time.Duration#kotlin.Double#kotlin.time.Duration#kotlin.coroutines.SuspendFunction3[kotlinx.coroutines.flow.FlowCollector[TypeParam(bounds=[kotlin.Any?])],kotlin.Throwable,kotlin.Long,kotlin.Boolean]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/retry-when-with-exponential-backoff.html
+$dokka.location:com.hoc081098.flowext//retryWithExponentialBackoff/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.time.Duration#kotlin.Double#kotlin.Long#kotlin.time.Duration#kotlin.coroutines.SuspendFunction1[kotlin.Throwable,kotlin.Boolean]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/retry-with-exponential-backoff.html
 $dokka.location:com.hoc081098.flowext//startWith/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/start-with.html
 $dokka.location:com.hoc081098.flowext//startWith/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/start-with.html
 $dokka.location:com.hoc081098.flowext//startWith/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])#TypeParam(bounds=[kotlin.Any?])/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/start-with.html
@@ -46,6 +51,16 @@ $dokka.location:com.hoc081098.flowext//valueOrNull/com.hoc081098.flowext.Event[T
 $dokka.location:com.hoc081098.flowext//valueOrThrow/com.hoc081098.flowext.Event[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/value-or-throw.html
 $dokka.location:com.hoc081098.flowext//withLatestFrom/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.coroutines.SuspendFunction2[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/with-latest-from.html
 $dokka.location:com.hoc081098.flowext//withLatestFrom/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/with-latest-from.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-exponential-backoff-delay-strategy/index.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy/ExponentialBackoffDelayStrategy/#kotlin.time.Duration#kotlin.Double#kotlin.time.Duration/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-exponential-backoff-delay-strategy/-exponential-backoff-delay-strategy.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy/nextDelay/#kotlin.Throwable#kotlin.Long/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-exponential-backoff-delay-strategy/next-delay.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-fixed-time-delay-strategy/index.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy/FixedTimeDelayStrategy/#kotlin.time.Duration/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-fixed-time-delay-strategy/-fixed-time-delay-strategy.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy/nextDelay/#kotlin.Throwable#kotlin.Long/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-fixed-time-delay-strategy/next-delay.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.NoDelayStrategy///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-no-delay-strategy/index.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy.NoDelayStrategy/nextDelay/#kotlin.Throwable#kotlin.Long/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/-no-delay-strategy/next-delay.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/index.html
+$dokka.location:com.hoc081098.flowext/DelayStrategy/nextDelay/#kotlin.Throwable#kotlin.Long/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-delay-strategy/next-delay.html
 $dokka.location:com.hoc081098.flowext/Event.Complete///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-complete/index.html
 $dokka.location:com.hoc081098.flowext/Event.Complete/toString/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-complete/to-string.html
 $dokka.location:com.hoc081098.flowext/Event.Error///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-error/index.html
@@ -57,7 +72,7 @@ $dokka.location:com.hoc081098.flowext/Event.Value/Value/#TypeParam(bounds=[kotli
 $dokka.location:com.hoc081098.flowext/Event.Value/toString/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-value/to-string.html
 $dokka.location:com.hoc081098.flowext/Event.Value/value/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-value/value.html
 $dokka.location:com.hoc081098.flowext/Event///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/index.html
-$dokka.location:com.hoc081098.flowext/NULL_Value///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-n-u-l-l_-value/index.html
-$dokka.location:com.hoc081098.flowext/NULL_Value/unbox/#kotlin.Any?/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-n-u-l-l_-value/unbox.html
+$dokka.location:com.hoc081098.flowext/NULL_VALUE///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-n-u-l-l_-v-a-l-u-e/index.html
+$dokka.location:com.hoc081098.flowext/NULL_VALUE/unbox/#kotlin.Any?/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-n-u-l-l_-v-a-l-u-e/unbox.html
 com.hoc081098.flowext
 
