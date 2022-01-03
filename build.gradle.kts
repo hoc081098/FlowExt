@@ -14,9 +14,6 @@ plugins {
   id("org.jetbrains.dokka") version "1.6.0"
 }
 
-group = "io.github.hoc081098"
-version = "0.3.0-SNAPSHOT"
-
 val coroutinesVersion = "1.6.0"
 val ktlintVersion = "0.43.2"
 
