@@ -156,7 +156,8 @@ spotless {
         "indent_size" to "2",
         "ij_kotlin_imports_layout" to "*",
         "end_of_line" to "lf",
-        "charset" to "utf-8"
+        "charset" to "utf-8",
+        "disabled_rules" to "filename"
       )
     )
 

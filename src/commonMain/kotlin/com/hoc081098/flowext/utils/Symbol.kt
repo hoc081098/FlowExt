@@ -22,15 +22,16 @@
  * SOFTWARE.
  */
 
-package com.hoc081098.flowext
+package com.hoc081098.flowext.utils
+
+import kotlin.jvm.JvmField
 
 /**
- * This is a work-around for having nested nulls in generic code.
- * This allows for writing faster generic code instead of using `Option`.
- * This is only used as an optimisation technique in low-level code.
+ * A symbol class that is used to define unique constants that are self-explanatory in debugger.
  */
-@Suppress("ClassName")
-public object NULL_VALUE {
+public class Symbol(@JvmField public val symbol: String) {
+  override fun toString(): String = "<$symbol>"
+
   @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
-  public inline fun <T> unbox(v: Any?): T = if (this === v) null as T else v as T
+  public inline fun <T> unbox(value: Any?): T = if (value === this) null as T else value as T
 }
