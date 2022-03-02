@@ -67,6 +67,8 @@ public fun interface DelayStrategy {
    *
    * Example: The [initialDelay] is 2000 ms, the [factor] is 1.5, and the [maxDelay] is 30000 ms.
    * For 10 attempts the sequence will be as follows:
+   *
+   * ```
    * -----------------------
    * | attempt# | back off |
    * |    1     |   2000   |
@@ -80,6 +82,7 @@ public fun interface DelayStrategy {
    * |    9     |  30000   |
    * |    10    |  30000   |
    * -----------------------
+   * ```
    */
   public class ExponentialBackoffDelayStrategy(
     private val initialDelay: Duration,
