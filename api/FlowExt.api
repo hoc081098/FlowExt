@@ -131,13 +131,21 @@ public final class com/hoc081098/flowext/TakeUntilKt {
 	public static final fun takeUntil (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/ThrottleConfiguration : java/lang/Enum {
+	public static final field LEADING Lcom/hoc081098/flowext/ThrottleConfiguration;
+	public static final field LEADING_AND_TRAILING Lcom/hoc081098/flowext/ThrottleConfiguration;
+	public static final field TRAILING Lcom/hoc081098/flowext/ThrottleConfiguration;
+	public static fun valueOf (Ljava/lang/String;)Lcom/hoc081098/flowext/ThrottleConfiguration;
+	public static fun values ()[Lcom/hoc081098/flowext/ThrottleConfiguration;
+}
+
 public final class com/hoc081098/flowext/ThrottleKt {
-	public static final fun throttle (Lkotlinx/coroutines/flow/Flow;ZZLkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun throttle$default (Lkotlinx/coroutines/flow/Flow;ZZLkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
-	public static final fun throttleTime (Lkotlinx/coroutines/flow/Flow;JZZ)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun throttleTime$default (Lkotlinx/coroutines/flow/Flow;JZZILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
-	public static final fun throttleTime-dWUq8MI (Lkotlinx/coroutines/flow/Flow;JZZ)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun throttleTime-dWUq8MI$default (Lkotlinx/coroutines/flow/Flow;JZZILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun throttle (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun throttle$default (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun throttleTime (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun throttleTime$default (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun throttleTime-8Mi8wO0 (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun throttleTime-8Mi8wO0$default (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/TimerKt {

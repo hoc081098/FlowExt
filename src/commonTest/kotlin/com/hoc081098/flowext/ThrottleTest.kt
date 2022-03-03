@@ -90,6 +90,31 @@ class ThrottleFirstTest : BaseTest() {
   }
 
   @Test
+  fun throttleWithCompleted_C() = runTest {
+    (1..10)
+      .asFlow()
+      .onEach { delay(200) }
+      .throttleTime(0)
+      .test((1..10).map { Event.Value(it) } + Event.Complete)
+  }
+
+  @Test
+  fun throttleWithCompleted_D() = runTest {
+    (1..10)
+      .asFlow()
+      .throttleTime(0)
+      .test((1..10).map { Event.Value(it) } + Event.Complete)
+  }
+
+  @Test
+  fun throttleWithCompleted_E() = runTest {
+    (1..10)
+      .asFlow()
+      .throttle { emptyFlow() }
+      .test((1..10).map { Event.Value(it) } + Event.Complete)
+  }
+
+  @Test
   fun throttleNullableWithCompleted() = runTest {
     (1..10)
       .asFlow()

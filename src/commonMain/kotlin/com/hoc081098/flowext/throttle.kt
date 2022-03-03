@@ -29,7 +29,6 @@ import com.hoc081098.flowext.ThrottleConfiguration.LEADING_AND_TRAILING
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.utils.NULL_VALUE
 import com.hoc081098.flowext.utils.Symbol
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -67,13 +66,19 @@ private inline val ThrottleConfiguration.destructured: Pair<Boolean, Boolean>
 public fun <T> Flow<T>.throttleTime(
   duration: Duration,
   throttleConfiguration: ThrottleConfiguration = LEADING,
-): Flow<T> = throttle(throttleConfiguration) { timer(Unit, duration) }
+): Flow<T> {
+  val timerFlow = timer(Unit, duration)
+  return throttle(throttleConfiguration) { timerFlow }
+}
 
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   timeMillis: Long,
   throttleConfiguration: ThrottleConfiguration = LEADING,
-): Flow<T> = throttle(throttleConfiguration) { timer(Unit, timeMillis) }
+): Flow<T> {
+  val timerFlow = timer(Unit, timeMillis)
+  return throttle(throttleConfiguration) { timerFlow }
+}
 
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttle(
@@ -120,6 +125,16 @@ public fun <T> Flow<T>.throttle(
 
       // wait for the next value
       select<Unit> {
+        // When a throttling window ends, send the value if there is a pending value.
+        throttled?.onJoin?.invoke {
+          println("    <<< while: onJoin")
+          throttled = null
+
+          if (trailing) {
+            trySend()
+          }
+        }
+
         values.onReceiveCatching { result ->
           result
             .onSuccess { value ->
@@ -134,7 +149,7 @@ public fun <T> Flow<T>.throttle(
               if (leading) {
                 trySend()
               }
-              throttled = scope.launch(start = CoroutineStart.UNDISPATCHED) {
+              throttled = scope.launch {
                 durationSelector(NULL_VALUE.unbox(value))
                   .take(1)
                   .collect()
@@ -148,16 +163,6 @@ public fun <T> Flow<T>.throttle(
               cleanupThrottling()
               lastValue = DONE_VALUE
             }
-        }
-
-        // When a throttling window ends, send the value if there is a pending value.
-        (throttled ?: return@select).onJoin {
-          println("    <<< while: onJoin")
-          throttled = null
-
-          if (trailing) {
-            trySend()
-          }
         }
       }
 
