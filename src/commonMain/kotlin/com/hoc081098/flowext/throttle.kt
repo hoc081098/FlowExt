@@ -24,11 +24,15 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.ThrottleConfiguration.LEADING
+import com.hoc081098.flowext.ThrottleConfiguration.LEADING_AND_TRAILING
+import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.utils.NULL_VALUE
 import com.hoc081098.flowext.utils.Symbol
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
@@ -49,26 +53,34 @@ import kotlin.time.Duration
 @SharedImmutable
 private val DONE_VALUE = Symbol("DONE_VALUE")
 
+public enum class ThrottleConfiguration {
+  LEADING,
+  TRAILING,
+  LEADING_AND_TRAILING,
+}
+
+@Suppress("NOTHING_TO_INLINE")
+private inline val ThrottleConfiguration.destructured: Pair<Boolean, Boolean>
+  get() = (this === LEADING || this === LEADING_AND_TRAILING) to (this === TRAILING || this === LEADING_AND_TRAILING)
+
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   duration: Duration,
-  leading: Boolean = true,
-  trailing: Boolean = false,
-): Flow<T> = throttle(leading = leading, trailing = trailing) { timer(Unit, duration) }
+  throttleConfiguration: ThrottleConfiguration = LEADING,
+): Flow<T> = throttle(throttleConfiguration) { timer(Unit, duration) }
 
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   timeMillis: Long,
-  leading: Boolean = true,
-  trailing: Boolean = false,
-): Flow<T> = throttle(leading = leading, trailing = trailing) { timer(Unit, timeMillis) }
+  throttleConfiguration: ThrottleConfiguration = LEADING,
+): Flow<T> = throttle(throttleConfiguration) { timer(Unit, timeMillis) }
 
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttle(
-  leading: Boolean = true,
-  trailing: Boolean = false,
+  throttleConfiguration: ThrottleConfiguration = LEADING,
   durationSelector: (value: T) -> Flow<Unit>,
 ): Flow<T> = flow {
+  val (leading, trailing) = throttleConfiguration.destructured
   val downstream = this
 
   coroutineScope {
@@ -86,7 +98,7 @@ public fun <T> Flow<T>.throttle(
       println("    >>> TrySend $lastValue")
       check(lastValue == null || lastValue != DONE_VALUE)
 
-      (lastValue ?: return).let { consumed ->
+      lastValue?.let { consumed ->
         // Ensure we clear out our lastValue
         // before we emit, otherwise reentrant code can cause
         // issues here.
@@ -95,11 +107,11 @@ public fun <T> Flow<T>.throttle(
       }
     }
 
-    fun cleanupThrottling(cancel: Boolean = true) {
-      if (cancel) {
-        throttled?.cancel()
+    suspend fun cleanupThrottling() {
+      throttled?.run {
+        throttled = null
+        cancelAndJoin()
       }
-      throttled = null
     }
 
     // Now consume the values
@@ -132,15 +144,16 @@ public fun <T> Flow<T>.throttle(
               println("    <<< while: onFailure throwable=$it")
 
               it?.let { throw it }
+
               cleanupThrottling()
               lastValue = DONE_VALUE
             }
         }
 
         // When a throttling window ends, send the value if there is a pending value.
-        throttled?.onJoin?.invoke {
+        (throttled ?: return@select).onJoin {
           println("    <<< while: onJoin")
-          cleanupThrottling(false)
+          throttled = null
 
           if (trailing) {
             trySend()
