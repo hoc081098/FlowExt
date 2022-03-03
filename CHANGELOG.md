@@ -5,9 +5,8 @@
 - Add `Symbol` class.
 
 - Add
-  - `Flow.throttle(leading: Boolean = true, trailing: Boolean = false, durationSelector: (value: T) -> Flow<Unit>)`.
-  - `Flow.throttleTime(duration: Duration, leading: Boolean = true, trailing: Boolean = false)`.
-  - `Flow.throttleTime(timeMillis: Long, leading: Boolean = true, trailing: Boolean = false)`.
+  - `Flow.throttle`.
+  - `Flow.throttleTime`.
 
 ## 0.2.0 - Jan 3, 2022
 
