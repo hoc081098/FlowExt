@@ -111,14 +111,14 @@ public fun <T> Flow<T>.throttle(
         // before we emit, otherwise reentrant code can cause
         // issues here.
         lastValue = null // Consume the value
-        downstream.emit(NULL_VALUE.unbox(consumed))
+        return@let downstream.emit(NULL_VALUE.unbox(consumed))
       }
     }
 
     suspend fun cleanupThrottling() {
       throttled?.run {
         throttled = null
-        cancelAndJoin()
+        return@run cancelAndJoin()
       }
     }
 
