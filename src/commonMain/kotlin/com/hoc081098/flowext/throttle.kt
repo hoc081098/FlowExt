@@ -37,10 +37,9 @@ import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlin.native.concurrent.SharedImmutable
 import kotlin.time.Duration
@@ -59,8 +58,11 @@ public enum class ThrottleConfiguration {
 }
 
 @Suppress("NOTHING_TO_INLINE")
-private inline val ThrottleConfiguration.destructured: Pair<Boolean, Boolean>
-  get() = (this === LEADING || this === LEADING_AND_TRAILING) to (this === TRAILING || this === LEADING_AND_TRAILING)
+private inline val ThrottleConfiguration.isLeading: Boolean
+  get() = this === LEADING || this === LEADING_AND_TRAILING
+
+private inline val ThrottleConfiguration.isTrailing: Boolean
+  get() = this === TRAILING || this === LEADING_AND_TRAILING
 
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
@@ -85,7 +87,8 @@ public fun <T> Flow<T>.throttle(
   throttleConfiguration: ThrottleConfiguration = LEADING,
   durationSelector: (value: T) -> Flow<Unit>,
 ): Flow<T> = flow {
-  val (leading, trailing) = throttleConfiguration.destructured
+  val leading = throttleConfiguration.isLeading
+  val trailing = throttleConfiguration.isTrailing
   val downstream = this
 
   coroutineScope {
@@ -149,11 +152,9 @@ public fun <T> Flow<T>.throttle(
               if (leading) {
                 trySend()
               }
-              throttled = scope.launch {
-                durationSelector(NULL_VALUE.unbox(value))
-                  .take(1)
-                  .collect()
-              }
+              throttled = durationSelector(NULL_VALUE.unbox(value))
+                .take(1)
+                .launchIn(scope)
             }
             .onFailure {
               println("    <<< while: onFailure throwable=$it")
