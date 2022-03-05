@@ -27,8 +27,8 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.ThrottleConfiguration.LEADING
 import com.hoc081098.flowext.ThrottleConfiguration.LEADING_AND_TRAILING
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
+import com.hoc081098.flowext.internal.DONE_VALUE
 import com.hoc081098.flowext.utils.NULL_VALUE
-import com.hoc081098.flowext.utils.Symbol
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -41,15 +41,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.selects.select
-import kotlin.native.concurrent.SharedImmutable
 import kotlin.time.Duration
-
-/*
- * Symbol used to indicate that the flow is complete.
- * It should never leak to the outside world.
- */
-@SharedImmutable
-private val DONE_VALUE = Symbol("DONE_VALUE")
 
 public enum class ThrottleConfiguration {
   LEADING,
