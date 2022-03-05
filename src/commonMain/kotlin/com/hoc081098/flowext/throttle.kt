@@ -107,22 +107,15 @@ public fun <T> Flow<T>.throttle(
       }
     }
 
-    suspend fun cleanupThrottling() {
-      throttled?.run {
-        throttled = null
-        return@run cancelAndJoin()
-      }
-    }
-
-    // Now consume the values
+    // Now consume the values until the original flow is complete.
     while (lastValue !== DONE_VALUE) {
-      println("*** while: lastValue=$lastValue throttled=$throttled")
+      println("polling throttled=$throttled")
 
       // wait for the next value
       select<Unit> {
         // When a throttling window ends, send the value if there is a pending value.
         throttled?.onJoin?.invoke {
-          println("    <<< while: onJoin")
+          println("    <<< onJoin $lastValue")
           throttled = null
 
           if (trailing) {
@@ -133,7 +126,7 @@ public fun <T> Flow<T>.throttle(
         values.onReceiveCatching { result ->
           result
             .onSuccess { value ->
-              println("    <<< while: onSuccess value=$value")
+              println("    <<< onSuccess value=$value throttled=$throttled")
 
               lastValue = value
 
@@ -149,19 +142,28 @@ public fun <T> Flow<T>.throttle(
                 .launchIn(scope)
             }
             .onFailure {
-              println("    <<< while: onFailure throwable=$it")
+              println("    <<< onFailure throwable=$it")
 
               it?.let { throw it }
 
-              cleanupThrottling()
+              // Once the original flow has completed, there may still be a pending value
+              // waiting to be emitted. If so, wait for the throttling window to end and then
+              // send it. That will complete this throttled flow.
+              if (trailing && throttled != null && lastValue != null) {
+                throttled!!.join()
+                throttled = null
+                trySend()
+              }
+
               lastValue = DONE_VALUE
             }
         }
       }
-
-      println("<<< done select: lastValue=$lastValue, throttled=$throttled\n")
     }
 
-    cleanupThrottling()
+    throttled?.run {
+      throttled = null
+      cancelAndJoin()
+    }
   }
 }

@@ -24,6 +24,7 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -284,7 +285,7 @@ class ThrottleFirstTest : BaseTest() {
       .onEach { delay(200) }
       .throttleTime(500)
       .take(1)
-      .test(listOf(Event.Value(1)) + Event.Complete)
+      .test(listOf(Event.Value(1), Event.Complete))
 
     (1..10)
       .asFlow()
@@ -292,7 +293,7 @@ class ThrottleFirstTest : BaseTest() {
       .concatWith(flow { throw RuntimeException() })
       .throttleTime(500)
       .take(1)
-      .test(listOf(Event.Value(1)) + Event.Complete)
+      .test(listOf(Event.Value(1), Event.Complete))
   }
 
   @Test
@@ -315,6 +316,34 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(6),
           Event.Value(9),
           Event.Value(10),
+          Event.Complete,
+        )
+      )
+  }
+}
+
+@ExperimentalCoroutinesApi
+class ThrottleLastTest : BaseTest() {
+  @Test
+  fun throttleWithCompleted_A() = runTest {
+    flow {
+      // -1---2----3-
+      // -@-----!--@-----!
+      // -------2--------3
+
+      delay(100)
+      emit(1)
+      delay(300)
+      emit(2)
+      delay(400)
+      emit(3)
+      delay(100)
+    }
+      .throttleTime(500, TRAILING)
+      .test(
+        listOf(
+          Event.Value(2),
+          Event.Value(3),
           Event.Complete,
         )
       )

@@ -1,5 +1,7 @@
 ## 0.3.0
 
+- Refactor `withLatestFrom`'s implementation.
+
 - Move `NULL_VALUE` to `com.hoc081098.flowext.utils` package.
 
 - Add `Symbol` class.
