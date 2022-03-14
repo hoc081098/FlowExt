@@ -18,6 +18,7 @@
 
 Kotlinx Coroutines Flow Extensions.
 Extensions to the Kotlin Flow library.
+Kotlin Flow extensions.
 
 ## Author: [Petrus Nguyễn Thái Học](https://github.com/hoc081098)
 
