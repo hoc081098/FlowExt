@@ -1,5 +1,12 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
+$dokka.location:com.hoc081098.flowext.utils////PointingToDeclaration/-flow-ext/com.hoc081098.flowext.utils/index.html
+$dokka.location:com.hoc081098.flowext.utils//NULL_VALUE/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext.utils/-n-u-l-l_-v-a-l-u-e.html
+$dokka.location:com.hoc081098.flowext.utils/Symbol///PointingToDeclaration/-flow-ext/com.hoc081098.flowext.utils/-symbol/index.html
+$dokka.location:com.hoc081098.flowext.utils/Symbol/Symbol/#kotlin.String/PointingToDeclaration/-flow-ext/com.hoc081098.flowext.utils/-symbol/-symbol.html
+$dokka.location:com.hoc081098.flowext.utils/Symbol/symbol/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext.utils/-symbol/symbol.html
+$dokka.location:com.hoc081098.flowext.utils/Symbol/toString/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext.utils/-symbol/to-string.html
+$dokka.location:com.hoc081098.flowext.utils/Symbol/unbox/#kotlin.Any?/PointingToDeclaration/-flow-ext/com.hoc081098.flowext.utils/-symbol/unbox.html
 $dokka.location:com.hoc081098.flowext////PointingToDeclaration/-flow-ext/com.hoc081098.flowext/index.html
 $dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int#kotlin.Int/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
 $dokka.location:com.hoc081098.flowext//bufferCount/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Int/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/buffer-count.html
@@ -45,6 +52,9 @@ $dokka.location:com.hoc081098.flowext//startWith/kotlinx.coroutines.flow.Flow[Ty
 $dokka.location:com.hoc081098.flowext//startWith/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.sequences.Sequence[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/start-with.html
 $dokka.location:com.hoc081098.flowext//startWith/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/start-with.html
 $dokka.location:com.hoc081098.flowext//takeUntil/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/take-until.html
+$dokka.location:com.hoc081098.flowext//throttle/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#com.hoc081098.flowext.ThrottleConfiguration#kotlin.Function1[TypeParam(bounds=[kotlin.Any?]),kotlinx.coroutines.flow.Flow[kotlin.Unit]]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/throttle.html
+$dokka.location:com.hoc081098.flowext//throttleTime/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.Long#com.hoc081098.flowext.ThrottleConfiguration/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/throttle-time.html
+$dokka.location:com.hoc081098.flowext//throttleTime/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.time.Duration#com.hoc081098.flowext.ThrottleConfiguration/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/throttle-time.html
 $dokka.location:com.hoc081098.flowext//timer/#TypeParam(bounds=[kotlin.Any?])#kotlin.Long/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/timer.html
 $dokka.location:com.hoc081098.flowext//timer/#TypeParam(bounds=[kotlin.Any?])#kotlin.time.Duration/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/timer.html
 $dokka.location:com.hoc081098.flowext//valueOrNull/com.hoc081098.flowext.Event[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/value-or-null.html
@@ -72,7 +82,10 @@ $dokka.location:com.hoc081098.flowext/Event.Value/Value/#TypeParam(bounds=[kotli
 $dokka.location:com.hoc081098.flowext/Event.Value/toString/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-value/to-string.html
 $dokka.location:com.hoc081098.flowext/Event.Value/value/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-value/value.html
 $dokka.location:com.hoc081098.flowext/Event///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/index.html
-$dokka.location:com.hoc081098.flowext/NULL_VALUE///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-n-u-l-l_-v-a-l-u-e/index.html
-$dokka.location:com.hoc081098.flowext/NULL_VALUE/unbox/#kotlin.Any?/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-n-u-l-l_-v-a-l-u-e/unbox.html
+$dokka.location:com.hoc081098.flowext/ThrottleConfiguration.LEADING///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-throttle-configuration/-l-e-a-d-i-n-g/index.html
+$dokka.location:com.hoc081098.flowext/ThrottleConfiguration.LEADING_AND_TRAILING///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-throttle-configuration/-l-e-a-d-i-n-g_-a-n-d_-t-r-a-i-l-i-n-g/index.html
+$dokka.location:com.hoc081098.flowext/ThrottleConfiguration.TRAILING///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-throttle-configuration/-t-r-a-i-l-i-n-g/index.html
+$dokka.location:com.hoc081098.flowext/ThrottleConfiguration///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-throttle-configuration/index.html
 com.hoc081098.flowext
+com.hoc081098.flowext.utils
 
