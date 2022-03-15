@@ -43,6 +43,9 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.selects.select
 import kotlin.time.Duration
 
+/**
+ * TBD
+ */
 public enum class ThrottleConfiguration {
   LEADING,
   TRAILING,
@@ -56,6 +59,9 @@ private inline val ThrottleConfiguration.isLeading: Boolean
 private inline val ThrottleConfiguration.isTrailing: Boolean
   get() = this === TRAILING || this === LEADING_AND_TRAILING
 
+/**
+ * TBD
+ */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   duration: Duration,
@@ -65,6 +71,9 @@ public fun <T> Flow<T>.throttleTime(
   return throttle(throttleConfiguration) { timerFlow }
 }
 
+/**
+ * TBD
+ */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   timeMillis: Long,
@@ -74,6 +83,9 @@ public fun <T> Flow<T>.throttleTime(
   return throttle(throttleConfiguration) { timerFlow }
 }
 
+/**
+ * TBD
+ */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttle(
   throttleConfiguration: ThrottleConfiguration = LEADING,
