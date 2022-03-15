@@ -24,13 +24,13 @@
 
 package com.hoc081098.flowext
 
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.onSuccess
+import com.hoc081098.flowext.internal.AtomicRef
+import com.hoc081098.flowext.utils.NULL_VALUE
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * Merges two [Flow]s into one [Flow] by combining each value from self with the latest value from the second [Flow], if any.
@@ -44,27 +44,25 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
   transform: suspend (A, B) -> R
 ): Flow<R> {
   return flow {
-    coroutineScope {
-      val otherValues = Channel<Any>(Channel.CONFLATED)
-      launch(start = CoroutineStart.UNDISPATCHED) {
-        other.collect {
-          return@collect otherValues.send(it ?: NULL_VALUE)
+    val otherRef = AtomicRef<Any?>(null)
+
+    try {
+      coroutineScope {
+        other
+          .onEach { otherRef.value = it ?: NULL_VALUE }
+          .launchIn(this)
+
+        collect { value ->
+          emit(
+            transform(
+              value,
+              NULL_VALUE.unbox(otherRef.value ?: return@collect)
+            ),
+          )
         }
       }
-
-      var lastValue: Any? = null
-      collect { value ->
-        otherValues
-          .tryReceive()
-          .onSuccess { lastValue = it }
-
-        emit(
-          transform(
-            value,
-            NULL_VALUE.unbox(lastValue ?: return@collect)
-          ),
-        )
-      }
+    } finally {
+      otherRef.value = null
     }
   }
 }

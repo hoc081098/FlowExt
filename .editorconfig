@@ -9,3 +9,4 @@ insert_final_newline = false
 
 [*.{kt, kts}]
 ij_kotlin_imports_layout = *
+disabled_rules=filename
