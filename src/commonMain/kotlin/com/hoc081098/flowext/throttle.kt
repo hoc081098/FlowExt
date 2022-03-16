@@ -44,11 +44,22 @@ import kotlinx.coroutines.selects.select
 import kotlin.time.Duration
 
 /**
- * TBD
+ * Define leading and trailing behavior.
  */
 public enum class ThrottleConfiguration {
+  /**
+   * Emits only the first item in each window.
+   */
   LEADING,
+
+  /**
+   * Emits only the last item in each window.
+   */
   TRAILING,
+
+  /**
+   * Emits both the first item and the last item in each window.
+   */
   LEADING_AND_TRAILING,
 }
 
@@ -60,7 +71,53 @@ private inline val ThrottleConfiguration.isTrailing: Boolean
   get() = this === TRAILING || this === LEADING_AND_TRAILING
 
 /**
- * TBD
+ * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
+ * for a [duration], then repeats this process for the next source value.
+ *
+ * * Example [ThrottleConfiguration.LEADING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttleTime(500.milliseconds)
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 1, 4, 7, 10
+ * ```
+ *
+ * * Example [ThrottleConfiguration.TRAILING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttleTime(500.milliseconds, TRAILING)
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 3, 6, 9, 10
+ * ```
+ *
+ * * Example [ThrottleConfiguration.LEADING_AND_TRAILING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttleTime(500.milliseconds, LEADING_AND_TRAILING)
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 1, 3, 4, 6, 7, 9, 10
+ * ```
  */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
@@ -72,7 +129,53 @@ public fun <T> Flow<T>.throttleTime(
 }
 
 /**
- * TBD
+ * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
+ * for [timeMillis] milliseconds, then repeats this process for the next source value.
+ *
+ * * Example [ThrottleConfiguration.LEADING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttleTime(500)
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 1, 4, 7, 10
+ * ```
+ *
+ * * Example [ThrottleConfiguration.TRAILING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttleTime(500, TRAILING)
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 3, 6, 9, 10
+ * ```
+ *
+ * * Example [ThrottleConfiguration.LEADING_AND_TRAILING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttleTime(500, LEADING_AND_TRAILING)
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 1, 3, 4, 6, 7, 9, 10
+ * ```
  */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
@@ -84,7 +187,53 @@ public fun <T> Flow<T>.throttleTime(
 }
 
 /**
- * TBD
+ * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
+ * for a duration determined by another [Flow], then repeats this process for the next source value.
+ *
+ * * Example [ThrottleConfiguration.LEADING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttle { timer(Unit, 500) }
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 1, 4, 7, 10
+ * ```
+ *
+ * * Example [ThrottleConfiguration.TRAILING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttle(TRAILING) { timer(Unit, 500) }
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 3, 6, 9, 10
+ * ```
+ *
+ * * Example [ThrottleConfiguration.LEADING_AND_TRAILING]:
+ *
+ * ```kotlin
+ * (1..10)
+ *     .asFlow()
+ *     .onEach { delay(200) }
+ *     .throttle(LEADING_AND_TRAILING) { timer(Unit, 500) }
+ * ```
+ *
+ * produces the following emissions
+ *
+ * ```text
+ * 1, 3, 4, 6, 7, 9, 10
+ * ```
  */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttle(
