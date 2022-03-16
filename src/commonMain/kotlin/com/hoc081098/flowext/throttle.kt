@@ -107,9 +107,9 @@ public fun <T> Flow<T>.throttle(
     var throttled: Job? = null
 
     suspend fun trySend() {
-      check(lastValue == null || lastValue != DONE_VALUE)
-
       lastValue?.let { consumed ->
+        check(lastValue !== DONE_VALUE)
+
         // Ensure we clear out our lastValue
         // before we emit, otherwise reentrant code can cause
         // issues here.
