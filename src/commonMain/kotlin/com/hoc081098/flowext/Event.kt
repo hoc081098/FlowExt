@@ -66,6 +66,13 @@ public inline fun <T, R> Event<T>.map(transform: (T) -> R): Event<R> = when (thi
   is Event.Value -> Event.Value(transform(value))
 }
 
+/**
+ * Returns the result of applying [transform] to this [Event]'s [value][Event.Value.value] if this is a [Event.Value].
+ * Otherwise, returns itself.
+ *
+ * Slightly different from [map] in that [transform] is expected to
+ * return an [Event] (which could be [Event.Error] or [Event.Complete]).
+ */
 public inline fun <T, R> Event<T>.flatMap(transform: (T) -> Event<R>): Event<R> = when (this) {
   Event.Complete -> Event.Complete
   is Event.Error -> this
@@ -77,6 +84,9 @@ public inline fun <T, R> Event<T>.flatMap(transform: (T) -> Event<R>): Event<R> 
  */
 public inline fun <T> Event<T>.valueOrNull(): T? = valueOrElse { null }
 
+/**
+ * Returns the encapsulated [value][Event.Value.value] if this [Event] is a [Event.Value], otherwise returns [defaultValue].
+ */
 public inline fun <T> Event<T>.valueOrDefault(defaultValue: T): T? = valueOrElse { defaultValue }
 
 /**
@@ -87,6 +97,12 @@ public inline fun <T> Event<T>.valueOrDefault(defaultValue: T): T? = valueOrElse
 public inline fun <T> Event<T>.valueOrThrow(): T =
   valueOrElse { throw it ?: NoSuchElementException("$this has no value!") }
 
+/**
+ * Returns the encapsulated [value][Event.Value.value] if this [Event] is a [Event.Value],
+ * otherwise returns the result of calling [defaultValue] function.
+ *
+ * The function [defaultValue] will be called with `null` if this [Event] is [Event.Complete].
+ */
 public inline fun <T> Event<T>.valueOrElse(defaultValue: (Throwable?) -> T): T = when (this) {
   Event.Complete -> defaultValue(null)
   is Event.Error -> defaultValue(error)

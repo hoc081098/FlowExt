@@ -28,6 +28,9 @@ import com.hoc081098.flowext.utils.TestException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertSame
 
 class EventTest {
@@ -110,6 +113,41 @@ class EventTest {
   }
 
   @Test
+  fun eventFlatmap() {
+    assertEquals(
+      Event.Value(2),
+      Event.Value(1).flatMap { Event.Value(it + 1) }
+    )
+    assertSame(
+      Event.Complete,
+      Event.Value(1).flatMap { Event.Complete }
+    )
+    val error = TestException()
+    assertEquals(
+      Event.Error(error),
+      Event.Value(1).flatMap { Event.Error(error) }
+    )
+    assertEquals(
+      "throws",
+      assertFailsWith<TestException> {
+        Event.Value(1).flatMap<Int, String> { throw TestException("throws") }
+      }.message,
+    )
+
+    val errorEvent: Event<Int> = Event.Error(TestException("1"))
+    assertSame(
+      errorEvent,
+      errorEvent.flatMap { Event.Value(it + 1) }
+    )
+
+    val completeEvent: Event<Int> = Event.Complete
+    assertSame(
+      completeEvent,
+      completeEvent.flatMap { Event.Value(it + 1) }
+    )
+  }
+
+  @Test
   fun valueOrNull() {
     listOf(
       Event.Value(1) to 1,
@@ -118,6 +156,39 @@ class EventTest {
     ).forEach { (e, v) ->
       assertEquals(v, e.valueOrNull())
     }
+  }
+
+  @Test
+  fun valueOrDefault() {
+    val defaultValue = 2
+
+    listOf(
+      Event.Value(1) to 1,
+      Event.Error(TestException()) to defaultValue,
+      Event.Complete to defaultValue,
+    ).forEach { (e, v) ->
+      assertEquals(v, e.valueOrDefault(defaultValue))
+    }
+  }
+
+  @Test
+  fun valueOrElse() {
+    assertEquals(1, Event.Value(1).valueOrElse { error("Should not reach here!") })
+
+    assertEquals(
+      2,
+      Event.Error(TestException("1")).valueOrElse {
+        assertIs<TestException>(assertNotNull(it))
+        2
+      }
+    )
+    assertEquals(
+      2,
+      Event.Complete.valueOrElse {
+        assertNull(it)
+        2
+      }
+    )
   }
 
   @Test
