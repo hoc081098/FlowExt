@@ -348,4 +348,290 @@ class ThrottleLastTest : BaseTest() {
         )
       )
   }
+
+  @Test
+  fun throttleWithCompleted_B() = runTest {
+    flow {
+      // -1---2----3----4
+      // -@-----!--@-----!
+      // -------2--------4
+
+      delay(100)
+      emit(1)
+      delay(300)
+      emit(2)
+      delay(400)
+      emit(3)
+      delay(450)
+      emit(4)
+    }
+      .throttleTime(500, TRAILING)
+      .test(
+        listOf(
+          Event.Value(2),
+          Event.Value(4),
+          Event.Complete,
+        )
+      )
+  }
+
+  @Test
+  fun throttleWithCompleted_C() = runTest {
+    flow {
+      // -1---2----3------4|
+      // -@-----!--@-----!
+      // -------2--------3 4
+
+      delay(100)
+      emit(1)
+      delay(300)
+      emit(2)
+      delay(400)
+      emit(3)
+      delay(550)
+      emit(4)
+    }
+      .throttleTime(500, TRAILING)
+      .test(
+        listOf(
+          Event.Value(2),
+          Event.Value(3),
+          Event.Value(4),
+          Event.Complete,
+        )
+      )
+  }
+
+  @Test
+  fun throttleWithCompletedAndNotDelay_A() = runTest {
+    (1..10)
+      .asFlow()
+      .onEach { delay(200) }
+      .throttleTime(0, TRAILING)
+      .test((1..10).map { Event.Value(it) } + Event.Complete)
+  }
+
+  @Test
+  fun throttleWithCompletedAndNotDelay_B() = runTest {
+    (1..10)
+      .asFlow()
+      .throttleTime(0, TRAILING)
+      .test((1..10).map { Event.Value(it) } + Event.Complete)
+  }
+
+  @Test
+  fun throttleWithCompletedAndNotDelay_C() = runTest {
+    (1..10)
+      .asFlow()
+      .throttle(TRAILING) { emptyFlow() }
+      .test((1..10).map { Event.Value(it) } + Event.Complete)
+  }
+
+  @Test
+  fun throttleNullableWithCompleted() = runTest {
+    (1..10)
+      .asFlow()
+      .onEach { delay(200) }
+      .map { v -> v.takeIf { it % 2 == 0 } }
+      .throttleTime(500, TRAILING)
+      .test(
+        listOf(
+          Event.Value(null),
+          Event.Value(6),
+          Event.Value(null),
+          Event.Value(10),
+          Event.Complete,
+        )
+      )
+  }
+
+  @Test
+  fun throttleSingleFlow() = runTest {
+    flowOf(1)
+      .throttleTime(100, TRAILING)
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Complete,
+        )
+      )
+  }
+
+  @Test
+  fun throttleEmptyFlow() = runTest {
+    emptyFlow<Int>()
+      .throttleTime(100, TRAILING)
+      .test(listOf(Event.Complete))
+  }
+
+  @Test
+  fun throttleNeverFlow() = runTest {
+    var hasValue = false
+
+    val job = neverFlow()
+      .throttleTime(100, TRAILING)
+      .onEach { hasValue = true }
+      .launchIn(this)
+    advanceTimeBy(1000)
+    job.cancel()
+
+    assertFalse(hasValue)
+  }
+
+  @Test
+  fun throttleFailureUpstream() = runTest {
+    flow {
+      emit(1)
+      throw RuntimeException("Broken!")
+    }.throttleTime(200, TRAILING).test(null) {
+      assertIs<RuntimeException>(it.single().errorOrThrow())
+    }
+
+    flow {
+      // 1-----2----X
+      //  --1   --2
+
+      emit(1)
+      delay(500)
+      emit(2)
+      delay(500)
+      throw RuntimeException("Broken!")
+    }.throttleTime(200, TRAILING).test(null) { events ->
+      assertEquals(3, events.size)
+      val (a, b, c) = events
+
+      assertEquals(1, a.valueOrThrow())
+      assertEquals(2, b.valueOrThrow())
+      assertIs<RuntimeException>(c.errorOrThrow())
+    }
+
+    flow {
+      // 1-2-X
+      //  ----X
+
+      emit(1)
+      delay(100)
+      emit(2)
+      delay(100)
+      throw RuntimeException("Broken!")
+    }.throttleTime(400, TRAILING).test(null) { events ->
+      assertIs<RuntimeException>(events.single().errorOrThrow())
+    }
+  }
+
+  @Test
+  fun throttleFailureSelector() = runTest {
+    (1..10)
+      .asFlow()
+      .throttle(TRAILING) { throw RuntimeException("Broken!") }
+      .test(null) { events ->
+        assertIs<RuntimeException>(events.single().errorOrThrow())
+      }
+
+    flow {
+      // 1-2----3
+      //  ----2 X
+
+      emit(1)
+      delay(100)
+      emit(2)
+      delay(400)
+      emit(3)
+    }
+      .throttle(TRAILING) {
+        when (it) {
+          1 -> timer(Unit, 400)
+          3 -> flow { throw RuntimeException("1") }
+          else -> flow { throw RuntimeException("2") }
+        }
+      }
+      .test(null) { events ->
+        assertEquals(2, events.size)
+        val (a, b) = events
+
+        assertEquals(2, a.valueOrThrow())
+        assertEquals(
+          "1",
+          assertIs<RuntimeException>(b.errorOrThrow()).message
+        )
+      }
+
+    flow {
+      // 1-2----3------4
+      //  ----2  -----X
+
+      emit(1)
+      delay(100)
+      emit(2)
+      delay(400)
+      emit(3)
+      delay(600)
+      emit(4)
+    }
+      .throttle(TRAILING) {
+        when (it) {
+          1 -> timer(Unit, 400)
+          3 -> flow {
+            delay(500)
+            throw RuntimeException("1")
+          }
+          else -> flow { throw RuntimeException("2") }
+        }
+      }
+      .test(null) { events ->
+        assertEquals(2, events.size)
+        val (a, b) = events
+
+        assertEquals(2, a.valueOrThrow())
+        assertEquals(
+          "1",
+          assertIs<RuntimeException>(b.errorOrThrow()).message
+        )
+      }
+  }
+
+  @Test
+  fun throttleTake() = runTest {
+    (1..10)
+      .asFlow()
+      .onEach { delay(200) }
+      .throttleTime(500, TRAILING)
+      .take(1)
+      .test(listOf(Event.Value(3), Event.Complete))
+
+    (1..10)
+      .asFlow()
+      .onEach { delay(200) }
+      .concatWith(flow { throw RuntimeException() })
+      .throttleTime(500, TRAILING)
+      .take(1)
+      .test(listOf(Event.Value(3), Event.Complete))
+  }
+
+  @Test
+  fun throttleCancellation() = runTest {
+    // --1--2--3--4--5--6--7--8--9--10
+
+    var count = 0
+    (1..10).asFlow()
+      .onEach { delay(200) }
+      .throttle(TRAILING) {
+        if (count++ % 2 == 0) {
+          flow { throw CancellationException("") }
+        } else {
+          timer(Unit, 500)
+        }
+      }
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(4),
+          Event.Value(5),
+          Event.Value(8),
+          Event.Value(9),
+          Event.Value(10),
+          Event.Complete,
+        )
+      )
+  }
 }

@@ -107,7 +107,6 @@ public fun <T> Flow<T>.throttle(
     var throttled: Job? = null
 
     suspend fun trySend() {
-      println("    >>> TrySend $lastValue")
       check(lastValue == null || lastValue != DONE_VALUE)
 
       lastValue?.let { consumed ->
@@ -121,13 +120,10 @@ public fun <T> Flow<T>.throttle(
 
     // Now consume the values until the original flow is complete.
     while (lastValue !== DONE_VALUE) {
-      println("polling throttled=$throttled")
-
       // wait for the next value
       select<Unit> {
         // When a throttling window ends, send the value if there is a pending value.
         throttled?.onJoin?.invoke {
-          println("    <<< onJoin $lastValue")
           throttled = null
 
           if (trailing) {
@@ -138,8 +134,6 @@ public fun <T> Flow<T>.throttle(
         values.onReceiveCatching { result ->
           result
             .onSuccess { value ->
-              println("    <<< onSuccess value=$value throttled=$throttled")
-
               lastValue = value
 
               // If we are not within a throttling window, immediately send the value (if leading is true)
@@ -154,8 +148,6 @@ public fun <T> Flow<T>.throttle(
                 .launchIn(scope)
             }
             .onFailure {
-              println("    <<< onFailure throwable=$it")
-
               it?.let { throw it }
 
               // Once the original flow has completed, there may still be a pending value
