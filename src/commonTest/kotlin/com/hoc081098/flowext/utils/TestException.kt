@@ -22,22 +22,11 @@
  * SOFTWARE.
  */
 
-package com.hoc081098.flowext
+package com.hoc081098.flowext.utils
 
-import com.hoc081098.flowext.utils.BaseTest
-import com.hoc081098.flowext.utils.test
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.take
-import kotlin.test.Test
-
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
-class IntervalTest : BaseTest() {
-  @Test
-  fun run() = runTest {
-    interval(100, 200)
-      .take(20)
-      .test((0L until 20).map { Event.Value(it) } + Event.Complete)
-  }
+class TestException : RuntimeException {
+  constructor() : super()
+  constructor(message: String?) : super(message)
+  constructor(message: String?, cause: Throwable?) : super(message, cause)
+  constructor(cause: Throwable?) : super(cause)
 }

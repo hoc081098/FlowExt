@@ -25,6 +25,9 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -172,9 +175,9 @@ class ThrottleFirstTest : BaseTest() {
   fun throttleFailureUpstream() = runTest {
     flow {
       emit(1)
-      throw RuntimeException("Broken!")
+      throw TestException("Broken!")
     }.throttleTime(200).test(null) {
-      assertIs<RuntimeException>(it.single().errorOrThrow())
+      assertIs<TestException>(it.single().errorOrThrow())
     }
 
     flow {
@@ -182,14 +185,14 @@ class ThrottleFirstTest : BaseTest() {
       delay(500)
       emit(2)
       delay(500)
-      throw RuntimeException("Broken!")
+      throw TestException("Broken!")
     }.throttleTime(200).test(null) { events ->
       assertEquals(3, events.size)
       val (a, b, c) = events
 
       assertEquals(1, a.valueOrThrow())
       assertEquals(2, b.valueOrThrow())
-      assertIs<RuntimeException>(c.errorOrThrow())
+      assertIs<TestException>(c.errorOrThrow())
     }
 
     flow {
@@ -197,13 +200,13 @@ class ThrottleFirstTest : BaseTest() {
       delay(100)
       emit(2) // Should be skipped since error will arrive before the timeout expires
       delay(100) // Should be published as soon as the timeout expires.
-      throw RuntimeException("Broken!")
+      throw TestException("Broken!")
     }.throttleTime(400).test(null) { events ->
       assertEquals(2, events.size)
       val (a, b) = events
 
       assertEquals(1, a.valueOrThrow())
-      assertIs<RuntimeException>(b.errorOrThrow())
+      assertIs<TestException>(b.errorOrThrow())
     }
   }
 
@@ -211,13 +214,13 @@ class ThrottleFirstTest : BaseTest() {
   fun throttleFailureSelector() = runTest {
     (1..10)
       .asFlow()
-      .throttle { throw RuntimeException("Broken!") }
+      .throttle { throw TestException("Broken!") }
       .test(null) { events ->
         assertEquals(2, events.size)
         val (a, b) = events
 
         assertEquals(1, a.valueOrThrow())
-        assertIs<RuntimeException>(b.errorOrThrow())
+        assertIs<TestException>(b.errorOrThrow())
       }
 
     flow {
@@ -230,8 +233,8 @@ class ThrottleFirstTest : BaseTest() {
       .throttle {
         when (it) {
           1 -> timer(Unit, 400)
-          3 -> flow { throw RuntimeException("1") }
-          else -> flow { throw RuntimeException("2") }
+          3 -> flow { throw TestException("1") }
+          else -> flow { throw TestException("2") }
         }
       }
       .test(null) { events ->
@@ -242,7 +245,7 @@ class ThrottleFirstTest : BaseTest() {
         assertEquals(3, b.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<RuntimeException>(c.errorOrThrow()).message
+          assertIs<TestException>(c.errorOrThrow()).message
         )
       }
 
@@ -260,9 +263,9 @@ class ThrottleFirstTest : BaseTest() {
           1 -> timer(Unit, 400)
           3 -> flow {
             delay(500)
-            throw RuntimeException("1")
+            throw TestException("1")
           }
-          else -> flow { throw RuntimeException("2") }
+          else -> flow { throw TestException("2") }
         }
       }
       .test(null) { events ->
@@ -273,7 +276,7 @@ class ThrottleFirstTest : BaseTest() {
         assertEquals(3, b.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<RuntimeException>(c.errorOrThrow()).message
+          assertIs<TestException>(c.errorOrThrow()).message
         )
       }
   }
@@ -290,7 +293,7 @@ class ThrottleFirstTest : BaseTest() {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
-      .concatWith(flow { throw RuntimeException() })
+      .concatWith(flow { throw TestException() })
       .throttleTime(500)
       .take(1)
       .test(listOf(Event.Value(1), Event.Complete))
@@ -482,9 +485,9 @@ class ThrottleLastTest : BaseTest() {
   fun throttleFailureUpstream() = runTest {
     flow {
       emit(1)
-      throw RuntimeException("Broken!")
+      throw TestException("Broken!")
     }.throttleTime(200, TRAILING).test(null) {
-      assertIs<RuntimeException>(it.single().errorOrThrow())
+      assertIs<TestException>(it.single().errorOrThrow())
     }
 
     flow {
@@ -495,14 +498,14 @@ class ThrottleLastTest : BaseTest() {
       delay(500)
       emit(2)
       delay(500)
-      throw RuntimeException("Broken!")
+      throw TestException("Broken!")
     }.throttleTime(200, TRAILING).test(null) { events ->
       assertEquals(3, events.size)
       val (a, b, c) = events
 
       assertEquals(1, a.valueOrThrow())
       assertEquals(2, b.valueOrThrow())
-      assertIs<RuntimeException>(c.errorOrThrow())
+      assertIs<TestException>(c.errorOrThrow())
     }
 
     flow {
@@ -513,9 +516,9 @@ class ThrottleLastTest : BaseTest() {
       delay(100)
       emit(2)
       delay(100)
-      throw RuntimeException("Broken!")
+      throw TestException("Broken!")
     }.throttleTime(400, TRAILING).test(null) { events ->
-      assertIs<RuntimeException>(events.single().errorOrThrow())
+      assertIs<TestException>(events.single().errorOrThrow())
     }
   }
 
@@ -523,9 +526,9 @@ class ThrottleLastTest : BaseTest() {
   fun throttleFailureSelector() = runTest {
     (1..10)
       .asFlow()
-      .throttle(TRAILING) { throw RuntimeException("Broken!") }
+      .throttle(TRAILING) { throw TestException("Broken!") }
       .test(null) { events ->
-        assertIs<RuntimeException>(events.single().errorOrThrow())
+        assertIs<TestException>(events.single().errorOrThrow())
       }
 
     flow {
@@ -541,8 +544,8 @@ class ThrottleLastTest : BaseTest() {
       .throttle(TRAILING) {
         when (it) {
           1 -> timer(Unit, 400)
-          3 -> flow { throw RuntimeException("1") }
-          else -> flow { throw RuntimeException("2") }
+          3 -> flow { throw TestException("1") }
+          else -> flow { throw TestException("2") }
         }
       }
       .test(null) { events ->
@@ -552,7 +555,7 @@ class ThrottleLastTest : BaseTest() {
         assertEquals(2, a.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<RuntimeException>(b.errorOrThrow()).message
+          assertIs<TestException>(b.errorOrThrow()).message
         )
       }
 
@@ -573,9 +576,9 @@ class ThrottleLastTest : BaseTest() {
           1 -> timer(Unit, 400)
           3 -> flow {
             delay(500)
-            throw RuntimeException("1")
+            throw TestException("1")
           }
-          else -> flow { throw RuntimeException("2") }
+          else -> flow { throw TestException("2") }
         }
       }
       .test(null) { events ->
@@ -585,7 +588,7 @@ class ThrottleLastTest : BaseTest() {
         assertEquals(2, a.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<RuntimeException>(b.errorOrThrow()).message
+          assertIs<TestException>(b.errorOrThrow()).message
         )
       }
   }
@@ -602,7 +605,7 @@ class ThrottleLastTest : BaseTest() {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
-      .concatWith(flow { throw RuntimeException() })
+      .concatWith(flow { throw TestException() })
       .throttleTime(500, TRAILING)
       .take(1)
       .test(listOf(Event.Value(3), Event.Complete))

@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -92,7 +95,7 @@ class DematerializeTest : BaseTest() {
 
   @Test
   fun testDematerialize_shouldDematerializeASadFlow() = runTest {
-    val ex = RuntimeException()
+    val ex = TestException()
 
     flowOf(1, 2, 3)
       .concatWith(flow { throw ex })
@@ -129,11 +132,11 @@ class DematerializeTest : BaseTest() {
         )
       )
 
-    assertFailsWith<RuntimeException> { flowOf(Event.Error(ex)).dematerialize().collect() }
-    assertFailsWith<RuntimeException> {
+    assertFailsWith<TestException> { flowOf(Event.Error(ex)).dematerialize().collect() }
+    assertFailsWith<TestException> {
       flowOf(Event.Error(ex), Event.Value(1)).dematerialize().collect()
     }
-    assertFailsWith<RuntimeException> {
+    assertFailsWith<TestException> {
       flowOf(Event.Error(ex), Event.Complete).dematerialize().collect()
     }
   }
@@ -151,7 +154,7 @@ class DematerializeTest : BaseTest() {
         )
       )
 
-    val ex = RuntimeException()
+    val ex = TestException()
     flowOf(1, 2, 3)
       .concatWith(flow { throw ex })
       .materialize()

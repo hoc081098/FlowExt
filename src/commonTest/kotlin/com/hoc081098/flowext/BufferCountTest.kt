@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -87,16 +90,16 @@ class BufferCountTest : BaseTest() {
 
   @Test
   fun testBufferCount_shouldThrowExceptionWithFailureUpStream() = runTest {
-    flow<Int> { throw RuntimeException("Broken!") }
+    flow<Int> { throw TestException("Broken!") }
       .bufferCount(2)
       .test(null) {
-        assertIs<RuntimeException>(it.single().errorOrThrow())
+        assertIs<TestException>(it.single().errorOrThrow())
       }
 
-    flow<Int> { throw RuntimeException("Broken!") }
+    flow<Int> { throw TestException("Broken!") }
       .bufferCount(2, 1)
       .test(null) {
-        assertIs<RuntimeException>(it.single().errorOrThrow())
+        assertIs<TestException>(it.single().errorOrThrow())
       }
   }
 

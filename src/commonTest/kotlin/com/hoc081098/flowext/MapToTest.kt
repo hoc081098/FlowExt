@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -43,7 +46,7 @@ class MapToTest : BaseTest() {
 
   @Test
   fun upstreamError() = runTest {
-    val throwable = RuntimeException()
+    val throwable = TestException()
 
     flow<Nothing> { throw throwable }
       .mapTo(2)

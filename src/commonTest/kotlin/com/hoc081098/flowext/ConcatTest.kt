@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -161,9 +164,9 @@ class ConcatTest : BaseTest() {
   @Test
   fun testConcat_firstFailureUpstream() = runTest {
     val flow = flowOf(1, 2, 3)
-    val failureFlow = flow<Nothing> { throw RuntimeException("Crash!") }
+    val failureFlow = flow<Nothing> { throw TestException("Crash!") }
     val expectation: suspend (List<Event<Int>>) -> Unit = { events ->
-      val message = assertIs<RuntimeException>(events.single().errorOrThrow()).message
+      val message = assertIs<TestException>(events.single().errorOrThrow()).message
       assertEquals("Crash!", message)
     }
 

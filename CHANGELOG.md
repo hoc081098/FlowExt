@@ -9,6 +9,9 @@
 - Add
   - `Flow.throttle`.
   - `Flow.throttleTime`.
+  - `Event.flatMap`.
+  - `Event.valueOrDefault`.
+  - `Event.valueOrElse`.
 
 ## 0.2.0 - Jan 3, 2022
 

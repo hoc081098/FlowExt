@@ -24,6 +24,8 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.catch
@@ -46,20 +48,20 @@ class RetryWhenWithDelayStrategyTest : BaseTest() {
     val retries = 3
     val flow = flow {
       emit(1)
-      throw RuntimeException((count++).toString())
+      throw TestException((count++).toString())
     }
 
     val sum =
       flow.retryWhenWithDelayStrategy(DelayStrategy.FixedTimeDelayStrategy(100.milliseconds)) { cause, attempt ->
         assertEquals(
           attempt.toString(),
-          assertIs<RuntimeException>(cause).message,
+          assertIs<TestException>(cause).message,
         )
         attempt < retries
       }.catch { cause ->
         assertEquals(
           retries.toString(),
-          assertIs<RuntimeException>(cause).message,
+          assertIs<TestException>(cause).message,
         )
       }.fold(0, Int::plus)
     assertEquals(4, sum)
@@ -67,7 +69,7 @@ class RetryWhenWithDelayStrategyTest : BaseTest() {
 }
 
 class DelayStrategyTest {
-  private val cause = RuntimeException()
+  private val cause = TestException()
   private val attempt = 0L
 
   @Test

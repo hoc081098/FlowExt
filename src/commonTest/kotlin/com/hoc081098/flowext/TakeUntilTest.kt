@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -82,21 +85,21 @@ class TakeUntilTest : BaseTest() {
 
   @Test
   fun upstreamError() = runTest {
-    flow<Nothing> { throw RuntimeException() }
+    flow<Nothing> { throw TestException() }
       .takeUntil(timer(Unit, 100))
       .test(null) {
-        assertIs<RuntimeException>(it.single().errorOrThrow())
+        assertIs<TestException>(it.single().errorOrThrow())
       }
 
     flow {
       emit(1)
-      throw RuntimeException()
+      throw TestException()
     }
       .takeUntil(timer(Unit, 100))
       .test(null) {
         assertEquals(2, it.size)
         assertEquals(1, it[0].valueOrThrow())
-        assertIs<RuntimeException>(it[1].errorOrThrow())
+        assertIs<TestException>(it[1].errorOrThrow())
       }
   }
 
