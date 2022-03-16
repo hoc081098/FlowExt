@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.hoc081098.flowext
 
 /**
@@ -64,30 +66,37 @@ public inline fun <T, R> Event<T>.map(transform: (T) -> R): Event<R> = when (thi
   is Event.Value -> Event.Value(transform(value))
 }
 
+public inline fun <T, R> Event<T>.flatMap(transform: (T) -> Event<R>): Event<R> = when (this) {
+  Event.Complete -> Event.Complete
+  is Event.Error -> this
+  is Event.Value -> transform(value)
+}
+
 /**
  * Returns the encapsulated [value][Event.Value.value] if this [Event] is a [Event.Value], otherwise returns `null`.
  */
-public fun <T> Event<T>.valueOrNull(): T? = when (this) {
-  Event.Complete -> null
-  is Event.Error -> null
-  is Event.Value -> value
-}
+public inline fun <T> Event<T>.valueOrNull(): T? = valueOrElse { null }
+
+public inline fun <T> Event<T>.valueOrDefault(defaultValue: T): T? = valueOrElse { defaultValue }
 
 /**
  * Returns the encapsulated value if this [Event] is a [Event.Value].
  * If this is [Event.Error], throws the encapsulated [error][Event.Error.error].
  * Otherwise, throws a [NoSuchElementException].
  */
-public fun <T> Event<T>.valueOrThrow(): T = when (this) {
-  Event.Complete -> throw NoSuchElementException("$this has no value!")
-  is Event.Error -> throw error
+public inline fun <T> Event<T>.valueOrThrow(): T =
+  valueOrElse { throw it ?: NoSuchElementException("$this has no value!") }
+
+public inline fun <T> Event<T>.valueOrElse(defaultValue: (Throwable?) -> T): T = when (this) {
+  Event.Complete -> defaultValue(null)
+  is Event.Error -> defaultValue(error)
   is Event.Value -> value
 }
 
 /**
  * Returns the encapsulated [error][Event.Error.error] if this [Event] is an [Event.Error], otherwise returns `null`.
  */
-public fun <T> Event<T>.errorOrNull(): Throwable? = when (this) {
+public inline fun <T> Event<T>.errorOrNull(): Throwable? = when (this) {
   Event.Complete -> null
   is Event.Error -> error
   is Event.Value -> null
@@ -97,8 +106,5 @@ public fun <T> Event<T>.errorOrNull(): Throwable? = when (this) {
  * Returns the encapsulated [error][Event.Error.error] if this [Event] is an [Event.Error].
  * Otherwise, throws a [NoSuchElementException].
  */
-public fun <T> Event<T>.errorOrThrow(): Throwable = when (this) {
-  Event.Complete -> throw NoSuchElementException("$this has no error!")
-  is Event.Error -> error
-  is Event.Value -> throw NoSuchElementException("$this has no error!")
-}
+public inline fun <T> Event<T>.errorOrThrow(): Throwable =
+  errorOrNull() ?: throw NoSuchElementException("$this has no error!")
