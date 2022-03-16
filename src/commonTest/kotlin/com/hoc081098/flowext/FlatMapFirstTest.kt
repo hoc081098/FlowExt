@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -99,10 +102,10 @@ class FlatMapFirstTest : BaseTest() {
 
   @Test
   fun testFailureUpstream() = runTest {
-    flow<Int> { throw RuntimeException("Broken!") }
+    flow<Int> { throw TestException("Broken!") }
       .flatMapFirst { emptyFlow<Int>() }
       .test(null) {
-        assertIs<RuntimeException>(it.single().errorOrThrow())
+        assertIs<TestException>(it.single().errorOrThrow())
       }
   }
 
@@ -110,14 +113,14 @@ class FlatMapFirstTest : BaseTest() {
   fun testFailureTransform() = runTest {
     flowOf(1, 2, 3).flatMapFirst { v ->
       if (v == 2) {
-        throw RuntimeException("Broken!")
+        throw TestException("Broken!")
       } else {
         flowOf(v)
       }
     }.test(null) {
       assertEquals(2, it.size)
       assertEquals(1, it[0].valueOrThrow())
-      assertIs<RuntimeException>(it[1].errorOrThrow())
+      assertIs<TestException>(it[1].errorOrThrow())
     }
   }
 
@@ -125,14 +128,14 @@ class FlatMapFirstTest : BaseTest() {
   fun testFailureFlow() = runTest {
     flowOf(1, 2, 3).flatMapFirst { v ->
       if (v == 2) {
-        flow { yield(); throw RuntimeException("Broken!") }
+        flow { yield(); throw TestException("Broken!") }
       } else {
         flowOf(v)
       }
     }.test(null) {
       assertEquals(2, it.size)
       assertEquals(1, it[0].valueOrThrow())
-      assertIs<RuntimeException>(it[1].errorOrThrow())
+      assertIs<TestException>(it[1].errorOrThrow())
     }
   }
 

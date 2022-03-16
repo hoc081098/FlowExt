@@ -22,22 +22,19 @@
  * SOFTWARE.
  */
 
-package com.hoc081098.flowext
+package com.hoc081098.flowext.utils
 
-import com.hoc081098.flowext.utils.BaseTest
-import com.hoc081098.flowext.utils.test
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.take
-import kotlin.test.Test
+import com.hoc081098.flowext.Event
+import com.hoc081098.flowext.materialize
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toList
+import kotlin.test.assertContentEquals
 
-@ExperimentalCoroutinesApi
-@InternalCoroutinesApi
-class IntervalTest : BaseTest() {
-  @Test
-  fun run() = runTest {
-    interval(100, 200)
-      .take(20)
-      .test((0L until 20).map { Event.Value(it) } + Event.Complete)
-  }
+suspend fun <T> Flow<T>.test(
+  expected: List<Event<T>>?,
+  expectation: (suspend (List<Event<T>>) -> Unit)? = null,
+) {
+  val events = materialize().toList()
+  expected?.let { assertContentEquals(it, events) }
+  expectation?.invoke(events)
 }

@@ -24,6 +24,8 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
@@ -57,7 +59,7 @@ class MaterializeTest : BaseTest() {
 
   @Test
   fun testMaterialize_shouldMaterializeASadFlow() = runTest {
-    val ex = RuntimeException()
+    val ex = TestException()
 
     val events1 = flowOf(1, 2, 3)
       .concatWith(flow { throw ex })
@@ -111,7 +113,7 @@ class MaterializeTest : BaseTest() {
       events1,
     )
 
-    val ex = RuntimeException()
+    val ex = TestException()
     val events2 = flowOf(1, 2, 3)
       .concatWith(flow { throw ex })
       .take(3)

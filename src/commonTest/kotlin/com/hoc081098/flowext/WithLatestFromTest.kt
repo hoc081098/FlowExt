@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -89,15 +92,15 @@ class WithLatestFromTest : BaseTest() {
 
   @Test
   fun testWithLatestFrom_failureUpStream() = runTest {
-    assertFailsWith<RuntimeException> {
-      flow<Int> { throw RuntimeException() }
+    assertFailsWith<TestException> {
+      flow<Int> { throw TestException() }
         .withLatestFrom(neverFlow())
         .collect()
     }
 
-    assertFailsWith<RuntimeException> {
+    assertFailsWith<TestException> {
       neverFlow()
-        .withLatestFrom(flow<Int> { throw RuntimeException() })
+        .withLatestFrom(flow<Int> { throw TestException() })
         .collect()
     }
   }

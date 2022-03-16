@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -54,7 +57,7 @@ class MapIndexedTest : BaseTest() {
 
   @Test
   fun upstreamError() = runTest {
-    val throwable = RuntimeException()
+    val throwable = TestException()
 
     flow<Int> { throw throwable }
       .mapIndexed { index, value -> index to value }
