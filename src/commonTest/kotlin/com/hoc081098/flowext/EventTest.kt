@@ -58,9 +58,10 @@ class EventTest {
 
   @Test
   fun errorEventToString() {
+    val error = TestException()
     assertEquals(
-      "Event.Error(com.hoc081098.flowext.utils.TestException)",
-      Event.Error(TestException()).toString()
+      "Event.Error($error)",
+      Event.Error(error).toString()
     )
   }
 
