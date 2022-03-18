@@ -26,7 +26,7 @@ Kotlin Flow. RxJava Kotlin Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. 
 
 ## API
 
-### Release docs: https://hoc081098.github.io/FlowExt/docs/0.x
+### 0.x release docs: https://hoc081098.github.io/FlowExt/docs/0.x
 
 ### Snapshot docs: https://hoc081098.github.io/FlowExt/docs/latest
 
@@ -37,23 +37,26 @@ Kotlin Flow. RxJava Kotlin Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. 
   - [`interval`](#interval)
   - [`neverFlow`](#neverFlow)
   - [`range`](#range)
-  - `timer`
+  - [`timer`](#timer)
 - Intermediate operators
   - `bufferCount`
-  - `concatWith`
-  - `startWith`
-  - `flatMapFirst`
+  - [`concatWith`](#concatWith)
+  - [`startWith`](#startWith)
+  - [`flatMapFirst`](#flatMapFirst)
+  - [`exhaustMap`](#flatMapFirst)
+  - [`flattenFirst`](#flattenFirst)
+  - [`exhaustAll`](#flattenFirst)
   - `mapIndexed`
-  - `mapTo`
-  - `materialize`
-  - `dematerialize`
+  - [`mapTo`](#mapTo)
+  - [`materialize`](#materialize)
+  - [`dematerialize`](#dematerialize)
   - `retryWhenWithDelayStrategy`
   - `retryWhenWithExponentialBackoff`
   - `retryWithExponentialBackoff`
-  - `takeUntil`
+  - [`takeUntil`](#takeUntil)
   - `throttle`
   - `throttleTime`
-  - `withLatestFrom`
+  - [`withLatestFrom`](#withLatestFrom)
 
 - **`bufferCount`** (similar to [RxJS bufferCount](https://rxjs.dev/api/operators/bufferCount)
   , [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-))
@@ -77,26 +80,58 @@ Kotlin Flow. RxJava Kotlin Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. 
 - ReactiveX docs: http://reactivex.io/documentation/operators/range.html
 - Similar to [RxJS range](https://rxjs.dev/api/index/function/range)
 
-- **`concatWith`** (similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith)
-  , [RxJava concatWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatWith-org.reactivestreams.Publisher-))
-- **`startWith`** (similar to [RxJS startWith](https://rxjs.dev/api/operators/startWith)
-  , [RxJava startWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#startWithItem-T-))
-- **`flatMapFirst`**/**`exhaustMap`** (similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap)
-  , [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/b48f2e9536cd985d912126709b97bd743e58c8fc/RxSwift/Observables/Merge.swift#L37))
+#### timer
 
-- **`flattenFirst`**/**`exhaustAll`** (similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll))
-- **`mapTo`** (similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))
-- **`materialize`** (similar to [RxJS materialize](https://rxjs.dev/api/operators/materialize)
-  , [RxJava materialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#materialize--))
-- **`dematerialize`** (similar to [RxJS dematerialize](https://rxjs.dev/api/operators/dematerialize)
-  , [RxJava dematerialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#dematerialize--))
+- ReactiveX docs: http://reactivex.io/documentation/operators/timer.html
+- Similar to [RxJS timer](https://rxjs.dev/api/index/function/timer)
 
-- **`takeUntil`** (http://reactivex.io/documentation/operators/takeuntil.html) (similar
-  to [RxJS takeUntil](https://rxjs.dev/api/operators/takeUntil))
-- **`timer`** (http://reactivex.io/documentation/operators/timer.html) (similar
-  to [RxJS timer](https://rxjs.dev/api/index/function/timer))
-- **`withLatestFrom`** (https://rxmarbles.com/#withLatestFrom) (similar
-  to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom))
+#### concatWith
+
+- Similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith)
+- Similar
+  to [RxJava concatWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatWith-org.reactivestreams.Publisher-)
+
+#### startWith
+
+- Similar to [RxJS startWith](https://rxjs.dev/api/operators/startWith)
+- Similar
+  to [RxJava startWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#startWithItem-T-)
+
+#### flatMapFirst / exhaustMap
+
+- Similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap)
+- Similar
+  to [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/b48f2e9536cd985d912126709b97bd743e58c8fc/RxSwift/Observables/Merge.swift#L37)
+
+#### flattenFirst / exhaustAll
+
+- Similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll)
+
+#### mapTo
+
+- Similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))
+
+#### materialize
+
+- Similar to [RxJS materialize](https://rxjs.dev/api/operators/materialize)
+- Similar
+  to [RxJava materialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#materialize--)
+
+#### dematerialize
+
+- Similar to [RxJS dematerialize](https://rxjs.dev/api/operators/dematerialize)
+- Similar
+  to [RxJava dematerialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#dematerialize--)
+
+#### takeUntil
+
+- ReactiveX docs: http://reactivex.io/documentation/operators/takeuntil.html
+- Similar to [RxJS takeUntil](https://rxjs.dev/api/operators/takeUntil)
+
+#### withLatestFrom
+
+- RxMarbles: https://rxmarbles.com/#withLatestFrom
+- Similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom)
 
 ... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs
 snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
