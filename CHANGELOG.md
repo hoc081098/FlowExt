@@ -1,5 +1,8 @@
 ## 0.3.0
 
+- Update
+  - `Gradle` to `7.4.1`.
+
 - Refactor `withLatestFrom`'s implementation.
 
 - Move `NULL_VALUE` to `com.hoc081098.flowext.utils` package.
