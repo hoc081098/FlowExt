@@ -36,6 +36,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.yield
 
+/**
+ * TODO(docs)
+ */
 @ExperimentalCoroutinesApi
 public fun <T> race(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> =
   if (flows.isEmpty()) flow
@@ -46,6 +49,9 @@ public fun <T> race(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> =
     }
   )
 
+/**
+ * TODO(docs)
+ */
 @ExperimentalCoroutinesApi
 public fun <T> race(flows: Iterable<Flow<T>>): Flow<T> = flow {
   coroutineScope {

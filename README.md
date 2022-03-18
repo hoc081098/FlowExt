@@ -36,6 +36,7 @@ Kotlin Flow. RxJava Kotlin Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. 
   - [`concat`](#concat)
   - [`interval`](#interval)
   - [`neverFlow`](#neverFlow)
+  - [`race`](#race)
   - [`range`](#range)
   - [`timer`](#timer)
 - Intermediate operators
@@ -74,6 +75,10 @@ Kotlin Flow. RxJava Kotlin Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. 
 #### neverFlow
 
 - Similar to [RxJS NEVER](https://rxjs.dev/api/index/const/NEVER)
+
+#### race
+
+TODO(docs)
 
 #### range
 
