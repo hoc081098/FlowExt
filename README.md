@@ -215,7 +215,7 @@ dependencies {
 ```License
 MIT License
 
-Copyright (c) 2021 Petrus Nguyễn Thái Học
+Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
 ```
 
 [badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat
