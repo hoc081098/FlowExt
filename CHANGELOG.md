@@ -16,6 +16,7 @@
   - `Event.valueOrDefault`.
   - `Event.valueOrElse`.
   - `race`.
+  - `Flow.mapToUnit`
 
 ## 0.2.0 - Jan 3, 2022
 
