@@ -28,7 +28,7 @@ jobs:
           java-version: '11'
 
       - name: Cache gradle, wrapper and buildSrc
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -38,7 +38,7 @@ jobs:
             ${{ matrix.os }}-gradle-
 
       - name: Cache konan
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.konan/cache
@@ -93,7 +93,7 @@ jobs:
           java-version: '11'
 
       - name: Cache gradle, wrapper and buildSrc
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -103,7 +103,7 @@ jobs:
             ${{ matrix.os }}-gradle-
 
       - name: Cache konan
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.konan/cache
