@@ -71,15 +71,6 @@ class RaceTest : BaseTest() {
 
   @Test
   fun raceSingle() = runTest {
-    race(flowOf(1, 2, 3)).test(
-      listOf(
-        Event.Value(1),
-        Event.Value(2),
-        Event.Value(3),
-        Event.Complete
-      )
-    )
-
     race(
       listOf(
         flowOf(1, 2, 3)

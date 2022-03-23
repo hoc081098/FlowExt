@@ -40,14 +40,27 @@ import kotlinx.coroutines.yield
  * TODO(docs)
  */
 @ExperimentalCoroutinesApi
-public fun <T> race(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> =
-  if (flows.isEmpty()) flow
-  else race(
-    buildList(capacity = 1 + flows.size) {
-      add(flow)
+public fun <T> race(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow<T> =
+  race(
+    buildList(capacity = 2 + flows.size) {
+      add(flow1)
+      add(flow2)
       addAll(flows)
     }
   )
+
+/**
+ * TODO(docs)
+ */
+@ExperimentalCoroutinesApi
+public fun <T> Flow<T>.raceWith(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> = race(
+  buildList(capacity = 2 + flows.size) {
+    add(this@raceWith)
+    add(flow)
+    addAll(flows)
+  }
+)
+
 
 /**
  * TODO(docs)
