@@ -27,13 +27,17 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.take
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -207,6 +211,60 @@ class RaceTest : BaseTest() {
       assertIs<TestException>(events.single().errorOrThrow())
     }
   }
+
+  @Test
+  fun raceTake() = runTest {
+    race(flowOf(1).log(1), flowOf(2).log(2))
+      .take(1)
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Complete
+        )
+      )
+
+    race(
+      flow {
+        delay(100)
+        emit(1)
+        throw TestException("")
+      }.log(1),
+      flow {
+        delay(200)
+        emit(2)
+      }.log(2)
+    )
+      .take(1)
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Complete,
+        )
+      )
+  }
+
+  @Test
+  fun raceCancellation() = runTest {
+    val message = "test"
+
+    race(
+      flow {
+        delay(50)
+        throw CancellationException(message)
+      },
+      flow {
+        delay(100)
+        emit(1)
+      }
+    ).test(null) { events ->
+      assertEquals(
+        message,
+        assertIs<CancellationException>(events.single().errorOrThrow()).message,
+      )
+    }
+  }
 }
 
 private fun <T> Flow<T>.log(tag: Any) = onEach { println("[$tag] >>> $it") }
+  .onStart { println("[$tag] start") }
+  .onCompletion { println("[$tag] complete $it") }

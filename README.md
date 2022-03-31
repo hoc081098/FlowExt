@@ -37,22 +37,25 @@ Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. RxJava Coroutines Flow.
   - [`concat`](#concat)
   - [`interval`](#interval)
   - [`neverFlow`](#neverFlow)
-  - [`race`](#race)
+  - [`race`](#race--amb)
+  - [`amb`](#race--amb)
   - [`range`](#range)
   - [`timer`](#timer)
 - Intermediate operators
   - [`bufferCount`](#bufferCount)
   - [`concatWith`](#concatWith)
   - [`startWith`](#startWith)
-  - [`flatMapFirst`](#flatMapFirst)
-  - [`exhaustMap`](#flatMapFirst)
-  - [`flattenFirst`](#flattenFirst)
-  - [`exhaustAll`](#flattenFirst)
+  - [`flatMapFirst`](#flatmapfirst--exhaustmap)
+  - [`exhaustMap`](#flatmapfirst--exhaustmap)
+  - [`flattenFirst`](#flattenfirst--exhaustall)
+  - [`exhaustAll`](#flattenfirst--exhaustall)
   - `mapIndexed`
   - [`mapTo`](#mapTo)
   - `mapToUnit`
   - [`materialize`](#materialize)
   - [`dematerialize`](#dematerialize)
+  - [`raceWith`](#racewith--ambwith)
+  - [`ambWith`](#racewith--ambwith)
   - `retryWhenWithDelayStrategy`
   - `retryWhenWithExponentialBackoff`
   - `retryWithExponentialBackoff`
@@ -81,9 +84,13 @@ Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. RxJava Coroutines Flow.
 
 - Similar to [RxJS NEVER](https://rxjs.dev/api/index/const/NEVER)
 
-#### race
+#### race / amb
 
-TODO(docs)
+- ReactiveX docs: http://reactivex.io/documentation/operators/amb.html
+- Similar
+  to [RxJava amb](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#amb-java.lang.Iterable-)
+  .
+- Similar to [RxJS race](https://rxjs.dev/api/index/function/race)
 
 #### range
 
@@ -132,6 +139,14 @@ TODO(docs)
 - Similar to [RxJS dematerialize](https://rxjs.dev/api/operators/dematerialize)
 - Similar
   to [RxJava dematerialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#dematerialize--)
+
+#### raceWith / ambWith
+
+- ReactiveX docs: http://reactivex.io/documentation/operators/amb.html
+- Similar
+  to [RxJava ambWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#ambWith-org.reactivestreams.Publisher-)
+  .
+- Similar to [RxJS raceWith](https://rxjs.dev/api/operators/raceWith)
 
 #### takeUntil
 
@@ -228,24 +243,24 @@ MIT License
 Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
 ```
 
-[badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat
+[badge-android]: http://img.shields.io/badge/android-6EDB8D.svg?style=flat
 
-[badge-ios]: http://img.shields.io/badge/platform-ios-CDCDCD.svg?style=flat
+[badge-ios]: http://img.shields.io/badge/ios-CDCDCD.svg?style=flat
 
-[badge-js]: http://img.shields.io/badge/platform-js-F8DB5D.svg?style=flat
+[badge-js]: http://img.shields.io/badge/js-F8DB5D.svg?style=flat
 
-[badge-jvm]: http://img.shields.io/badge/platform-jvm-DB413D.svg?style=flat
+[badge-jvm]: http://img.shields.io/badge/jvm-DB413D.svg?style=flat
 
-[badge-linux]: http://img.shields.io/badge/platform-linux-2D3F6C.svg?style=flat
+[badge-linux]: http://img.shields.io/badge/linux-2D3F6C.svg?style=flat
 
-[badge-windows]: http://img.shields.io/badge/platform-windows-4D76CD.svg?style=flat
+[badge-windows]: http://img.shields.io/badge/windows-4D76CD.svg?style=flat
 
-[badge-mac]: http://img.shields.io/badge/platform-macos-111111.svg?style=flat
+[badge-mac]: http://img.shields.io/badge/macos-111111.svg?style=flat
 
-[badge-watchos]: http://img.shields.io/badge/platform-watchos-C0C0C0.svg?style=flat
+[badge-watchos]: http://img.shields.io/badge/watchos-C0C0C0.svg?style=flat
 
-[badge-tvos]: http://img.shields.io/badge/platform-tvos-808080.svg?style=flat
+[badge-tvos]: http://img.shields.io/badge/tvos-808080.svg?style=flat
 
-[badge-wasm]: https://img.shields.io/badge/platform-wasm-624FE8.svg?style=flat
+[badge-wasm]: https://img.shields.io/badge/wasm-624FE8.svg?style=flat
 
-[badge-nodejs]: https://img.shields.io/badge/platform-nodejs-68a063.svg?style=flat
+[badge-nodejs]: https://img.shields.io/badge/nodejs-68a063.svg?style=flat

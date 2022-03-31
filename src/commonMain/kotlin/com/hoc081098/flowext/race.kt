@@ -36,8 +36,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.yield
 
+//
+// race / raceWith
+//
+
 /**
- * TODO(docs)
+ * Mirrors the one [Flow] in an array of several [Flow]s that first either emits a value
+ * or sends a termination event (error or complete event).
+ *
+ * @see race
  */
 @ExperimentalCoroutinesApi
 public fun <T> race(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow<T> =
@@ -50,7 +57,10 @@ public fun <T> race(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow
   )
 
 /**
- * TODO(docs)
+ * Mirrors the current [Flow] or the other [Flow]s provided of which the first either emits a value
+ * or sends a termination event (error or complete event).
+ *
+ * @see race
  */
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.raceWith(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> = race(
@@ -61,9 +71,14 @@ public fun <T> Flow<T>.raceWith(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> =
   }
 )
 
-
 /**
- * TODO(docs)
+ * Mirrors the one [Flow] in an [Iterable] of several [Flow]s that first either emits a value
+ * or sends a termination event (error or complete event).
+ *
+ * When you pass a number of source [Flow]s to [race], it will pass through the emissions
+ * and events of exactly one of these [Flow]s: the first one that sends an event to [race],
+ * either by emitting a value or sending an error or complete event.
+ * [race] will cancel the emissions and events of all of the other source [Flow]s.
  */
 @ExperimentalCoroutinesApi
 public fun <T> race(flows: Iterable<Flow<T>>): Flow<T> = flow {
@@ -92,7 +107,6 @@ public fun <T> race(flows: Iterable<Flow<T>>): Flow<T> = flow {
         }
       }
     }
-    println("winnerIndex=$winnerIndex, winnerResult=$winnerResult")
 
     channels.forEachIndexed { index, channel ->
       if (index != winnerIndex) {
@@ -106,8 +120,47 @@ public fun <T> race(flows: Iterable<Flow<T>>): Flow<T> = flow {
         emitAll(channels[winnerIndex])
       }
       .onFailure {
-        println("onFailure $it")
         it?.let { throw it }
       }
   }
 }
+
+//
+// amb / ambWith
+//
+
+/**
+ * This function is an alias to [race] operator.
+ *
+ * @see race
+ */
+@ExperimentalCoroutinesApi
+public fun <T> amb(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow<T> = race(
+  buildList(capacity = 2 + flows.size) {
+    add(flow1)
+    add(flow2)
+    addAll(flows)
+  }
+)
+
+/**
+ * This function is an alias to [raceWith] operator.
+ *
+ * @see raceWith
+ */
+@ExperimentalCoroutinesApi
+public fun <T> Flow<T>.ambWith(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> = race(
+  buildList(capacity = 2 + flows.size) {
+    add(this@ambWith)
+    add(flow)
+    addAll(flows)
+  }
+)
+
+/**
+ * This function is an alias to [race] operator.
+ *
+ * @see race
+ */
+@ExperimentalCoroutinesApi
+public fun <T> amb(flows: Iterable<Flow<T>>): Flow<T> = race(flows)
