@@ -88,17 +88,11 @@ public fun <T> concat(
 /**
  * Creates an output [Flow] which sequentially emits all values from the first given [Flow] and then moves on to the next.
  */
-public fun <T> concat(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow<T> {
-  return if (flows.isEmpty()) {
-    concat(flow1, flow2)
-  } else {
-    flow {
-      emitAll(flow1)
-      emitAll(flow2)
-      flows.forEach {
-        emitAll(it)
-      }
-    }
+public fun <T> concat(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow<T> = flow {
+  emitAll(flow1)
+  emitAll(flow2)
+  flows.forEach {
+    emitAll(it)
   }
 }
 
