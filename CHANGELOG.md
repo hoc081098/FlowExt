@@ -20,6 +20,12 @@
   - `Flow.mapToUnit`.
   - `Flow.startWith { }` that accepts a lambda parameter.
 
+- Add and update docs.
+
+- Add more test cases, increase code coverage.
+
+- Internal bug fixes.
+
 ## 0.2.0 - Jan 3, 2022
 
 - Update
