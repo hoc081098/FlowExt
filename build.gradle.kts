@@ -16,7 +16,7 @@ plugins {
 }
 
 val coroutinesVersion = "1.6.0"
-val ktlintVersion = "0.43.2"
+val ktlintVersion = "0.44.0"
 
 repositories {
   mavenCentral()
