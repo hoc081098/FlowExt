@@ -25,6 +25,7 @@ public final class com/hoc081098/flowext/ConcatKt {
 	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Ljava/lang/Object;[Ljava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Lkotlin/sequences/Sequence;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }

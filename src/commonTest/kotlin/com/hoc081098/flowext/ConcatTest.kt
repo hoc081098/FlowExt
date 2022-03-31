@@ -96,6 +96,65 @@ class ConcatTest : BaseTest() {
         flowOf(16, 17, 18),
       )
     ).test((1..18).map { Event.Value(it) } + Event.Complete)
+
+    flowOf(1, 2, 3)
+      .concatWith(flowOf(4, 5, 6))
+      .test((1..6).map { Event.Value(it) } + Event.Complete)
+
+    flowOf(1, 2, 3)
+      .concatWith(
+        flowOf(4, 5, 6),
+        flowOf(7, 8, 9),
+      )
+      .test((1..9).map { Event.Value(it) } + Event.Complete)
+
+    flowOf(1, 2, 3)
+      .concatWith(
+        flowOf(4, 5, 6),
+        flowOf(7, 8, 9),
+        flowOf(10, 11, 12),
+      )
+      .test((1..12).map { Event.Value(it) } + Event.Complete)
+
+    flowOf(1, 2, 3)
+      .concatWith(
+        flowOf(4, 5, 6),
+        flowOf(7, 8, 9),
+        flowOf(10, 11, 12),
+        flowOf(13, 14, 15),
+      )
+      .test((1..15).map { Event.Value(it) } + Event.Complete)
+
+    flowOf(1, 2, 3)
+      .concatWith(
+        flowOf(4, 5, 6),
+        flowOf(7, 8, 9),
+        flowOf(10, 11, 12),
+        flowOf(13, 14, 15),
+        flowOf(16, 17, 18),
+      ).test((1..18).map { Event.Value(it) } + Event.Complete)
+
+    flowOf(1, 2, 3)
+      .concatWith(
+        sequenceOf(
+          flowOf(4, 5, 6),
+          flowOf(7, 8, 9),
+          flowOf(10, 11, 12),
+          flowOf(13, 14, 15),
+          flowOf(16, 17, 18),
+        )
+      ).test((1..18).map { Event.Value(it) } + Event.Complete)
+
+    flowOf(1, 2, 3)
+      .concatWith(
+        listOf(
+          flowOf(4, 5, 6),
+          flowOf(7, 8, 9),
+          flowOf(10, 11, 12),
+          flowOf(13, 14, 15),
+          flowOf(16, 17, 18),
+        )
+      ).test((1..18).map { Event.Value(it) } + Event.Complete)
   }
 
   @Test
