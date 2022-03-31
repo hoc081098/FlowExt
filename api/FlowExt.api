@@ -120,6 +120,9 @@ public final class com/hoc081098/flowext/NeverFlowKt {
 }
 
 public final class com/hoc081098/flowext/RaceKt {
+	public static final fun amb (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun amb (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun ambWith (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun race (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun race (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun raceWith (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
