@@ -25,6 +25,7 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -176,6 +177,15 @@ public fun <T> Flow<T>.concatWith(others: Sequence<Flow<T>>): Flow<T> {
  * Returns a [Flow] that emits a specified item before it begins to emit items emitted by the current [Flow].
  */
 public fun <T> Flow<T>.startWith(item: T): Flow<T> = concat(flowOf(item), this)
+
+/**
+ * Returns a [Flow] that emits a specified item before it begins to emit items emitted by the current [Flow].
+ * [itemFactory] will be called on the collection for each new [FlowCollector].
+ */
+public fun <T> Flow<T>.startWith(itemFactory: suspend () -> T): Flow<T> = concat(
+  flow { emit(itemFactory()) },
+  this
+)
 
 /**
  * Returns a [Flow] that emits the specified items before it begins to emit items emitted by the current [Flow].

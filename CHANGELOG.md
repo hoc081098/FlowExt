@@ -18,6 +18,7 @@
   - `race`, `amb`.
   - `raceWith`, `ambWith`.
   - `Flow.mapToUnit`.
+  - `Flow.startWith { }` that accepts a lambda parameter.
 
 ## 0.2.0 - Jan 3, 2022
 
