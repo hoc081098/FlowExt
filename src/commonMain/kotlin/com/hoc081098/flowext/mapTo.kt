@@ -35,3 +35,5 @@ import kotlinx.coroutines.flow.transform
 @Suppress("NOTHING_TO_INLINE")
 public inline fun <T, R> Flow<T>.mapTo(value: R): Flow<R> =
   transform { return@transform emit(value) }
+
+public inline fun <T> Flow<T>.mapToUnit(): Flow<Unit> = mapTo(Unit)

@@ -29,6 +29,7 @@ import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
@@ -45,11 +46,27 @@ class MapToTest : BaseTest() {
   }
 
   @Test
+  fun mapToUnitBasic() = runTest {
+    (0 until 10).asFlow()
+      .mapToUnit()
+      .test(List(10) { Event.Value(Unit) } + Event.Complete)
+  }
+
+  @Test
   fun upstreamError() = runTest {
     val throwable = TestException()
 
     flow<Nothing> { throw throwable }
       .mapTo(2)
+      .test(listOf(Event.Error(throwable)))
+  }
+
+  @Test
+  fun mapToWithFailureUpstream() = runTest {
+    val throwable = TestException()
+
+    flow<Nothing> { throw throwable }
+      .mapToUnit()
       .test(listOf(Event.Error(throwable)))
   }
 }

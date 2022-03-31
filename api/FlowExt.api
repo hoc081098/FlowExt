@@ -107,6 +107,7 @@ public final class com/hoc081098/flowext/MapIndexedKt {
 
 public final class com/hoc081098/flowext/MapToKt {
 	public static final fun mapTo (Lkotlinx/coroutines/flow/Flow;Ljava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun mapToUnit (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/Materialize_dematerializeKt {
@@ -116,6 +117,11 @@ public final class com/hoc081098/flowext/Materialize_dematerializeKt {
 
 public final class com/hoc081098/flowext/NeverFlowKt {
 	public static final fun neverFlow ()Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/hoc081098/flowext/RaceKt {
+	public static final fun race (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun race (Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/RangeKt {
