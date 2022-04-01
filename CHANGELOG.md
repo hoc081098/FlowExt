@@ -1,7 +1,8 @@
 ## 0.3.0
 
 - Update
-  - `Gradle` to `7.4.1`.
+  - `Kotlin` to `1.6.20`.
+  - `Gradle` to `7.4.2`.
 
 - Refactor `withLatestFrom`'s implementation.
 
