@@ -15,7 +15,7 @@ plugins {
   id("org.jetbrains.kotlinx.kover") version "0.5.0"
 }
 
-val coroutinesVersion = "1.6.0"
+val coroutinesVersion = "1.6.1"
 val ktlintVersion = "0.44.0"
 
 repositories {
