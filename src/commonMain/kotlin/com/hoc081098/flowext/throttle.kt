@@ -287,15 +287,9 @@ public fun <T> Flow<T>.throttleTime(
               if (leading) {
                 trySend()
               }
-              throttled = when (val duration = durationSelector(NULL_VALUE.unbox(value))) {
-                Duration.ZERO -> {
-                  if (trailing) {
-                    trySend()
-                  }
-                  null
-                }
-                else -> scope.launch { delay(duration) }
-              }
+
+              val duration = durationSelector(NULL_VALUE.unbox(value))
+              throttled = scope.launch { delay(duration) }
             }
             .onFailure {
               it?.let { throw it }
