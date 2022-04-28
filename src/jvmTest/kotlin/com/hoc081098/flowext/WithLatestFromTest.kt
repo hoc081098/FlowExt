@@ -50,32 +50,32 @@ import kotlin.test.assertFailsWith
 class WithLatestFromJvmTest {
   @Test
   fun basic() = runBlocking {
-    withContext(
-      Executors.newSingleThreadExecutor {
-        Thread(it).apply {
-          name = "My thrad"
-        }
-      }.asCoroutineDispatcher()
-    ) {
-      println("1" + Thread.currentThread())
-
-      flowOf(1).withLatestFrom(
-        flow {
-          println("2" + Thread.currentThread())
-          emit(2)
-        }.flowOn(
-          Executors.newSingleThreadExecutor {
-            Thread(it).apply {
-              name = "Hihi"
-            }
-          }.asCoroutineDispatcher()
-        )
-      ).collect {
-        println("3" + Thread.currentThread())
-        println(it)
+    val context1 = Executors.newSingleThreadExecutor {
+      Thread(it).apply {
+        name = "My thread 1"
       }
+    }.asCoroutineDispatcher()
+
+    val context2 = Executors.newSingleThreadExecutor {
+      Thread(it).apply {
+        name = "My thread 2"
+      }
+    }.asCoroutineDispatcher()
+
+    withContext(context1) {
+      flowOf(1)
+        .withLatestFrom(flow { emit(2) }.flowOn(context2))
+        .onEach {
+          println("3" + Thread.currentThread())
+          println(it)
+        }
+        .test(
+          listOf(
+            Event.Value(1 to 2),
+            Event.Complete
+          )
+        )
     }
-    error("")
 
     val f1 = flowOf(1, 2, 3, 4)
     val f2 = flowOf("a", "b", "c", "d", "e")
