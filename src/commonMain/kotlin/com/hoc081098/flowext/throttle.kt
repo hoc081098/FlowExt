@@ -303,10 +303,12 @@ public fun <T> Flow<T>.throttleTime(
               // Once the original flow has completed, there may still be a pending value
               // waiting to be emitted. If so, wait for the throttling window to end and then
               // send it. That will complete this throttled flow.
-              if (trailing && throttled != null && lastValue != null) {
-                throttled!!.join()
-                throttled = null
-                trySend()
+              if (trailing && lastValue != null) {
+                throttled?.run {
+                  throttled = null
+                  join()
+                  trySend()
+                }
               }
 
               lastValue = DONE_VALUE
