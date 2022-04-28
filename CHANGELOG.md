@@ -1,7 +1,8 @@
 ## 0.3.0
 
 - Update
-  - `Kotlin` to `1.6.20`.
+  - `Kotlin` to `1.6.21`.
+  - `KotlinX Coroutines` to `1.6.1`.
   - `Gradle` to `7.4.2`.
 
 - Refactor `withLatestFrom`'s implementation.

@@ -6,16 +6,16 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.6.20"
+  kotlin("multiplatform") version "1.6.21"
   id("com.diffplug.spotless") version "6.5.1"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.19.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
-  id("org.jetbrains.dokka") version "1.6.10"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.9.0"
+  id("org.jetbrains.dokka") version "1.6.21"
   id("org.jetbrains.kotlinx.kover") version "0.5.0"
 }
 
-val coroutinesVersion = "1.6.0"
+val coroutinesVersion = "1.6.1"
 val ktlintVersion = "0.44.0"
 
 repositories {
@@ -217,6 +217,12 @@ tasks.withType<DokkaTask>().configureEach {
     configureEach {
       externalDocumentationLink {
         url.set(URL("https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/"))
+      }
+
+      sourceLink {
+        localDirectory.set(file("src/commonMain/kotlin"))
+        remoteUrl.set(URL("https://github.com/hoc081098/FlowExt/tree/master/src/commonMain/kotlin"))
+        remoteLineSuffix.set("#L")
       }
     }
   }

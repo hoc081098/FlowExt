@@ -191,7 +191,7 @@ public fun <T> Flow<T>.throttleTime(
  * (1..10)
  *     .asFlow()
  *     .onEach { delay(200) }
- *     .throttle { timer(Unit, 500) }
+ *     .throttleTime { 500.milliseconds }
  * ```
  *
  * produces the following emissions
@@ -206,7 +206,7 @@ public fun <T> Flow<T>.throttleTime(
  * (1..10)
  *     .asFlow()
  *     .onEach { delay(200) }
- *     .throttle(TRAILING) { timer(Unit, 500) }
+ *     .throttleTime(TRAILING) { 500.milliseconds }
  * ```
  *
  * produces the following emissions
@@ -221,7 +221,7 @@ public fun <T> Flow<T>.throttleTime(
  * (1..10)
  *     .asFlow()
  *     .onEach { delay(200) }
- *     .throttle(LEADING_AND_TRAILING) { timer(Unit, 500) }
+ *     .throttleTime(LEADING_AND_TRAILING) { 500.milliseconds }
  * ```
  *
  * produces the following emissions
