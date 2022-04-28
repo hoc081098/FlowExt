@@ -30,4 +30,6 @@ internal actual class AtomicRef<T> actual constructor(value: T) {
   private val atomic = NativeAtomicReference(value)
 
   actual var value: T by atomic::value
+
+  actual fun compareAndSet(expect: T, update: T): Boolean = atomic.compareAndSet(expect, update)
 }

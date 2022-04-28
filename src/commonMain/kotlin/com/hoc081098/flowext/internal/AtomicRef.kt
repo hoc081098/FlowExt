@@ -26,4 +26,6 @@ package com.hoc081098.flowext.internal
 
 internal expect class AtomicRef<T>(value: T) {
   var value: T
+
+  fun compareAndSet(expect: T, update: T): Boolean
 }

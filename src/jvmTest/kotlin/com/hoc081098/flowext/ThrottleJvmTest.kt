@@ -49,7 +49,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @ExperimentalCoroutinesApi
-class ThrottleFirstTest : BaseTest() {
+class ThrottleFirstJvmTest : BaseTest() {
   @Test
   fun throttleWithCompleted_A() = runTest {
     (1..10)
@@ -326,7 +326,7 @@ class ThrottleFirstTest : BaseTest() {
 }
 
 @ExperimentalCoroutinesApi
-class ThrottleLastTest : BaseTest() {
+class ThrottleLastJvmTest : BaseTest() {
   @Test
   fun throttleWithCompleted_A() = runTest {
     flow {

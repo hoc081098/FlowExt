@@ -11,7 +11,6 @@
 - Add `Symbol` class.
 
 - Add
-  - `Flow.throttle`.
   - `Flow.throttleTime`.
   - `Event.flatMap`.
   - `Event.valueOrDefault`.

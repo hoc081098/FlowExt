@@ -64,7 +64,6 @@
   - `retryWhenWithExponentialBackoff`
   - `retryWithExponentialBackoff`
   - [`takeUntil`](#takeUntil)
-  - `throttle`
   - `throttleTime`
   - [`withLatestFrom`](#withLatestFrom)
 

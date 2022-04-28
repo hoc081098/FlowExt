@@ -32,4 +32,6 @@ internal actual class AtomicRef<T> actual constructor(value: T) {
   actual var value: T
     get() = atomic.get()
     set(value) = atomic.set(value)
+
+  actual fun compareAndSet(expect: T, update: T): Boolean = atomic.compareAndSet(expect, update)
 }

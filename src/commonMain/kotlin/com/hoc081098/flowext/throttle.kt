@@ -36,12 +36,13 @@ import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Define leading and trailing behavior.
@@ -123,10 +124,7 @@ private inline val ThrottleConfiguration.isTrailing: Boolean
 public fun <T> Flow<T>.throttleTime(
   duration: Duration,
   throttleConfiguration: ThrottleConfiguration = LEADING,
-): Flow<T> {
-  val timerFlow = timer(Unit, duration)
-  return throttle(throttleConfiguration) { timerFlow }
-}
+): Flow<T> = throttleTime(throttleConfiguration) { duration }
 
 /**
  * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
@@ -181,10 +179,7 @@ public fun <T> Flow<T>.throttleTime(
 public fun <T> Flow<T>.throttleTime(
   timeMillis: Long,
   throttleConfiguration: ThrottleConfiguration = LEADING,
-): Flow<T> {
-  val timerFlow = timer(Unit, timeMillis)
-  return throttle(throttleConfiguration) { timerFlow }
-}
+): Flow<T> = throttleTime(throttleConfiguration) { timeMillis.milliseconds }
 
 /**
  * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
@@ -236,9 +231,9 @@ public fun <T> Flow<T>.throttleTime(
  * ```
  */
 @ExperimentalCoroutinesApi
-public fun <T> Flow<T>.throttle(
+public fun <T> Flow<T>.throttleTime(
   throttleConfiguration: ThrottleConfiguration = LEADING,
-  durationSelector: (value: T) -> Flow<Unit>,
+  durationSelector: (value: T) -> Duration,
 ): Flow<T> = flow {
   val leading = throttleConfiguration.isLeading
   val trailing = throttleConfiguration.isTrailing
@@ -292,9 +287,15 @@ public fun <T> Flow<T>.throttle(
               if (leading) {
                 trySend()
               }
-              throttled = durationSelector(NULL_VALUE.unbox(value))
-                .take(1)
-                .launchIn(scope)
+              throttled = when (val duration = durationSelector(NULL_VALUE.unbox(value))) {
+                Duration.ZERO -> {
+                  if (trailing) {
+                    trySend()
+                  }
+                  null
+                }
+                else -> scope.launch { delay(duration) }
+              }
             }
             .onFailure {
               it?.let { throw it }
