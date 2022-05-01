@@ -262,18 +262,20 @@ public fun <T> Flow<T>.throttleTime(
       }
     }
 
+    val onWindowClosed = suspend {
+      throttled = null
+
+      if (trailing) {
+        trySend()
+      }
+    }
+
     // Now consume the values until the original flow is complete.
     while (lastValue !== DONE_VALUE) {
       // wait for the next value
       select<Unit> {
         // When a throttling window ends, send the value if there is a pending value.
-        throttled?.onJoin?.invoke {
-          throttled = null
-
-          if (trailing) {
-            trySend()
-          }
-        }
+        throttled?.onJoin?.invoke(onWindowClosed)
 
         values.onReceiveCatching { result ->
           result
@@ -288,8 +290,10 @@ public fun <T> Flow<T>.throttleTime(
                 trySend()
               }
 
-              val duration = durationSelector(NULL_VALUE.unbox(value))
-              throttled = scope.launch { delay(duration) }
+              when (val duration = durationSelector(NULL_VALUE.unbox(value))) {
+                Duration.ZERO -> onWindowClosed()
+                else -> throttled = scope.launch { delay(duration) }
+              }
             }
             .onFailure {
               it?.let { throw it }

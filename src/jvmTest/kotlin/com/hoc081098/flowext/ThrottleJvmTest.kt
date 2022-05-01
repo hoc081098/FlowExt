@@ -41,7 +41,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.StandardTestDispatcher
 import java.util.concurrent.Executors
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -178,7 +177,7 @@ class ThrottleFirstJvmTest {
   }
 
   @Test
-  fun throttleFailureUpstream() = runBlocking(StandardTestDispatcher()) {
+  fun throttleFailureUpstream() = runBlocking {
     flow {
       emit(1)
       throw TestException("Broken!")
