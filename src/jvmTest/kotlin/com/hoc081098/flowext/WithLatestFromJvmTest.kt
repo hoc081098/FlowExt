@@ -29,18 +29,14 @@ import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import java.util.concurrent.Executors
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -50,33 +46,6 @@ import kotlin.test.assertFailsWith
 class WithLatestFromJvmTest {
   @Test
   fun basic() = runBlocking {
-    val context1 = Executors.newSingleThreadExecutor {
-      Thread(it).apply {
-        name = "My thread 1"
-      }
-    }.asCoroutineDispatcher()
-
-    val context2 = Executors.newSingleThreadExecutor {
-      Thread(it).apply {
-        name = "My thread 2"
-      }
-    }.asCoroutineDispatcher()
-
-    withContext(context1) {
-      flowOf(1)
-        .withLatestFrom(flow { emit(2) }.flowOn(context2))
-        .onEach {
-          println("3" + Thread.currentThread())
-          println(it)
-        }
-        .test(
-          listOf(
-            Event.Value(1 to 2),
-            Event.Complete
-          )
-        )
-    }
-
     val f1 = flowOf(1, 2, 3, 4)
     val f2 = flowOf("a", "b", "c", "d", "e")
     assertEquals(

@@ -25,22 +25,24 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
-import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceTimeBy
+import java.util.concurrent.Executors
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -49,9 +51,9 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @ExperimentalCoroutinesApi
-class ThrottleFirstJvmTest : BaseTest() {
+class ThrottleFirstJvmTest {
   @Test
-  fun throttleWithCompleted_A() = runTest {
+  fun throttleWithCompleted_A() = runBlocking {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
@@ -68,7 +70,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompleted_B() = runTest {
+  fun throttleWithCompleted_B() = runBlocking {
     flow {
       emit(1) // deliver
       emit(2) // skip
@@ -99,7 +101,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompletedAndNotDelay_A() = runTest {
+  fun throttleWithCompletedAndNotDelay_A() = runBlocking {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
@@ -108,7 +110,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompletedAndNotDelay_B() = runTest {
+  fun throttleWithCompletedAndNotDelay_B() = runBlocking {
     (1..10)
       .asFlow()
       .throttleTime(0)
@@ -116,7 +118,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompletedAndNotDelay_C() = runTest {
+  fun throttleWithCompletedAndNotDelay_C() = runBlocking {
     (1..10)
       .asFlow()
       .throttleTime { Duration.ZERO }
@@ -124,7 +126,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleNullableWithCompleted() = runTest {
+  fun throttleNullableWithCompleted() = runBlocking {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
@@ -142,7 +144,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleSingleFlow() = runTest {
+  fun throttleSingleFlow() = runBlocking {
     flowOf(1)
       .throttleTime(100)
       .test(
@@ -154,28 +156,29 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleEmptyFlow() = runTest {
+  fun throttleEmptyFlow() = runBlocking {
     emptyFlow<Int>()
       .throttleTime(100)
       .test(listOf(Event.Complete))
   }
 
   @Test
-  fun throttleNeverFlow() = runTest {
+  fun throttleNeverFlow() = runBlocking {
     var hasValue = false
 
     val job = neverFlow()
       .throttleTime(100)
       .onEach { hasValue = true }
+      .flowOn(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
       .launchIn(this)
-    advanceTimeBy(1000)
+    delay(1000)
     job.cancel()
 
     assertFalse(hasValue)
   }
 
   @Test
-  fun throttleFailureUpstream() = runTest(StandardTestDispatcher()) {
+  fun throttleFailureUpstream() = runBlocking(StandardTestDispatcher()) {
     flow {
       emit(1)
       throw TestException("Broken!")
@@ -219,7 +222,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleFailureSelector() = runTest {
+  fun throttleFailureSelector() = runBlocking {
     (1..10)
       .asFlow()
       .throttleTime { throw TestException("Broken!") }
@@ -287,7 +290,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleTake() = runTest {
+  fun throttleTake() = runBlocking {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
@@ -305,7 +308,7 @@ class ThrottleFirstJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleCancellation() = runTest {
+  fun throttleCancellation() = runBlocking {
     var count = 0
     (1..10).asFlow()
       .onEach { delay(200) }
@@ -326,9 +329,9 @@ class ThrottleFirstJvmTest : BaseTest() {
 }
 
 @ExperimentalCoroutinesApi
-class ThrottleLastJvmTest : BaseTest() {
+class ThrottleLastJvmTest {
   @Test
-  fun throttleWithCompleted_A() = runTest {
+  fun throttleWithCompleted_A() = runBlocking {
     flow {
       // -1---2----3-
       // -@-----!--@-----!
@@ -353,7 +356,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompleted_B() = runTest {
+  fun throttleWithCompleted_B() = runBlocking {
     flow {
       // -1---2----3----4
       // -@-----!--@-----!
@@ -379,7 +382,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompleted_C() = runTest {
+  fun throttleWithCompleted_C() = runBlocking {
     flow {
       // -1---2----3------4|
       // -@-----!--@-----!
@@ -406,7 +409,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompletedAndNotDelay_A() = runTest {
+  fun throttleWithCompletedAndNotDelay_A() = runBlocking {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
@@ -415,7 +418,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompletedAndNotDelay_B() = runTest {
+  fun throttleWithCompletedAndNotDelay_B() = runBlocking {
     (1..10)
       .asFlow()
       .throttleTime(0, TRAILING)
@@ -423,7 +426,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleWithCompletedAndNotDelay_C() = runTest {
+  fun throttleWithCompletedAndNotDelay_C() = runBlocking {
     (1..10)
       .asFlow()
       .throttleTime(TRAILING) { Duration.ZERO }
@@ -431,7 +434,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleNullableWithCompleted() = runTest {
+  fun throttleNullableWithCompleted() = runBlocking {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
@@ -449,7 +452,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleSingleFlow() = runTest {
+  fun throttleSingleFlow() = runBlocking {
     flowOf(1)
       .throttleTime(100, TRAILING)
       .test(
@@ -461,28 +464,29 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleEmptyFlow() = runTest {
+  fun throttleEmptyFlow() = runBlocking {
     emptyFlow<Int>()
       .throttleTime(100, TRAILING)
       .test(listOf(Event.Complete))
   }
 
   @Test
-  fun throttleNeverFlow() = runTest {
+  fun throttleNeverFlow() = runBlocking {
     var hasValue = false
 
     val job = neverFlow()
       .throttleTime(100, TRAILING)
       .onEach { hasValue = true }
+      .flowOn(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
       .launchIn(this)
-    advanceTimeBy(1000)
+    delay(1000)
     job.cancel()
 
     assertFalse(hasValue)
   }
 
   @Test
-  fun throttleFailureUpstream() = runTest {
+  fun throttleFailureUpstream() = runBlocking {
     flow {
       emit(1)
       throw TestException("Broken!")
@@ -523,7 +527,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleFailureSelector() = runTest {
+  fun throttleFailureSelector() = runBlocking {
     (1..10)
       .asFlow()
       .throttleTime(TRAILING) { throw TestException("Broken!") }
@@ -591,7 +595,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleTake() = runTest {
+  fun throttleTake() = runBlocking {
     (1..10)
       .asFlow()
       .onEach { delay(200) }
@@ -609,7 +613,7 @@ class ThrottleLastJvmTest : BaseTest() {
   }
 
   @Test
-  fun throttleCancellation() = runTest {
+  fun throttleCancellation() = runBlocking {
     // --1--2--3--4--5--6--7--8--9--10
 
     var count = 1
