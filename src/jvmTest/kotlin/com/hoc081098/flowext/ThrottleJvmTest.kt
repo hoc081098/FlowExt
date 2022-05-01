@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -49,6 +50,7 @@ import kotlin.test.assertIs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+@Ignore("Ignore JVM tests. Run only locally.")
 @ExperimentalCoroutinesApi
 class ThrottleFirstJvmTest {
   @Test
@@ -327,6 +329,7 @@ class ThrottleFirstJvmTest {
   }
 }
 
+@Ignore("Ignore JVM tests. Run only locally.")
 @ExperimentalCoroutinesApi
 class ThrottleLastJvmTest {
   @Test

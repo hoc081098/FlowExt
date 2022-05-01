@@ -37,10 +37,12 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+@Ignore("Ignore JVM tests. Run only locally.")
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class WithLatestFromJvmTest {
