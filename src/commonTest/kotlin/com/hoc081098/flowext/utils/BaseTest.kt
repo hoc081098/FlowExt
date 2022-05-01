@@ -25,15 +25,19 @@
 package com.hoc081098.flowext.utils
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 abstract class BaseTest {
   @ExperimentalCoroutinesApi
-  protected fun runTest(testBody: suspend TestScope.() -> Unit): TestResult {
+  protected fun runTest(
+    testDispatcher: TestDispatcher? = null,
+    testBody: suspend TestScope.() -> Unit
+  ): TestResult {
     return kotlinx.coroutines.test.runTest(
-      context = UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatchers"),
+      context = testDispatcher ?: UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatcher"),
       testBody = testBody,
     )
   }

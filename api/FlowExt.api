@@ -154,10 +154,10 @@ public final class com/hoc081098/flowext/ThrottleConfiguration : java/lang/Enum 
 }
 
 public final class com/hoc081098/flowext/ThrottleKt {
-	public static final fun throttle (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun throttle$default (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun throttleTime (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun throttleTime (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun throttleTime$default (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun throttleTime$default (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun throttleTime-8Mi8wO0 (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun throttleTime-8Mi8wO0$default (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }
