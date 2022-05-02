@@ -129,7 +129,7 @@
 
 #### mapTo
 
-- Similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo))
+- Similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo)
 
 #### materialize
 
