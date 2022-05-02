@@ -17,7 +17,7 @@
   - `Event.valueOrDefault`.
   - `Event.valueOrElse`.
   - `race`, `amb`.
-  - `raceWith`, `ambWith`.
+  - `Flow.raceWith`, `Flow.ambWith`.
   - `Flow.mapToUnit`.
   - `Flow.startWith { }` that accepts a lambda parameter.
 
