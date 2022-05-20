@@ -30,6 +30,10 @@ public final class com/hoc081098/flowext/ConcatKt {
 	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/DeferKt {
+	public static final fun defer (Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public abstract interface class com/hoc081098/flowext/DelayStrategy {
 	public abstract fun nextDelay-3nIYWDw (Ljava/lang/Throwable;J)J
 }
@@ -95,6 +99,10 @@ public final class com/hoc081098/flowext/FlatMapFirstKt {
 	public static final fun exhaustMap (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun flatMapFirst (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun flattenFirst (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/hoc081098/flowext/FlowFromSuspendKt {
+	public static final fun flowFromSuspend (Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/IntervalKt {
