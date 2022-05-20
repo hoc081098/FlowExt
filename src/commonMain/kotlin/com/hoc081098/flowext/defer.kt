@@ -25,7 +25,14 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
+/**
+ * Creates a [Flow] that, on collection, calls a [Flow] factory to make a [Flow] for each new [FlowCollector].
+ *
+ * In some circumstances, waiting until the last minute (that is, until collection time)
+ * to generate the [Flow] can ensure that collectors receive the freshest data.
+ */
 public fun <T> defer(flowFactory: suspend () -> Flow<T>): Flow<T> = flow { emitAll(flowFactory()) }
