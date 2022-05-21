@@ -40,6 +40,8 @@
 
 - Create
   - [`concat`](#concat)
+  - [`defer`](#defer)
+  - [`flowFromSuspend`](#flowFromSuspend)
   - [`interval`](#interval)
   - [`neverFlow`](#neverFlow)
   - [`race`](#race--amb)
@@ -79,6 +81,10 @@
 - Similar to [RxJS concat](https://rxjs.dev/api/index/function/concat)
 - Similar
   to [RxJava concat](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concat-java.lang.Iterable-)
+
+#### defer
+
+#### flowFromSuspend
 
 #### interval
 
