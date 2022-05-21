@@ -1,3 +1,9 @@
+## 0.4.0
+
+- Add
+  - `defer`.
+  - `flowFromSuspend`.
+
 ## 0.3.0 - May 2, 2022
 
 - Update
