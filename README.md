@@ -84,6 +84,10 @@
 
 #### defer
 
+- Similar to [RxJS defer](https://rxjs.dev/api/index/function/defer)
+- Similar
+  to [RxJava defer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#defer-io.reactivex.rxjava3.functions.Supplier-)
+
 #### flowFromSuspend
 
 #### interval
