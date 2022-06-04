@@ -190,7 +190,7 @@ spotless {
 allprojects {
   plugins.withId("com.vanniktech.maven.publish") {
     mavenPublish {
-      publishToMavenCentral("S01")
+      publishToMavenCentral(SonatypeHost.S01)
       enableReleaseSigning()
     }
   }
