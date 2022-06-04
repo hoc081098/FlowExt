@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.MavenPublishBasePlugin
+import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -188,10 +191,10 @@ spotless {
 }
 
 allprojects {
-  plugins.withId("com.vanniktech.maven.publish") {
-    mavenPublish {
+  plugins.withType<MavenPublishBasePlugin> {
+    extensions.configure<MavenPublishBaseExtension> {
       publishToMavenCentral(SonatypeHost.S01)
-      enableReleaseSigning()
+      signAllPublications()
     }
   }
 }
