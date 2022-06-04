@@ -146,6 +146,9 @@ jobs:
       #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_PRIVATE_KEY }}
       #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
+      - name: Generate docs
+        run: ./gradlew dokkaHtml --no-parallel --stacktrace
+
       - name: Deploy docs 🚀 to website
         if: ${{ github.ref == 'refs/heads/master' && github.repository == 'hoc081098/FlowExt' && matrix.os == 'macos-11' }}
         uses: JamesIves/github-pages-deploy-action@v4.3.3

@@ -84,6 +84,9 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
+      - name: Generate docs
+        run: ./gradlew dokkaHtml --no-parallel --stacktrace
+
       - name: Deploy docs 🚀 to website
         if: ${{ matrix.os == 'macos-11' }}
         uses: JamesIves/github-pages-deploy-action@v4.3.3
