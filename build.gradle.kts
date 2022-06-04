@@ -1,3 +1,6 @@
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.MavenPublishBasePlugin
+import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -9,7 +12,7 @@ plugins {
   kotlin("multiplatform") version "1.6.21"
   id("com.diffplug.spotless") version "6.6.1"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.19.0"
+  id("com.vanniktech.maven.publish") version "0.20.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.0"
   id("org.jetbrains.dokka") version "1.6.21"
   id("org.jetbrains.kotlinx.kover") version "0.5.1"
@@ -188,9 +191,10 @@ spotless {
 }
 
 allprojects {
-  plugins.withId("com.vanniktech.maven.publish") {
-    mavenPublish {
-      sonatypeHost = com.vanniktech.maven.publish.SonatypeHost.S01
+  plugins.withType<MavenPublishBasePlugin> {
+    extensions.configure<MavenPublishBaseExtension> {
+      publishToMavenCentral(SonatypeHost.S01)
+      signAllPublications()
     }
   }
 }
