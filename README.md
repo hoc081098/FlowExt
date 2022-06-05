@@ -55,6 +55,9 @@
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
   - [`exhaustMap`](#flatmapfirst--exhaustmap)
   - [`flattenFirst`](#flattenfirst--exhaustall)
+  - [`flatMapConcatEager`](#flatmapconcateager)
+  - `mapEager`
+  - `flattenEager`
   - [`exhaustAll`](#flattenfirst--exhaustall)
   - `mapIndexed`
   - [`mapTo`](#mapTo)
@@ -137,6 +140,10 @@
 #### flattenFirst / exhaustAll
 
 - Similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll)
+
+#### flatMapConcatEager
+
+- Similar to [RxJava concatMapEager](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatMapEager-io.reactivex.rxjava3.functions.Function-)
 
 #### mapTo
 
