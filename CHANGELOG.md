@@ -3,6 +3,7 @@
 - Add
   - `defer`.
   - `flowFromSuspend`.
+  - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
 
 ## 0.3.0 - May 2, 2022
 
