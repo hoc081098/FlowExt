@@ -10,7 +10,7 @@ import java.net.URL
 
 plugins {
   kotlin("multiplatform") version "1.6.21"
-  id("com.diffplug.spotless") version "6.6.1"
+  id("com.diffplug.spotless") version "6.7.2"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.20.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.0"
