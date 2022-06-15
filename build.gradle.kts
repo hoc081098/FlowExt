@@ -154,7 +154,7 @@ spotless {
   kotlin {
     target("**/*.kt")
 
-    ktlint(ktlintVersion).userData(
+    ktlint(ktlintVersion).editorConfigOverride(
       mapOf(
         // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
         "indent_size" to "2",
@@ -175,7 +175,7 @@ spotless {
   kotlinGradle {
     target("**/*.kts")
 
-    ktlint(ktlintVersion).userData(
+    ktlint(ktlintVersion).editorConfigOverride(
       mapOf(
         "indent_size" to "2",
         "ij_kotlin_imports_layout" to "*",
