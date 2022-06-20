@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.6.21"
+  kotlin("multiplatform") version "1.7.0"
   id("com.diffplug.spotless") version "6.6.1"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.20.0"
