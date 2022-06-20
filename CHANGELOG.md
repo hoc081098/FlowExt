@@ -1,5 +1,8 @@
 ## 0.4.0
 
+- Update
+  - `Kotlin` to `1.7.0`.
+
 - Add
   - `defer`.
   - `flowFromSuspend`.
