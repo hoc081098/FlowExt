@@ -2,6 +2,7 @@
 
 - Update
   - `Kotlin` to `1.7.0`.
+  - `KotlinX Coroutines` to `1.6.3`.
 
 - Add
   - `defer`.
