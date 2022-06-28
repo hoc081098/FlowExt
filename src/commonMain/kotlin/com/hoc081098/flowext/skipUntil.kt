@@ -24,39 +24,43 @@
 
 package com.hoc081098.flowext
 
-import com.hoc081098.flowext.utils.NULL_VALUE
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.produceIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.selects.select
 
+/**
+ * TODO
+ */
+@FlowPreview
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
   coroutineScope {
-    val values = produce {
-      collect { send(it ?: NULL_VALUE) }
-    }
-    val notifierChannel = produce(capacity = 1) {
-      notifier.take(1).collect()
-      send(Unit)
-    }
+    val values = produceIn(this)
+    val notifierChannel = produce<Nothing>() { notifier.take(1).collect() }
 
     var shouldEmit = false
     var loop = true
 
     while (loop) {
+      ensureActive()
+
       select<Unit> {
         if (!shouldEmit) {
           notifierChannel.onReceiveCatching { result ->
-            result
-              .onSuccess { shouldEmit = true }
-              .onFailure { it?.let { throw it } }
+            result.onFailure {
+              it?.let { throw it }
+              shouldEmit = true
+            }
           }
         }
 
@@ -65,12 +69,14 @@ public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
             result
               .onSuccess {
                 if (shouldEmit) {
-                  emit(NULL_VALUE.unbox(it))
+                  emit(it)
                 }
               }
               .onFailure {
                 it?.let { throw it }
+
                 loop = false
+                notifierChannel.cancel()
               }
           }
       }
@@ -78,6 +84,10 @@ public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
   }
 }
 
+/**
+ * TODO
+ */
 @Suppress("NOTHING_TO_INLINE")
+@FlowPreview
 @ExperimentalCoroutinesApi
 public inline fun <T> Flow<T>.dropUntil(notifier: Flow<Any?>): Flow<T> = skipUntil(notifier)

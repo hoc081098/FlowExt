@@ -8,6 +8,7 @@
   - `defer`.
   - `flowFromSuspend`.
   - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
+  - `skipUntil`, `dropUntil`.
 
 ## 0.3.0 - May 2, 2022
 

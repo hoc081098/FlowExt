@@ -158,6 +158,11 @@ public final class com/hoc081098/flowext/RetryWhenWithDelayStrategyKt {
 	public static synthetic fun retryWithExponentialBackoff-f6PB7jA$default (Lkotlinx/coroutines/flow/Flow;JDJJLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/SkipUntilKt {
+	public static final fun dropUntil (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun skipUntil (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/TakeUntilKt {
 	public static final fun takeUntil (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
