@@ -58,18 +58,22 @@ kotlin {
   iosArm64()
   iosArm32()
   iosX64()
+  iosSimulatorArm64()
 
   macosX64()
+  macosArm64()
   mingwX64()
   linuxX64()
 
   tvosX64()
+  tvosSimulatorArm64()
   tvosArm64()
 
   watchosArm32()
   watchosArm64()
   watchosX64()
   watchosX86()
+  watchosSimulatorArm64()
 
   sourceSets {
     val commonMain by getting {
@@ -112,14 +116,18 @@ kotlin {
 
     val appleTargets = listOf(
       "iosX64",
+      "iosSimulatorArm64",
       "iosArm64",
       "iosArm32",
       "macosX64",
+      "macosArm64",
       "tvosArm64",
       "tvosX64",
+      "tvosSimulatorArm64",
       "watchosArm32",
       "watchosArm64",
       "watchosX86",
+      "watchosSimulatorArm64",
       "watchosX64"
     )
 
