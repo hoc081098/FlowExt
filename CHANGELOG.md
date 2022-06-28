@@ -9,6 +9,8 @@
   - `flowFromSuspend`.
   - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
 
+- Support for Apple Silicon targets
+
 ## 0.3.0 - May 2, 2022
 
 - Update
