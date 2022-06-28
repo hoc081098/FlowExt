@@ -57,7 +57,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
             transform(
               value,
               NULL_VALUE.unbox(otherRef.value ?: return@collect)
-            ),
+            )
           )
         }
       }

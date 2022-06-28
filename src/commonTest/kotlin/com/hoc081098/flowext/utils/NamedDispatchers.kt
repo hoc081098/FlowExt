@@ -24,10 +24,10 @@
 
 package com.hoc081098.flowext.utils
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Runnable
 import kotlin.coroutines.CoroutineContext
 import kotlin.native.concurrent.ThreadLocal
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Runnable
 
 /**
  * Test dispatchers that emulate multiplatform context tracking.

@@ -26,6 +26,9 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
+import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
@@ -34,9 +37,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -49,9 +49,9 @@ class MaterializeTest : BaseTest() {
         Event.Value(1),
         Event.Value(2),
         Event.Value(3),
-        Event.Complete,
+        Event.Complete
       ),
-      events,
+      events
     )
 
     assertEquals(Event.Complete, emptyFlow<Int>().materialize().single())
@@ -70,9 +70,9 @@ class MaterializeTest : BaseTest() {
         Event.Value(1),
         Event.Value(2),
         Event.Value(3),
-        Event.Error(ex),
+        Event.Error(ex)
       ),
-      events1,
+      events1
     )
 
     val events2 = flowOf(1, 2, 3)
@@ -81,13 +81,13 @@ class MaterializeTest : BaseTest() {
       .toList()
     assertContentEquals(
       listOf(Event.Error(ex)),
-      events2,
+      events2
     )
 
     val events3 = concat(
       flowOf(1, 2, 3),
       flow { throw ex },
-      flowOf(4, 5, 6),
+      flowOf(4, 5, 6)
     )
       .materialize()
       .toList()
@@ -96,9 +96,9 @@ class MaterializeTest : BaseTest() {
         Event.Value(1),
         Event.Value(2),
         Event.Value(3),
-        Event.Error(ex),
+        Event.Error(ex)
       ),
-      events3,
+      events3
     )
   }
 
@@ -108,9 +108,9 @@ class MaterializeTest : BaseTest() {
     assertContentEquals(
       listOf(
         Event.Value(1),
-        Event.Complete,
+        Event.Complete
       ),
-      events1,
+      events1
     )
 
     val ex = TestException()
@@ -124,9 +124,9 @@ class MaterializeTest : BaseTest() {
         Event.Value(1),
         Event.Value(2),
         Event.Value(3),
-        Event.Complete,
+        Event.Complete
       ),
-      events2,
+      events2
     )
 
     val events3 = flowOf(1, 2, 3)
@@ -138,9 +138,9 @@ class MaterializeTest : BaseTest() {
       listOf(
         Event.Value(1),
         Event.Value(2),
-        Event.Complete,
+        Event.Complete
       ),
-      events3,
+      events3
     )
   }
 }

@@ -26,6 +26,10 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Ignore
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -37,10 +41,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import kotlin.test.Ignore
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 @Ignore("Ignore JVM tests. Run only locally.")
 @InternalCoroutinesApi
@@ -57,7 +57,7 @@ class WithLatestFromJvmTest {
         "b" to 4,
         "c" to 4,
         "d" to 4,
-        "e" to 4,
+        "e" to 4
       )
     )
   }
@@ -73,7 +73,7 @@ class WithLatestFromJvmTest {
         "b" to null,
         "c" to null,
         "d" to null,
-        "e" to null,
+        "e" to null
       )
     )
   }
@@ -87,7 +87,7 @@ class WithLatestFromJvmTest {
       listOf(
         "c" to 1,
         "d" to 1,
-        "e" to 1,
+        "e" to 1
       )
     )
   }

@@ -29,6 +29,8 @@ import com.hoc081098.flowext.ThrottleConfiguration.LEADING_AND_TRAILING
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.internal.DONE_VALUE
 import com.hoc081098.flowext.utils.NULL_VALUE
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -41,8 +43,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Define leading and trailing behavior.
@@ -123,7 +123,7 @@ private inline val ThrottleConfiguration.isTrailing: Boolean
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   duration: Duration,
-  throttleConfiguration: ThrottleConfiguration = LEADING,
+  throttleConfiguration: ThrottleConfiguration = LEADING
 ): Flow<T> = throttleTime(throttleConfiguration) { duration }
 
 /**
@@ -178,7 +178,7 @@ public fun <T> Flow<T>.throttleTime(
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   timeMillis: Long,
-  throttleConfiguration: ThrottleConfiguration = LEADING,
+  throttleConfiguration: ThrottleConfiguration = LEADING
 ): Flow<T> = throttleTime(throttleConfiguration) { timeMillis.milliseconds }
 
 /**
@@ -233,7 +233,7 @@ public fun <T> Flow<T>.throttleTime(
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   throttleConfiguration: ThrottleConfiguration = LEADING,
-  durationSelector: (value: T) -> Duration,
+  durationSelector: (value: T) -> Duration
 ): Flow<T> = flow {
   val leading = throttleConfiguration.isLeading
   val trailing = throttleConfiguration.isTrailing

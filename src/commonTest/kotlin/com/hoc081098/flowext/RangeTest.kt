@@ -26,9 +26,9 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -48,7 +48,7 @@ class RangeTest : BaseTest() {
         Event.Value(2),
         Event.Value(3),
         Event.Value(4),
-        Event.Complete,
+        Event.Complete
       )
     )
   }
