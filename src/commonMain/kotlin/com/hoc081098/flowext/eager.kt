@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 @FlowPreview
 public fun <T, R> Flow<T>.mapEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
-  transform: suspend (value: T) -> R,
+  transform: suspend (value: T) -> R
 ): Flow<R> = if (concurrency == 1) {
   map(transform)
 } else {
@@ -81,7 +81,7 @@ public fun <T, R> Flow<T>.mapEager(
 public fun <T, R> Flow<T>.flatMapConcatEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
   bufferSize: Int = Channel.BUFFERED,
-  transform: suspend (value: T) -> Flow<R>,
+  transform: suspend (value: T) -> Flow<R>
 ): Flow<R> = map(transform).flattenConcatEager(concurrency, bufferSize)
 
 /**
@@ -109,7 +109,7 @@ public fun <T, R> Flow<T>.flatMapConcatEager(
 @FlowPreview
 public fun <T> Flow<Flow<T>>.flattenConcatEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
-  bufferSize: Int = Channel.BUFFERED,
+  bufferSize: Int = Channel.BUFFERED
 ): Flow<T> {
   require(concurrency > 0) { "Expected positive concurrency level, but had $concurrency" }
   return if (concurrency == 1) flattenConcat() else flattenConcatEagerInternal(this, concurrency, bufferSize)

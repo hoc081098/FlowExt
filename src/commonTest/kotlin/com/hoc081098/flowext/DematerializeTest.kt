@@ -27,6 +27,8 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertFailsWith
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
@@ -34,8 +36,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
-import kotlin.test.Test
-import kotlin.test.assertFailsWith
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -50,7 +50,7 @@ class DematerializeTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Complete,
+          Event.Complete
         )
       )
 
@@ -58,7 +58,7 @@ class DematerializeTest : BaseTest() {
       Event.Value(1),
       Event.Value(2),
       Event.Value(3),
-      Event.Complete,
+      Event.Complete
     )
       .dematerialize()
       .test(
@@ -66,7 +66,7 @@ class DematerializeTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Complete,
+          Event.Complete
         )
       )
 
@@ -77,7 +77,7 @@ class DematerializeTest : BaseTest() {
       Event.Complete,
       Event.Value(4),
       Event.Value(5),
-      Event.Value(6),
+      Event.Value(6)
     )
       .dematerialize()
       .test(
@@ -85,7 +85,7 @@ class DematerializeTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Complete,
+          Event.Complete
         )
       )
 
@@ -106,7 +106,7 @@ class DematerializeTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Error(ex),
+          Event.Error(ex)
         )
       )
 
@@ -119,7 +119,7 @@ class DematerializeTest : BaseTest() {
     concat(
       flowOf(1, 2, 3),
       flow { throw ex },
-      flowOf(4, 5, 6),
+      flowOf(4, 5, 6)
     )
       .materialize()
       .dematerialize()
@@ -128,7 +128,7 @@ class DematerializeTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Error(ex),
+          Event.Error(ex)
         )
       )
 
@@ -150,7 +150,7 @@ class DematerializeTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
 
@@ -165,7 +165,7 @@ class DematerializeTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Complete,
+          Event.Complete
         )
       )
 
@@ -178,7 +178,7 @@ class DematerializeTest : BaseTest() {
         listOf(
           Event.Value(1),
           Event.Value(2),
-          Event.Complete,
+          Event.Complete
         )
       )
   }

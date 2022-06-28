@@ -27,9 +27,9 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 class FlowFromSuspendTest : BaseTest() {

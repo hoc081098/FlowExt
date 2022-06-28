@@ -30,6 +30,10 @@ import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.hang
 import com.hoc081098.flowext.utils.sum
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -49,10 +53,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.yield
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.time.Duration.Companion.seconds
 
 @FlowPreview
 @ExperimentalCoroutinesApi

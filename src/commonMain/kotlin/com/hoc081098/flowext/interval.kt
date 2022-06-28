@@ -24,10 +24,10 @@
 
 package com.hoc081098.flowext
 
+import kotlin.time.Duration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlin.time.Duration
 
 /**
  * Returns a [Flow] that emits a 0L after the [initialDelay] and ever-increasing numbers
@@ -38,7 +38,7 @@ import kotlin.time.Duration
  */
 public fun interval(
   initialDelay: Duration,
-  period: Duration,
+  period: Duration
 ): Flow<Long> {
   require(initialDelay >= Duration.ZERO) { "Expected non-negative delay, but has $initialDelay ms" }
   require(period >= Duration.ZERO) { "Expected non-negative period, but has $period ms" }
@@ -63,7 +63,7 @@ public fun interval(
  */
 public fun interval(
   initialDelayMillis: Long,
-  periodMillis: Long,
+  periodMillis: Long
 ): Flow<Long> {
   require(initialDelayMillis >= 0) { "Expected non-negative delay, but has $initialDelayMillis ms" }
   require(periodMillis >= 0) { "Expected non-negative periodMillis, but has $periodMillis ms" }

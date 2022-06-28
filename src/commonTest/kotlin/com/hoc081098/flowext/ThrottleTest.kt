@@ -28,6 +28,12 @@ import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -41,12 +47,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 
 @ExperimentalCoroutinesApi
 class ThrottleFirstTest : BaseTest() {
@@ -62,7 +62,7 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(4),
           Event.Value(7),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -93,7 +93,7 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(1),
           Event.Value(3),
           Event.Value(7),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -136,7 +136,7 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(4),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -148,7 +148,7 @@ class ThrottleFirstTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -347,7 +347,7 @@ class ThrottleLastTest : BaseTest() {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -373,7 +373,7 @@ class ThrottleLastTest : BaseTest() {
         listOf(
           Event.Value(2),
           Event.Value(4),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -400,7 +400,7 @@ class ThrottleLastTest : BaseTest() {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -443,7 +443,7 @@ class ThrottleLastTest : BaseTest() {
           Event.Value(6),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -455,7 +455,7 @@ class ThrottleLastTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }

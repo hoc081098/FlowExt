@@ -24,12 +24,12 @@
 
 package com.hoc081098.flowext
 
+import kotlin.math.pow
+import kotlin.time.Duration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.retryWhen
-import kotlin.math.pow
-import kotlin.time.Duration
 
 /**
  * Interface that computes the delay between retries.
@@ -87,7 +87,7 @@ public fun interface DelayStrategy {
   public class ExponentialBackoffDelayStrategy(
     private val initialDelay: Duration,
     private val factor: Double,
-    private val maxDelay: Duration,
+    private val maxDelay: Duration
   ) : DelayStrategy {
     override fun nextDelay(cause: Throwable, attempt: Long): Duration =
       (if (attempt <= 0L) initialDelay else initialDelay * factor.pow(attempt.toDouble()))
@@ -133,9 +133,9 @@ public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
   strategy = DelayStrategy.ExponentialBackoffDelayStrategy(
     initialDelay = initialDelay,
     factor = factor,
-    maxDelay = maxDelay,
+    maxDelay = maxDelay
   ),
-  predicate = predicate,
+  predicate = predicate
 )
 
 /**
