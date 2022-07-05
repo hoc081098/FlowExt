@@ -28,6 +28,8 @@ import com.hoc081098.flowext.utils.BaseStepTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -36,8 +38,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @FlowPreview
 @InternalCoroutinesApi

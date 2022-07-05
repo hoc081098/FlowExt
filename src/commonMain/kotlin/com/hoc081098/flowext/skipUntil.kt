@@ -46,7 +46,7 @@ import kotlinx.coroutines.selects.select
 public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
   coroutineScope {
     val values = produceIn(this)
-    val notifierChannel = produce<Nothing>() { notifier.take(1).collect() }
+    val notifierChannel = produce<Nothing> { notifier.take(1).collect() }
 
     var shouldEmit = false
     var loop = true
