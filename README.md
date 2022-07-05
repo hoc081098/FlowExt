@@ -93,6 +93,8 @@
 
 #### flowFromSuspend
 
+- Similar to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
+
 #### interval
 
 - Similar to [RxJS interval](https://rxjs.dev/api/index/function/interval)
