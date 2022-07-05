@@ -28,6 +28,7 @@ import com.hoc081098.flowext.utils.BaseStepTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,13 +40,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.runBlocking
 
+@Ignore("Ignore JVM tests. Run only locally.")
 @FlowPreview
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
-class SkipUntilTest : BaseStepTest() {
+class SkipUntilJvmTest : BaseStepTest() {
   @Test
-  fun testSkipUntil() = runTest {
+  fun testSkipUntil() = runBlocking {
     // ----------1----------2----------3
     // ---------------|
     flowOf(1, 2, 3)
@@ -61,14 +64,14 @@ class SkipUntilTest : BaseStepTest() {
   }
 
   @Test
-  fun testSkipUntilNever() = runTest {
+  fun testSkipUntilNever() = runBlocking {
     flowOf(1, 2, 3, 4)
       .skipUntil(neverFlow())
       .test(listOf(Event.Complete))
   }
 
   @Test
-  fun testSkipUntilEmpty() = runTest {
+  fun testSkipUntilEmpty() = runBlocking {
     flowOf(1, 2, 3, 4)
       .skipUntil(emptyFlow())
       .test(
@@ -83,7 +86,7 @@ class SkipUntilTest : BaseStepTest() {
   }
 
   @Test
-  fun testSkipUntilFailureUpstream() = runTest {
+  fun testSkipUntilFailureUpstream() = runBlocking {
     // 01--------------------2X
     // ----------100
 
@@ -119,7 +122,7 @@ class SkipUntilTest : BaseStepTest() {
   }
 
   @Test
-  fun testSkipUntilCancellation() = runTest {
+  fun testSkipUntilCancellation() = runBlocking {
     flow {
       emit(0)
       delay(200)
@@ -140,7 +143,7 @@ class SkipUntilTest : BaseStepTest() {
   }
 
   @Test
-  fun testSkipUntilNotifierFailure() = runTest {
+  fun testSkipUntilNotifierFailure() = runBlocking {
     flow {
       emit(0)
       delay(200)

@@ -24,19 +24,16 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.internal.AtomicBoolean
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.onFailure
-import kotlinx.coroutines.channels.onSuccess
-import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.produceIn
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.selects.select
+import kotlinx.coroutines.launch
 
 /**
  * TODO
@@ -45,42 +42,20 @@ import kotlinx.coroutines.selects.select
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
   coroutineScope {
-    val values = produceIn(this)
-    val notifierChannel = produce<Nothing> { notifier.take(1).collect() }
+    val shouldEmit = AtomicBoolean(false)
 
-    var shouldEmit = false
-    var loop = true
+    val job = launch(start = CoroutineStart.UNDISPATCHED) {
+      notifier.take(1).collect()
+      shouldEmit.value = true
+    }
 
-    while (loop) {
-      ensureActive()
-
-      select<Unit> {
-        if (!shouldEmit) {
-          notifierChannel.onReceiveCatching { result ->
-            result.onFailure {
-              it?.let { throw it }
-              shouldEmit = true
-            }
-          }
-        }
-
-        values
-          .onReceiveCatching { result ->
-            result
-              .onSuccess {
-                if (shouldEmit) {
-                  emit(it)
-                }
-              }
-              .onFailure {
-                it?.let { throw it }
-
-                loop = false
-                notifierChannel.cancel()
-              }
-          }
+    collect {
+      if (shouldEmit.value) {
+        emit(it)
       }
     }
+
+    job.cancel()
   }
 }
 
