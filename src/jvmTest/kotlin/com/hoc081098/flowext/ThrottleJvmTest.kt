@@ -27,6 +27,14 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import java.util.concurrent.Executors
+import kotlin.test.Ignore
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -41,14 +49,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
-import java.util.concurrent.Executors
-import kotlin.test.Ignore
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 
 @Ignore("Ignore JVM tests. Run only locally.")
 @ExperimentalCoroutinesApi
@@ -65,7 +65,7 @@ class ThrottleFirstJvmTest {
           Event.Value(4),
           Event.Value(7),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -96,7 +96,7 @@ class ThrottleFirstJvmTest {
           Event.Value(1),
           Event.Value(3),
           Event.Value(7),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -139,7 +139,7 @@ class ThrottleFirstJvmTest {
           Event.Value(4),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -151,7 +151,7 @@ class ThrottleFirstJvmTest {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -352,7 +352,7 @@ class ThrottleLastJvmTest {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -378,7 +378,7 @@ class ThrottleLastJvmTest {
         listOf(
           Event.Value(2),
           Event.Value(4),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -405,7 +405,7 @@ class ThrottleLastJvmTest {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -448,7 +448,7 @@ class ThrottleLastJvmTest {
           Event.Value(6),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -460,7 +460,7 @@ class ThrottleLastJvmTest {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }

@@ -10,6 +10,14 @@
   - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
   - `skipUntil`, `dropUntil`.
 
+- Support for Apple Silicon targets
+  - `iosSimulatorArm64`.
+  - `macosArm64`.
+  - `tvosSimulatorArm64`.
+  - `watchosSimulatorArm64`.
+
+- Enable compatibility with non-hierarchical multiplatform projects.
+
 ## 0.3.0 - May 2, 2022
 
 - Update

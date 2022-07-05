@@ -27,14 +27,14 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.internal.AtomicBoolean
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.time.Duration.Companion.seconds
 
 @ExperimentalCoroutinesApi
 class TimerTest : BaseTest() {
@@ -44,7 +44,7 @@ class TimerTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
 
@@ -52,7 +52,7 @@ class TimerTest : BaseTest() {
       .test(
         listOf(
           Event.Value(2),
-          Event.Complete,
+          Event.Complete
         )
       )
   }

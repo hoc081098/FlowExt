@@ -44,15 +44,15 @@ class EventTest {
   fun valueEventEqualsAndHashCode() {
     assertEquals(
       Event.Value(listOf(1, 2, 3)),
-      Event.Value(listOf(1, 2, 3)),
+      Event.Value(listOf(1, 2, 3))
     )
     assertEquals(
       Event.Value(listOf(1, 2, 3)).hashCode(),
-      Event.Value(listOf(1, 2, 3)).hashCode(),
+      Event.Value(listOf(1, 2, 3)).hashCode()
     )
     assertEquals(
       listOf(1, 2, 3).hashCode(),
-      Event.Value(listOf(1, 2, 3)).hashCode(),
+      Event.Value(listOf(1, 2, 3)).hashCode()
     )
   }
 
@@ -70,15 +70,15 @@ class EventTest {
     val e = TestException()
     assertEquals(
       Event.Error(e),
-      Event.Error(e),
+      Event.Error(e)
     )
     assertEquals(
       Event.Error(e).hashCode(),
-      Event.Error(e).hashCode(),
+      Event.Error(e).hashCode()
     )
     assertEquals(
       e.hashCode(),
-      Event.Error(e).hashCode(),
+      Event.Error(e).hashCode()
     )
   }
 
@@ -97,7 +97,7 @@ class EventTest {
       "throws",
       assertFailsWith<TestException> {
         Event.Value(1).map { throw TestException("throws") }
-      }.message,
+      }.message
     )
 
     val errorEvent: Event<Int> = Event.Error(TestException("1"))
@@ -132,7 +132,7 @@ class EventTest {
       "throws",
       assertFailsWith<TestException> {
         Event.Value(1).flatMap<Int, String> { throw TestException("throws") }
-      }.message,
+      }.message
     )
 
     val errorEvent: Event<Int> = Event.Error(TestException("1"))
@@ -153,7 +153,7 @@ class EventTest {
     listOf(
       Event.Value(1) to 1,
       Event.Error(TestException()) to null,
-      Event.Complete to null,
+      Event.Complete to null
     ).forEach { (e, v) ->
       assertEquals(v, e.valueOrNull())
     }
@@ -166,7 +166,7 @@ class EventTest {
     listOf(
       Event.Value(1) to 1,
       Event.Error(TestException()) to defaultValue,
-      Event.Complete to defaultValue,
+      Event.Complete to defaultValue
     ).forEach { (e, v) ->
       assertEquals(v, e.valueOrDefault(defaultValue))
     }
@@ -211,7 +211,7 @@ class EventTest {
     listOf(
       Event.Value(1) to null,
       Event.Error(exception) to exception,
-      Event.Complete to null,
+      Event.Complete to null
     ).forEach { (e, v) ->
       assertEquals(v, e.errorOrNull())
     }

@@ -27,15 +27,15 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
@@ -50,7 +50,7 @@ class MapIndexedTest : BaseTest() {
           Event.Value(1 to 2),
           Event.Value(2 to 3),
           Event.Value(3 to 4),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -77,7 +77,7 @@ class MapIndexedTest : BaseTest() {
         assertEquals(
           listOf(
             Event.Value(0 to 0),
-            Event.Value(1 to 1),
+            Event.Value(1 to 1)
           ),
           it.take(2)
         )
@@ -91,7 +91,7 @@ class MapIndexedTest : BaseTest() {
         listOf(
           Event.Value(0 to 0),
           Event.Value(1 to 1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }

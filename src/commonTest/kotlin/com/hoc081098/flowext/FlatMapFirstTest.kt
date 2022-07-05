@@ -27,6 +27,9 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -37,9 +40,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.yield
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -56,7 +56,7 @@ class FlatMapFirstTest : BaseTest() {
       .test(
         listOf(
           Event.Value("one"),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -75,7 +75,7 @@ class FlatMapFirstTest : BaseTest() {
           300, 301, 302, 303, 304,
           500, 501, 502, 503, 504,
           700, 701, 702, 703, 704,
-          900, 901, 902, 903, 904,
+          900, 901, 902, 903, 904
         ).map { Event.Value(it) } + Event.Complete
       )
   }
@@ -93,8 +93,13 @@ class FlatMapFirstTest : BaseTest() {
       .take(7)
       .test(
         listOf(
-          100, 101, 102, 103, 104,
-          300, 301
+          100,
+          101,
+          102,
+          103,
+          104,
+          300,
+          301
         ).map { Event.Value(it) } + Event.Complete
       )
     assertEquals(3, input)
@@ -158,7 +163,7 @@ class FlatMapFirstTest : BaseTest() {
           Event.Value(1),
           Event.Value(1),
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }

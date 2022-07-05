@@ -195,7 +195,7 @@ public fun <T> Flow<T>.startWith(item1: T, item2: T): Flow<T> = concat(
     emit(item1)
     emit(item2)
   },
-  this,
+  this
 )
 
 /**
@@ -207,7 +207,7 @@ public fun <T> Flow<T>.startWith(item1: T, item2: T, item3: T): Flow<T> = concat
     emit(item2)
     emit(item3)
   },
-  this,
+  this
 )
 
 /**
@@ -220,7 +220,7 @@ public fun <T> Flow<T>.startWith(item1: T, item2: T, item3: T, item4: T): Flow<T
     emit(item3)
     emit(item4)
   },
-  this,
+  this
 )
 
 /**
@@ -235,7 +235,7 @@ public fun <T> Flow<T>.startWith(item1: T, item2: T, item3: T, item4: T, item5: 
       emit(item4)
       emit(item5)
     },
-    this,
+    this
   )
 
 /**
@@ -249,7 +249,7 @@ public fun <T> Flow<T>.startWith(item: T, vararg items: T): Flow<T> {
         emit(it)
       }
     },
-    this,
+    this
   )
 }
 

@@ -26,17 +26,17 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.fold
 import kotlin.math.pow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.fold
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -55,13 +55,13 @@ class RetryWhenWithDelayStrategyTest : BaseTest() {
       flow.retryWhenWithDelayStrategy(DelayStrategy.FixedTimeDelayStrategy(100.milliseconds)) { cause, attempt ->
         assertEquals(
           attempt.toString(),
-          assertIs<TestException>(cause).message,
+          assertIs<TestException>(cause).message
         )
         attempt < retries
       }.catch { cause ->
         assertEquals(
           retries.toString(),
-          assertIs<TestException>(cause).message,
+          assertIs<TestException>(cause).message
         )
       }.fold(0, Int::plus)
     assertEquals(4, sum)
@@ -100,38 +100,38 @@ class DelayStrategyTest {
       val strategy = DelayStrategy.ExponentialBackoffDelayStrategy(
         initialDelay = initialDelay,
         factor = factor,
-        maxDelay = maxDelay,
+        maxDelay = maxDelay
       )
 
       fun Duration.coerce(): Duration = coerceAtMost(maxDelay)
 
       assertEquals(
         initialDelay.coerce(),
-        strategy.nextDelay(cause, 0),
+        strategy.nextDelay(cause, 0)
       )
       assertEquals(
         (initialDelay * factor).coerce(),
-        strategy.nextDelay(cause, 1),
+        strategy.nextDelay(cause, 1)
       )
       assertEquals(
         (initialDelay * factor * factor).coerce(),
-        strategy.nextDelay(cause, 2),
+        strategy.nextDelay(cause, 2)
       )
       assertEquals(
         (initialDelay * factor * factor * factor).coerce(),
-        strategy.nextDelay(cause, 3),
+        strategy.nextDelay(cause, 3)
       )
       assertEquals(
         (initialDelay * factor * factor * factor * factor).coerce(),
-        strategy.nextDelay(cause, 4),
+        strategy.nextDelay(cause, 4)
       )
       assertEquals(
         (initialDelay * factor * factor * factor * factor * factor).coerce(),
-        strategy.nextDelay(cause, 5),
+        strategy.nextDelay(cause, 5)
       )
       assertEquals(
         (initialDelay * factor.pow(100)).coerce(),
-        strategy.nextDelay(cause, 100),
+        strategy.nextDelay(cause, 100)
       )
     }
 
@@ -155,7 +155,7 @@ class DelayStrategyTest {
       Triple(100.milliseconds, 1.5, 3_000.milliseconds),
       Triple(100.milliseconds, 1.5, 4_000.milliseconds),
       Triple(100.milliseconds, 1.5, 5_000.milliseconds),
-      Triple(100.milliseconds, 1.5, 6_000.milliseconds),
+      Triple(100.milliseconds, 1.5, 6_000.milliseconds)
     ).forEach { (a, b, c) -> every(a, b, c) }
   }
 }

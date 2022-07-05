@@ -24,6 +24,8 @@
 
 package com.hoc081098.flowext.utils
 
+import kotlin.test.assertTrue
+import kotlin.test.fail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -33,18 +35,16 @@ import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlin.test.assertTrue
-import kotlin.test.fail
 
 abstract class BaseTest {
   @ExperimentalCoroutinesApi
   protected fun runTest(
     testDispatcher: TestDispatcher? = null,
-    testBody: suspend TestScope.() -> Unit,
+    testBody: suspend TestScope.() -> Unit
   ): TestResult {
     return kotlinx.coroutines.test.runTest(
       context = testDispatcher ?: UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatcher"),
-      testBody = testBody,
+      testBody = testBody
     )
   }
 }
