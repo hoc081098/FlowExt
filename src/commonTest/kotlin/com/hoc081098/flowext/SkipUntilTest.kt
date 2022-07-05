@@ -58,6 +58,17 @@ class SkipUntilTest : BaseStepTest() {
           Event.Complete
         )
       )
+
+    flowOf(1, 2, 3)
+      .onEach { delay(100) }
+      .dropUntil(timer(Unit, 150))
+      .test(
+        listOf(
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete
+        )
+      )
   }
 
   @Test
