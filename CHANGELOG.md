@@ -15,6 +15,8 @@
   - `tvosSimulatorArm64`.
   - `watchosSimulatorArm64`.
 
+- Enable compatibility with non-hierarchical multiplatform projects.
+
 ## 0.3.0 - May 2, 2022
 
 - Update
