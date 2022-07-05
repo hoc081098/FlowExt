@@ -36,7 +36,10 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 
 /**
- * TODO
+ * Returns a [Flow] that skips items emitted by the source [Flow] until a second [Flow] emits a value or completes.
+ *
+ * @param notifier The second [Flow] that has to emit a value before the source [Flow]'s values
+ * begin to be mirrored by the resulting [Flow].
  */
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -60,7 +63,9 @@ public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
 }
 
 /**
- * TODO
+ * This function is an alias to [skipUntil] operator.
+ *
+ * @see skipUntil
  */
 @Suppress("NOTHING_TO_INLINE")
 @FlowPreview
