@@ -69,6 +69,8 @@
   - `retryWhenWithDelayStrategy`
   - `retryWhenWithExponentialBackoff`
   - `retryWithExponentialBackoff`
+  - [`skipUntil`](#skipuntil--dropuntil)
+  - [`dropUntil`](#skipuntil--dropuntil)
   - [`takeUntil`](#takeUntil)
   - `throttleTime`
   - [`withLatestFrom`](#withLatestFrom)
@@ -170,6 +172,12 @@
   to [RxJava ambWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#ambWith-org.reactivestreams.Publisher-)
   .
 - Similar to [RxJS raceWith](https://rxjs.dev/api/operators/raceWith)
+
+#### skipUntil / dropUntil
+
+- ReactiveX docs: https://reactivex.io/documentation/operators/skipuntil.html
+- Similar to [RxJS skipUntil](https://rxjs.dev/api/index/function/skipUntil)
+- Similar to [RxJava skipUntil](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#skipUntil-org.reactivestreams.Publisher-)
 
 #### takeUntil
 

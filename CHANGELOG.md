@@ -8,6 +8,7 @@
   - `defer`.
   - `flowFromSuspend`.
   - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
+  - `skipUntil`, `dropUntil`.
 
 - Support for Apple Silicon targets
   - `iosSimulatorArm64`.
