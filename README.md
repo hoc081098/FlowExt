@@ -66,6 +66,7 @@
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
   - [`ambWith`](#racewith--ambwith)
+  - [`pairwise`](#pairwise)
   - `retryWhenWithDelayStrategy`
   - `retryWhenWithExponentialBackoff`
   - `retryWithExponentialBackoff`
@@ -172,6 +173,10 @@
   to [RxJava ambWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#ambWith-org.reactivestreams.Publisher-)
   .
 - Similar to [RxJS raceWith](https://rxjs.dev/api/operators/raceWith)
+
+#### pairwise
+
+- Similar to [RxJS pairwise](https://rxjs.dev/api/operators/pairwise)
 
 #### skipUntil / dropUntil
 
