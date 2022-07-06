@@ -33,6 +33,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 
@@ -62,6 +63,23 @@ class PairwiseTest : BaseStepTest() {
           Event.Value(0 to 1),
           Event.Value(1 to 2),
           Event.Value(2 to 3),
+          Event.Complete
+        )
+      )
+  }
+
+  @Test
+  fun testPairwiseNullable() = runTest {
+    // 0 - null - 2 - null
+
+    range(0, 4)
+      .map { it.takeIf { it % 2 == 0 } }
+      .pairwise()
+      .test(
+        listOf(
+          Event.Value(0 to null),
+          Event.Value(null to 2),
+          Event.Value(2 to null),
           Event.Complete
         )
       )
