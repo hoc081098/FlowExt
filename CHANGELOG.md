@@ -9,6 +9,7 @@
   - `flowFromSuspend`.
   - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
   - `skipUntil`, `dropUntil`.
+  - `pairwise`.
 
 - Support for Apple Silicon targets
   - `iosSimulatorArm64`.

@@ -137,6 +137,10 @@ public final class com/hoc081098/flowext/NeverFlowKt {
 	public static final fun neverFlow ()Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/PairwiseKt {
+	public static final fun pairwise (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/RaceKt {
 	public static final fun amb (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun amb (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
