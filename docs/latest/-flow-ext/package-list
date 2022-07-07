@@ -101,6 +101,10 @@ $dokka.location:com.hoc081098.flowext/Event.Value/Value/#TypeParam(bounds=[kotli
 $dokka.location:com.hoc081098.flowext/Event.Value/toString/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-value/to-string.html
 $dokka.location:com.hoc081098.flowext/Event.Value/value/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/-value/value.html
 $dokka.location:com.hoc081098.flowext/Event///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-event/index.html
+$dokka.location:com.hoc081098.flowext/NeverFlow.Companion///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-never-flow/-companion/index.html
+$dokka.location:com.hoc081098.flowext/NeverFlow.Companion/collect/#kotlinx.coroutines.flow.FlowCollector[kotlin.Nothing]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-never-flow/-companion/collect.html
+$dokka.location:com.hoc081098.flowext/NeverFlow///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-never-flow/index.html
+$dokka.location:com.hoc081098.flowext/NeverFlow/collect/#kotlinx.coroutines.flow.FlowCollector[kotlin.Nothing]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-never-flow/collect.html
 $dokka.location:com.hoc081098.flowext/ThrottleConfiguration.LEADING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}-flow-ext/com.hoc081098.flowext/-throttle-configuration/-l-e-a-d-i-n-g/index.html
 $dokka.location:com.hoc081098.flowext/ThrottleConfiguration.LEADING_AND_TRAILING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}-flow-ext/com.hoc081098.flowext/-throttle-configuration/-l-e-a-d-i-n-g_-a-n-d_-t-r-a-i-l-i-n-g/index.html
 $dokka.location:com.hoc081098.flowext/ThrottleConfiguration.TRAILING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}-flow-ext/com.hoc081098.flowext/-throttle-configuration/-t-r-a-i-l-i-n-g/index.html
