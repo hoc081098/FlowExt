@@ -31,16 +31,16 @@ import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.ZERO
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
-import kotlinx.coroutines.withContext
 
 @ExperimentalCoroutinesApi
 class NeverFlowTest : BaseStepTest() {
@@ -52,31 +52,25 @@ class NeverFlowTest : BaseStepTest() {
   }
 
   @Test
-  fun testNeverFlow() = runTest(dispatchTimeout = 2.5.seconds) {
+  fun testNeverFlow() = runTest(dispatchTimeout = 2.seconds) {
     val list = mutableListOf<Any?>()
-    val job = launch { neverFlow().toList(list) }
-    val intervalJob = interval(ZERO, 100.milliseconds).launchIn(this)
+    val job = launch(start = UNDISPATCHED) { neverFlow().toList(list) }
+    val intervalJob = interval(ZERO, 100.milliseconds)
+      .take(1_000)
+      .launchIn(this)
 
     runCurrent()
 
-    advanceTimeBy(500)
-    runCurrent()
-    assertTrue(list.isEmpty())
-
-    withContext(Dispatchers.Default) {
-      val d = 2.seconds / 10
-
-      repeat(10) {
-        runCurrent()
-        delay(d)
-      }
+    repeat(1_000) {
+      advanceTimeBy(100)
+      runCurrent()
+      assertTrue(list.isEmpty())
     }
 
-    advanceTimeBy(500)
-    runCurrent()
-    assertTrue(list.isEmpty())
-
-    job.cancelAndJoin()
+    advanceUntilIdle()
     intervalJob.cancelAndJoin()
+    job.cancelAndJoin()
+
+    assertTrue(list.isEmpty())
   }
 }
