@@ -10,6 +10,10 @@
   - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
   - `skipUntil`, `dropUntil`.
   - `pairwise`.
+  - `NeverFlow` interface and `NeverFlow.Companion` object.
+
+- Refactor
+  - `neverFlow()` now returns `NeverFlow`.
 
 - Support for Apple Silicon targets
   - `iosSimulatorArm64`.
