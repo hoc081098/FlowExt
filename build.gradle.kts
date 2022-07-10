@@ -9,8 +9,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
-  kotlin("multiplatform") version "1.7.0"
-  id("com.diffplug.spotless") version "6.7.2"
+  kotlin("multiplatform") version "1.6.21"
+  id("com.diffplug.spotless") version "6.8.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.20.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.10.1"
@@ -19,7 +19,7 @@ plugins {
 }
 
 val coroutinesVersion = "1.6.3"
-val ktlintVersion = "0.45.2"
+val ktlintVersion = "0.46.1"
 
 repositories {
   mavenCentral()
@@ -78,7 +78,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+        api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
       }
     }
     val commonTest by getting {
@@ -164,7 +164,8 @@ spotless {
     "indent_size",
     "end_of_line",
     "charset",
-    "continuation_indent_size"
+    "continuation_indent_size",
+    "disabled_rules"
   )
 
   kotlin {
