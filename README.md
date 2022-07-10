@@ -30,6 +30,11 @@
 
 ## Author: [Petrus Nguyễn Thái Học](https://github.com/hoc081098)
 
+## Buy me a coffee
+Liked some of my work? Buy me a coffee (or more likely a beer)
+
+[!["Buy Me A Coffee"](https://cdn.buymeacoffee.com/buttons/default-orange.png)](https://www.buymeacoffee.com/hoc081098)
+
 ## API
 
 ### 0.x release docs: https://hoc081098.github.io/FlowExt/docs/0.x
