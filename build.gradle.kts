@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
-  kotlin("multiplatform") version "1.7.0"
+  kotlin("multiplatform") version "1.6.21"
   id("com.diffplug.spotless") version "6.8.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.20.0"
