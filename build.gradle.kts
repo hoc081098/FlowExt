@@ -78,7 +78,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+        api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
       }
     }
     val commonTest by getting {
