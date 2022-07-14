@@ -31,9 +31,22 @@
 ## Author: [Petrus Nguyễn Thái Học](https://github.com/hoc081098)
 
 ## Buy me a coffee
+
 Liked some of my work? Buy me a coffee (or more likely a beer)
 
 [!["Buy Me A Coffee"](https://cdn.buymeacoffee.com/buttons/default-orange.png)](https://www.buymeacoffee.com/hoc081098)
+
+## Supported targets
+
+- `android`
+- `jvm`
+- `js` (`IR` and `LEGACY`)
+- `iosArm64`, `iosArm32`, `iosX64`, `iosSimulatorArm64`
+- `watchosArm32`, `watchosArm64`, `watchosX64`, `watchosX86`, `watchosSimulatorArm64`
+- `tvosX64`, `tvosSimulatorArm64`, `tvosArm64`.
+- `macosX64`, `macosArm64`
+- `mingwX64`
+- `linuxX64`
 
 ## API
 
@@ -55,6 +68,9 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - [`timer`](#timer)
 - Intermediate operators
   - [`bufferCount`](#bufferCount)
+  - [`cast`](#cast--castnotNull--castnullable)
+  - [`castNotNull`](#cast--castnotNull--castnullable)
+  - [`castNullable`](#cast--castnotNull--castnullable)
   - [`concatWith`](#concatWith)
   - [`startWith`](#startWith)
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
@@ -101,7 +117,8 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 #### flowFromSuspend
 
-- Similar to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
+- Similar
+  to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
 
 #### interval
 
@@ -129,6 +146,11 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 - ReactiveX docs: http://reactivex.io/documentation/operators/timer.html
 - Similar to [RxJS timer](https://rxjs.dev/api/index/function/timer)
 
+#### cast / castNotNull / castNullable
+
+- Similar
+  to [RxJava cast](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#cast-java.lang.Class-)
+
 #### concatWith
 
 - Similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith)
@@ -153,7 +175,8 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 #### flatMapConcatEager
 
-- Similar to [RxJava concatMapEager](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatMapEager-io.reactivex.rxjava3.functions.Function-)
+- Similar
+  to [RxJava concatMapEager](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatMapEager-io.reactivex.rxjava3.functions.Function-)
 
 #### mapTo
 
@@ -187,7 +210,8 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/skipuntil.html
 - Similar to [RxJS skipUntil](https://rxjs.dev/api/index/function/skipUntil)
-- Similar to [RxJava skipUntil](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#skipUntil-org.reactivestreams.Publisher-)
+- Similar
+  to [RxJava skipUntil](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#skipUntil-org.reactivestreams.Publisher-)
 
 #### takeUntil
 
@@ -223,23 +247,6 @@ implementation("io.github.hoc081098:FlowExt:0.3.0")
 
 ```groovy
 implementation("io.github.hoc081098:FlowExt-jvm:0.3.0")
-```
-
-### Native binaries
-
-```groovy
-implementation("io.github.hoc081098:FlowExt-iosx64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-iosarm64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-iosarm32:0.3.0")
-implementation("io.github.hoc081098:FlowExt-watchosx86:0.3.0")
-implementation("io.github.hoc081098:FlowExt-watchosx64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-watchosarm64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-watchosarm32:0.3.0")
-implementation("io.github.hoc081098:FlowExt-tvosx64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-tvosxarm64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-macosx64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-mingwx64:0.3.0")
-implementation("io.github.hoc081098:FlowExt-linuxx64:0.3.0")
 ```
 
 ### Snapshot
