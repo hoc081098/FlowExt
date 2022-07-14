@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
  */
 @FlowPreview
 @ExperimentalCoroutinesApi
-public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
+public fun <T> Flow<T>.skipUntil(notifier: Flow<*>): Flow<T> = flow {
   coroutineScope {
     val shouldEmit = AtomicBoolean(false)
 
