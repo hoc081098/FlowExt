@@ -11,6 +11,7 @@
   - `skipUntil`, `dropUntil`.
   - `pairwise`.
   - `NeverFlow` interface and `NeverFlow.Companion` object.
+  - `cast`, `castNotNull`, `castNullable`.
 
 - Refactor
   - `neverFlow()` now returns `NeverFlow`.

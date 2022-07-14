@@ -3,6 +3,10 @@ public final class com/hoc081098/flowext/BufferCountKt {
 	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;II)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/CastKt {
+	public static final fun castNullable (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/ConcatKt {
 	public static final fun concat (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun concat (Lkotlin/sequences/Sequence;)Lkotlinx/coroutines/flow/Flow;
