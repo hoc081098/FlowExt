@@ -1,7 +1,8 @@
 ## 0.4.0
 
 - Update
-  - `KotlinX Coroutines` to `1.6.3`.
+  - `KotlinX Coroutines` to `1.6.4`.
+  - `Gradle` to `7.5`.
 
 - Add
   - `defer`.
