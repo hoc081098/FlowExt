@@ -46,7 +46,7 @@ public inline fun <reified R> Flow<*>.cast(): Flow<R> = map { it as R }
  * a [NullPointerException] will be thrown.
  */
 @Suppress("NOTHING_TO_INLINE")
-public inline fun <reified T : Any> Flow<T?>.castNotNull(): Flow<T> = cast()
+public inline fun <reified T : Any> Flow<T?>.castNotNull(): Flow<T> = map { it!! }
 
 /**
  * Adapt this `Flow<T>` to be a `Flow<T?>`.
