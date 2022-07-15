@@ -12,6 +12,7 @@
   - `pairwise`.
   - `NeverFlow` interface and `NeverFlow.Companion` object.
   - `cast`, `castNotNull`, `castNullable`.
+  - `combine` versions for `6 - 12` `Flow`s.
 
 - Refactor
   - `neverFlow()` now returns `NeverFlow`.
