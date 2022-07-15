@@ -15,6 +15,7 @@
 
 - Refactor
   - `neverFlow()` now returns `NeverFlow`.
+  - `takeUntil`: change `notifier` type to `Flow<Any?>`
 
 - Support for Apple Silicon targets
   - `iosSimulatorArm64`.
