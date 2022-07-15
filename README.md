@@ -68,6 +68,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - [`timer`](#timer)
 - Intermediate operators
   - [`bufferCount`](#bufferCount)
+  - [`combine`](#combine)
   - [`cast`](#cast--castnotNull--castnullable)
   - [`castNotNull`](#cast--castnotNull--castnullable)
   - [`castNullable`](#cast--castnotNull--castnullable)
@@ -145,6 +146,11 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 - ReactiveX docs: http://reactivex.io/documentation/operators/timer.html
 - Similar to [RxJS timer](https://rxjs.dev/api/index/function/timer)
+
+#### combine
+
+- ReactiveX docs: https://reactivex.io/documentation/operators/combinelatest.html
+- `combine` versions for `6 - 12` `Flow`s.
 
 #### cast / castNotNull / castNullable
 
