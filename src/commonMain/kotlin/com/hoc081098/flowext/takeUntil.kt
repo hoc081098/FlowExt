@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
  * @param notifier The [Flow] whose first emitted value or complete event
  * will cause the output [Flow] of [takeUntil] to stop emitting values from the source [Flow].
  */
-public fun <T, R> Flow<T>.takeUntil(notifier: Flow<R>): Flow<T> = flow {
+public fun <T> Flow<T>.takeUntil(notifier: Flow<Any?>): Flow<T> = flow {
   try {
     coroutineScope {
       val job = launch(start = CoroutineStart.UNDISPATCHED) {
