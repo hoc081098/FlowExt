@@ -230,6 +230,25 @@ flowFromSuspend: 2
 
 - Similar to [RxJS interval](https://rxjs.dev/api/index/function/interval)
 
+Returns a `Flow` that emits a `0L` after the `initialDelay` and ever-increasing numbers
+after each `period` of time thereafter.
+
+```kotlin
+interval(initialDelay = 100.milliseconds, period = 1.seconds)
+  .take(5)
+  .collect { println("interval: $it") }
+```
+
+Output:
+
+```none
+interval: 0
+interval: 1
+interval: 2
+interval: 3
+interval: 4
+```
+
 #### neverFlow
 
 - Similar to [RxJS NEVER](https://rxjs.dev/api/index/const/NEVER)
