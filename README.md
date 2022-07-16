@@ -200,6 +200,32 @@ defer: 2
 - Similar
   to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
 
+Creates a _cold_ flow that produces a single value from the given `function`.
+
+```kotlin
+var count = 0L
+val flow = flowFromSuspend {
+  delay(count)
+  count++
+}
+
+flow.collect { println("flowFromSuspend: $it") }
+println("---")
+flow.collect { println("flowFromSuspend: $it") }
+println("---")
+flow.collect { println("flowFromSuspend: $it") }
+```
+
+Output:
+
+```none
+flowFromSuspend: 0
+---
+flowFromSuspend: 1
+---
+flowFromSuspend: 2
+```
+
 #### interval
 
 - Similar to [RxJS interval](https://rxjs.dev/api/index/function/interval)
