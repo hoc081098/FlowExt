@@ -316,6 +316,22 @@ race: 3
 - ReactiveX docs: http://reactivex.io/documentation/operators/range.html
 - Similar to [RxJS range](https://rxjs.dev/api/index/function/range)
 
+Creates a `Flow` that emits a sequence of numbers within a specified range.
+
+```kotlin
+range(start = 0, count = 5)
+  .collect { println("range: $it") }
+```
+
+Output:
+
+```none
+range: 1
+range: 2
+range: 3
+range: 4
+```
+
 #### timer
 
 - ReactiveX docs: http://reactivex.io/documentation/operators/timer.html
