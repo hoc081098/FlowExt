@@ -253,6 +253,23 @@ interval: 4
 
 - Similar to [RxJS NEVER](https://rxjs.dev/api/index/const/NEVER)
 
+Returns a `NeverFlow` that never emits any values to the `FlowCollector` and never completes.
+
+```kotlin
+neverFlow()
+  .startWith(7)
+  .collect { println("neverFlow: $it") }
+
+println("Completed!")
+```
+
+Output:
+
+```none
+neverFlow: 7
+// Never prints "Completed!"
+```
+
 #### race / amb
 
 - ReactiveX docs: http://reactivex.io/documentation/operators/amb.html
@@ -260,6 +277,39 @@ interval: 4
   to [RxJava amb](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#amb-java.lang.Iterable-)
   .
 - Similar to [RxJS race](https://rxjs.dev/api/index/function/race)
+
+Mirrors the one `Flow` in an `Iterable` of several `Flow`s that first either emits a value
+or sends a termination event (error or complete event).
+
+When you pass a number of source `Flow`s to `race`, it will pass through the emissions
+and events of exactly one of these `Flow`s: the first one that sends an event to `race`,
+either by emitting a value or sending an error or complete event.
+`race` will cancel the emissions and events of all of the other source `Flow`s.
+
+```kotlin
+race(
+  flow {
+    delay(100)
+    emit(1)
+    emit(2)
+    emit(3)
+  },
+  flow {
+    delay(200)
+    emit(2)
+    emit(3)
+    emit(4)
+  }
+).collect { println("race: $it") }
+```
+
+Output:
+
+```none
+race: 1
+race: 2
+race: 3
+```
 
 #### range
 
