@@ -167,6 +167,34 @@ concat: 6
 - Similar
   to [RxJava defer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#defer-io.reactivex.rxjava3.functions.Supplier-)
 
+Creates a `Flow` that, on collection, calls a `Flow` factory to make a `Flow` for each new `FlowCollector`.
+In some circumstances, waiting until the last minute (that is, until collection time)
+to generate the `Flow` can ensure that collectors receive the freshest data.
+
+```kotlin
+var count = 0L
+val flow = defer {
+  delay(count)
+  flowOf(count++)
+}
+
+flow.collect { println("defer: $it") }
+println("---")
+flow.collect { println("defer: $it") }
+println("---")
+flow.collect { println("defer: $it") }
+```
+
+Output:
+
+```none
+defer: 0
+---
+defer: 1
+---
+defer: 2
+```
+
 #### flowFromSuspend
 
 - Similar
