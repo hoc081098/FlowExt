@@ -337,6 +337,20 @@ range: 4
 - ReactiveX docs: http://reactivex.io/documentation/operators/timer.html
 - Similar to [RxJS timer](https://rxjs.dev/api/index/function/timer)
 
+Creates a `Flow` that will wait for a given `duration`, before emitting the `value`.
+
+```kotlin
+timer(value = Unit, duration = 1.seconds)
+  .collect { println("timer: $it") }
+```
+
+Output:
+
+```none
+// After 1 second
+timer: kotlin.Unit
+```
+
 #### combine
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/combinelatest.html
