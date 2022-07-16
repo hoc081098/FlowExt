@@ -418,7 +418,7 @@ Returns a `Flow` that emits the items emitted from the current `Flow`, then the 
 ```kotlin
 flowOf(1, 2, 3)
   .concatWith(flowOf(4, 5, 6))
-  .collect { println("concatWith: $i5") }
+  .collect { println("concatWith: $it") }
 ```
 
 Output:
@@ -438,6 +438,24 @@ concatWith: 6
 - Similar to [RxJS startWith](https://rxjs.dev/api/operators/startWith)
 - Similar
   to [RxJava startWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#startWithItem-T-)
+
+Returns a `Flow` that emits a specified item (or many items) before it begins to emit items emitted by the current `Flow`.
+
+```kotlin
+flowOf(1, 2, 3)
+  .startWith(0)
+  .collect { println("startWith: $i") }
+```
+
+Output:
+
+```none
+startWith: 0
+startWith: 1
+startWith: 2
+startWith: 3
+---
+```
 
 #### flatMapFirst / exhaustMap
 
