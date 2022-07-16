@@ -6,7 +6,7 @@
 [![Validate Gradle Wrapper](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Kotlin version](https://img.shields.io/badge/Kotlin-1.6.21-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
-[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.6.1-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.6.1)
+[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.6.4-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.6.1)
 ![badge][badge-jvm]
 ![badge][badge-android]
 ![badge][badge-ios]
@@ -104,11 +104,62 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 - Similar
   to [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-)
 
+Buffers the source `Flow` values until the size hits the maximum `bufferSize` given.
+
+```kotlin
+range(start = 0, count = 10)
+  .bufferCount(bufferSize = 3)
+  .collect { println("bufferCount: $it") }
+
+println("---")
+
+range(start = 0, count = 10)
+  .bufferCount(bufferSize = 3, startBufferEvery = 2)
+  .collect { println("bufferCount: $it") }
+```
+
+Output:
+
+```none
+bufferCount: [0, 1, 2]
+bufferCount: [3, 4, 5]
+bufferCount: [6, 7, 8]
+bufferCount: [9]
+---
+bufferCount: [0, 1, 2]
+bufferCount: [2, 3, 4]
+bufferCount: [4, 5, 6]
+bufferCount: [6, 7, 8]
+bufferCount: [8, 9]
+```
+
+----
+
 #### concat
 
 - Similar to [RxJS concat](https://rxjs.dev/api/index/function/concat)
 - Similar
   to [RxJava concat](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concat-java.lang.Iterable-)
+
+Creates an output `Flow` which sequentially emits all values from the first given `Flow` and then moves on to the next.
+
+```kotlin
+concat(
+  flow1 = flowOf(1, 2, 3),
+  flow2 = flowOf(4, 5, 6)
+).collect { println("concat: $it") }
+```
+
+Output:
+
+```none
+concat: 1
+concat: 2
+concat: 3
+concat: 4
+concat: 5
+concat: 6
+```
 
 #### defer
 
