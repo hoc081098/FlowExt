@@ -361,11 +361,77 @@ timer: kotlin.Unit
 - Similar
   to [RxJava cast](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#cast-java.lang.Class-)
 
+##### cast
+Adapt this `Flow` to be a `Flow<R>`.
+
+This `Flow` is wrapped as a `Flow<R>` which checks at run-time that each value event emitted
+by this Flow is also an instance of `R`.
+
+At the collection time, if this `Flow` has any value that is not an instance of `R`,
+a `ClassCastException` will be thrown.
+
+```kotlin
+flowOf<Any?>(1, 2, 3)
+  .cast<Int>()
+  .collect { v: Int -> println("cast: $v") }
+```
+
+Output:
+
+```none
+cast: 1
+cast: 2
+cast: 3
+---
+```
+
+##### castNotNull
+
+Adapt this `Flow<T?>` to be a `Flow<T>`.
+
+At the collection time, if this `Flow` has any `null` value,
+a `NullPointerException` will be thrown.
+
+```kotlin
+flowOf<Int?>(1, 2, 3)
+  .castNotNull()
+  .collect { v: Int -> println("castNotNull: $v") }
+```
+
+Output:
+
+```none
+castNotNull: 1
+castNotNull: 2
+castNotNull: 3
+---
+```
+
 #### concatWith
 
 - Similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith)
 - Similar
   to [RxJava concatWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatWith-org.reactivestreams.Publisher-)
+
+Returns a `Flow` that emits the items emitted from the current `Flow`, then the next, one after the other, without interleaving them.
+
+```kotlin
+flowOf(1, 2, 3)
+  .concatWith(flowOf(4, 5, 6))
+  .collect { println("concatWith: $i5") }
+```
+
+Output:
+
+```none
+concatWith: 1
+concatWith: 2
+concatWith: 3
+concatWith: 4
+concatWith: 5
+concatWith: 6
+---
+```
 
 #### startWith
 
