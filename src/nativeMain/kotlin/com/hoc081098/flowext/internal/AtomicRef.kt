@@ -25,9 +25,10 @@
 package com.hoc081098.flowext.internal
 
 import kotlin.native.concurrent.AtomicReference as NativeAtomicReference
+import kotlin.native.concurrent.freeze
 
 internal actual class AtomicRef<T> actual constructor(value: T) {
-  private val atomic = NativeAtomicReference(value)
+  private val atomic = NativeAtomicReference(value.freeze())
 
   actual var value: T by atomic::value
 
