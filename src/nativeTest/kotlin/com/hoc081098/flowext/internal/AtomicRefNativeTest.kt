@@ -24,25 +24,57 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlin.native.concurrent.FreezableAtomicReference
 import kotlin.native.concurrent.freeze
 import kotlin.native.concurrent.isFrozen
+import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
-internal actual class AtomicRef<T> actual constructor(initialValue: T) {
-  private val atomic = FreezableAtomicReference(initialValue)
+class AtomicRefNativeTest {
+  @Test
+  fun accepts_not_frozen_initial_value() {
+    AtomicRef(Any())
+  }
 
-  actual var value: T
-    get() = atomic.value
-    set(value) {
-      atomic.value = value.freezeIfNeeded()
-    }
+  @Test
+  fun accepts_frozen_initial_value() {
+    val ref = AtomicRef(Any().freeze())
 
-  actual fun compareAndSet(expect: T, update: T): Boolean =
-    atomic.compareAndSet(expect, update.freezeIfNeeded())
+    assertTrue(ref.value.isFrozen)
+  }
 
-  private inline fun T.freezeIfNeeded(): T = if (atomic.isFrozen) {
-    freeze()
-  } else {
-    this
+  @Test
+  fun does_not_freeze_initial_value() {
+    val ref = AtomicRef(Any())
+
+    assertFalse(ref.value.isFrozen)
+  }
+
+  @Test
+  fun freezes_current_value_WHEN_frozen() {
+    val ref = AtomicRef(Any())
+
+    ref.freeze()
+
+    assertTrue(ref.value.isFrozen)
+  }
+
+  @Test
+  fun does_not_freeze_new_value_IF_not_frozen() {
+    val ref = AtomicRef(Any())
+
+    ref.value = Any()
+
+    assertFalse(ref.value.isFrozen)
+  }
+
+  @Test
+  fun freezes_new_value_IF_frozen() {
+    val ref = AtomicRef(Any())
+
+    ref.freeze()
+    ref.value = Any()
+
+    assertTrue(ref.value.isFrozen)
   }
 }
