@@ -24,13 +24,25 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlin.native.concurrent.AtomicReference as NativeAtomicReference
+import kotlin.native.concurrent.FreezableAtomicReference
 import kotlin.native.concurrent.freeze
+import kotlin.native.concurrent.isFrozen
 
-internal actual class AtomicRef<T> actual constructor(value: T) {
-  private val atomic = NativeAtomicReference(value.freeze())
+internal actual class AtomicRef<T> actual constructor(initialValue: T) {
+  private val atomic = FreezableAtomicReference(initialValue)
 
-  actual var value: T by atomic::value
+  actual var value: T
+    get() = atomic.value
+    set(value) {
+      atomic.value = value.freezeIfNeeded()
+    }
 
-  actual fun compareAndSet(expect: T, update: T): Boolean = atomic.compareAndSet(expect, update)
+  actual fun compareAndSet(expect: T, update: T): Boolean =
+    atomic.compareAndSet(expect, update.freezeIfNeeded())
+
+  private inline fun T.freezeIfNeeded(): T = if (atomic.isFrozen) {
+    freeze()
+  } else {
+    this
+  }
 }
