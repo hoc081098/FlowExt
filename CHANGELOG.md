@@ -18,6 +18,8 @@
   - `neverFlow()` now returns `NeverFlow`.
   - `takeUntil`: change `notifier` type to `Flow<Any?>`
 
+- Internal fix for `AtomicRef`: freeze `value` if `AtomicRef` is frozen.
+
 - Support for Apple Silicon targets
   - `iosSimulatorArm64`.
   - `macosArm64`.
