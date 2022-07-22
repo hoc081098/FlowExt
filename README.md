@@ -81,7 +81,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - `mapEager`
   - `flattenEager`
   - [`exhaustAll`](#flattenfirst--exhaustall)
-  - `mapIndexed`
+  - [`mapIndexed`](#mapIndexed)
   - [`mapTo`](#mapTo)
   - [`mapToUnit`](#mapToUnit)
   - [`materialize`](#materialize)
@@ -542,6 +542,25 @@ flatMapConcatEager: 4
 flatMapConcatEager: onCompletion 4
 flatMapConcatEager: 5
 flatMapConcatEager: onCompletion 5
+```
+
+#### mapIndexed
+
+Returns a flow containing the results of applying the given `transform` function
+to each value and its index in the original flow.
+
+```kotlin
+range(1, 3)
+  .mapIndexed { index, value -> index to value }
+  .collect { println("mapIndexed: $it") }
+```
+
+Output:
+
+```none
+mapIndexed: (0, 1)
+mapIndexed: (1, 2)
+mapIndexed: (2, 3)
 ```
 
 #### mapTo
