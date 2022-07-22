@@ -483,6 +483,24 @@ flatMapFirst: 5
 
 - Similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll)
 
+Converts a higher-order `Flow` into a first-order `Flow` by dropping inner `Flow` while the previous inner `Flow` has not yet completed.
+
+```kotlin
+range(1, 5)
+  .onEach { delay(100) }
+  .map { timer(it, 130) }
+  .flattenFirst()
+  .collect { println("flattenFirst: $it") }
+```
+
+Output:
+
+```none
+flattenFirst: 1
+flattenFirst: 3
+flattenFirst: 5
+```
+
 #### flatMapConcatEager
 
 - Similar
