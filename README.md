@@ -668,6 +668,24 @@ raceWith: 3
 
 - Similar to [RxJS pairwise](https://rxjs.dev/api/operators/pairwise)
 
+Groups pairs of consecutive emissions together and emits them as a pair.
+Emits the `(n)th` and `(n-1)th` events as a pair.
+The first value won't be emitted until the second one arrives.
+
+```kotlin
+range(0, 4)
+  .pairwise()
+  .collect { println("pairwise: $it") }
+```
+
+Output:
+
+```none
+pairwise: (0, 1)
+pairwise: (1, 2)
+pairwise: (2, 3)
+```
+
 #### skipUntil / dropUntil
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/skipuntil.html
