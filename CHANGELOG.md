@@ -16,7 +16,7 @@
 
 - Refactor
   - `neverFlow()` now returns `NeverFlow`.
-  - `takeUntil`: change `notifier` type to `Flow<Any?>`
+  - `takeUntil`: change `notifier`'s type to `Flow<Any?>`
 
 - Internal fix for `AtomicRef`: freeze `value` if `AtomicRef` is frozen.
 
