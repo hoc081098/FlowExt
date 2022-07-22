@@ -90,7 +90,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - [`raceWith`](#racewith--ambwith)
   - [`ambWith`](#racewith--ambwith)
   - [`pairwise`](#pairwise)
-  - `retryWhenWithDelayStrategy`
+  - [`retryWhenWithDelayStrategy`](#retrywhenwithdelaystrategy)
   - `retryWhenWithExponentialBackoff`
   - [`retryWithExponentialBackoff`](#retrywithexponentialbackoff)
   - [`skipUntil`](#skipuntil--dropuntil)
@@ -704,6 +704,43 @@ Output:
 pairwise: (0, 1)
 pairwise: (1, 2)
 pairwise: (2, 3)
+```
+
+#### retryWhenWithDelayStrategy
+
+Retries collection of the given flow when an exception occurs in the upstream flow and the
+`predicate` returns true. The predicate also receives an `attempt` number as parameter,
+starting from zero on the initial call. When `predicate` returns true, the next retries will be
+delayed after a duration computed by `DelayStrategy.nextDelay`.
+
+- ReactiveX docs: https://reactivex.io/documentation/operators/retry.html
+
+```kotlin
+var count = -1
+
+flowFromSuspend {
+  ++count
+  println("Call count=$count")
+
+  when (count) {
+    0 -> throw MyException(message = "Will retry...", cause = null)
+    1 -> "Result: count=$count"
+    else -> error("Unexpected: count=$count")
+  }
+}
+  .retryWhenWithDelayStrategy(
+    strategy = DelayStrategy.FixedTimeDelayStrategy(duration = 200.milliseconds),
+    predicate = { cause, attempt -> cause is MyException && attempt < 1 }
+  )
+  .collect { println("retryWhenWithDelayStrategy: $it") }
+```
+
+Output:
+
+```none
+Call count=0
+Call count=1
+retryWhenWithDelayStrategy: Result: count=1
 ```
 
 #### retryWithExponentialBackoff
