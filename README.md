@@ -91,7 +91,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - [`ambWith`](#racewith--ambwith)
   - [`pairwise`](#pairwise)
   - [`retryWhenWithDelayStrategy`](#retrywhenwithdelaystrategy)
-  - `retryWhenWithExponentialBackoff`
+  - [`retryWhenWithExponentialBackoff`](#retrywhenwithexponentialbackoff)
   - [`retryWithExponentialBackoff`](#retrywithexponentialbackoff)
   - [`skipUntil`](#skipuntil--dropuntil)
   - [`dropUntil`](#skipuntil--dropuntil)
@@ -741,6 +741,42 @@ Output:
 Call count=0
 Call count=1
 retryWhenWithDelayStrategy: Result: count=1
+```
+
+#### retryWhenWithExponentialBackoff
+
+- ReactiveX docs: https://reactivex.io/documentation/operators/retry.html
+
+Retries collection of the given flow with exponential backoff delay strategy
+when an exception occurs in the upstream flow and the `predicate` returns true. When `predicate` returns true,
+the next retries will be delayed after a duration computed by `DelayStrategy.ExponentialBackoffDelayStrategy`.
+
+```kotlin
+var count = -1
+
+flowFromSuspend {
+  ++count
+  println("Call count=$count")
+
+  when (count) {
+    0 -> throw MyException(message = "Will retry...", cause = null)
+    1 -> "Result: count=$count"
+    else -> error("Unexpected: count=$count")
+  }
+}
+  .retryWhenWithExponentialBackoff(
+    initialDelay = 500.milliseconds,
+    factor = 2.0,
+  ) { cause, attempt -> cause is MyException && attempt < 1 }
+  .collect { println("retryWhenWithExponentialBackoff: $it") }
+```
+
+Output:
+
+```none
+Call count=0
+Call count=1
+retryWhenWithExponentialBackoff: Result: count=1
 ```
 
 #### retryWithExponentialBackoff
