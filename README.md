@@ -693,6 +693,22 @@ pairwise: (2, 3)
 - Similar
   to [RxJava skipUntil](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#skipUntil-org.reactivestreams.Publisher-)
 
+Returns a `Flow` that skips items emitted by the source `Flow` until a second `Flow` emits a value or completes.
+
+```kotlin
+flowOf(1, 2, 3)
+  .onEach { delay(100) }
+  .skipUntil(timer(Unit, 150))
+  .collect { println("skipUntil: $it") }
+```
+
+Output:
+
+```none
+skipUntil: 2
+skipUntil: 3
+```
+
 #### takeUntil
 
 - ReactiveX docs: http://reactivex.io/documentation/operators/takeuntil.html
