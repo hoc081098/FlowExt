@@ -588,11 +588,45 @@ mapToUnit: kotlin.Unit
 - Similar
   to [RxJava materialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#materialize--)
 
+Represents all of the notifications from the source `Flow` as `value` emissions marked with their original types within `Event` objects.
+
+```kotlin
+flowOf(1, 2, 3)
+  .materialize()
+  .collect { println("materialize: $it") }
+```
+
+Output:
+
+```none
+materialize: Event.Value(1)
+materialize: Event.Value(2)
+materialize: Event.Value(3)
+materialize: Event.Complete
+```
+
 #### dematerialize
 
 - Similar to [RxJS dematerialize](https://rxjs.dev/api/operators/dematerialize)
 - Similar
   to [RxJava dematerialize](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#dematerialize--)
+
+Converts a `Flow` of `Event` objects into the emissions that they represent.
+
+
+```kotlin
+flowOf(Event.Value(1), Event.Value(2), Event.Value(3))
+  .dematerialize()
+  .collect { println("dematerialize: $it") }
+```
+
+Output:
+
+```none
+dematerialize: 1
+dematerialize: 2
+dematerialize: 3
+```
 
 #### raceWith / ambWith
 
