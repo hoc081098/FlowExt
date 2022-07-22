@@ -59,21 +59,22 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 - Create
   - [`concat`](#concat)
   - [`defer`](#defer)
-  - [`flowFromSuspend`](#flowFromSuspend)
+  - [`flowFromSuspend`](#flowfromsuspend)
   - [`interval`](#interval)
-  - [`neverFlow`](#neverFlow)
+  - [`neverFlow`](#neverflow)
   - [`race`](#race--amb)
   - [`amb`](#race--amb)
   - [`range`](#range)
   - [`timer`](#timer)
+
 - Intermediate operators
-  - [`bufferCount`](#bufferCount)
+  - [`bufferCount`](#buffercount)
   - [`combine`](#combine)
-  - [`cast`](#cast--castnotNull--castnullable)
-  - [`castNotNull`](#cast--castnotNull--castnullable)
-  - [`castNullable`](#cast--castnotNull--castnullable)
-  - [`concatWith`](#concatWith)
-  - [`startWith`](#startWith)
+  - [`cast`](#cast--castnotnull--castnullable)
+  - [`castNotNull`](#cast--castnotnull--castnullable)
+  - [`castNullable`](#cast--castnotnull--castnullable)
+  - [`concatWith`](#concatwith)
+  - [`startWith`](#startwith)
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
   - [`exhaustMap`](#flatmapfirst--exhaustmap)
   - [`flattenFirst`](#flattenfirst--exhaustall)
@@ -81,9 +82,9 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - `mapEager`
   - `flattenEager`
   - [`exhaustAll`](#flattenfirst--exhaustall)
-  - [`mapIndexed`](#mapIndexed)
-  - [`mapTo`](#mapTo)
-  - [`mapToUnit`](#mapToUnit)
+  - [`mapIndexed`](#mapindexed)
+  - [`mapTo`](#mapto)
+  - [`mapToUnit`](#maptounit)
   - [`materialize`](#materialize)
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
@@ -91,12 +92,12 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - [`pairwise`](#pairwise)
   - `retryWhenWithDelayStrategy`
   - `retryWhenWithExponentialBackoff`
-  - `retryWithExponentialBackoff`
+  - [`retryWithExponentialBackoff`](#retrywithexponentialbackoff)
   - [`skipUntil`](#skipuntil--dropuntil)
   - [`dropUntil`](#skipuntil--dropuntil)
-  - [`takeUntil`](#takeUntil)
-  - [`throttleTime`](#throttleTime)
-  - [`withLatestFrom`](#withLatestFrom)
+  - [`takeUntil`](#takeuntil)
+  - [`throttleTime`](#throttletime)
+  - [`withLatestFrom`](#withlatestfrom)
 
 #### bufferCount
 
@@ -703,6 +704,43 @@ Output:
 pairwise: (0, 1)
 pairwise: (1, 2)
 pairwise: (2, 3)
+```
+
+#### retryWithExponentialBackoff
+
+- ReactiveX docs: https://reactivex.io/documentation/operators/retry.html
+
+Retries collection of the given flow with exponential backoff delay strategy
+when an exception occurs in the upstream flow and the `predicate` returns true. When `predicate` returns true,
+the next retries will be delayed after a duration computed by `DelayStrategy.ExponentialBackoffDelayStrategy`.
+
+```kotlin
+var count = -1
+
+flowFromSuspend {
+  ++count
+  println("Call count=$count")
+
+  when (count) {
+    0 -> throw MyException(message = "Will retry...", cause = null)
+    1 -> "Result: count=$count"
+    else -> error("Unexpected: count=$count")
+  }
+}
+  .retryWithExponentialBackoff(
+    maxAttempt = 2,
+    initialDelay = 500.milliseconds,
+    factor = 2.0,
+  ) { it is MyException }
+  .collect { println("retryWithExponentialBackoff: $it") }
+```
+
+Output:
+
+```none
+Call count=0
+Call count=1
+retryWithExponentialBackoff: Result: count=1
 ```
 
 #### skipUntil / dropUntil
