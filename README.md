@@ -714,6 +714,22 @@ skipUntil: 3
 - ReactiveX docs: http://reactivex.io/documentation/operators/takeuntil.html
 - Similar to [RxJS takeUntil](https://rxjs.dev/api/operators/takeUntil)
 
+Emits the values emitted by the source `Flow` until a `notifier Flow` emits a value or completes.
+
+```kotlin
+range(0, 5)
+  .onEach { delay(100) }
+  .takeUntil(timer(Unit, 270.milliseconds))
+  .collect { println("takeUntil: $it") }
+```
+
+Output:
+
+```none
+takeUntil: 0
+takeUntil: 1
+```
+
 #### withLatestFrom
 
 - RxMarbles: https://rxmarbles.com/#withLatestFrom
