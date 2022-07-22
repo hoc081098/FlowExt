@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 
-package com.hoc081098.flowext
+package com.hoc081098.flowext.internal
 
-import com.hoc081098.flowext.internal.AtomicBoolean
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

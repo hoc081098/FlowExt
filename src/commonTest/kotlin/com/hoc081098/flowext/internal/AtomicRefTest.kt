@@ -24,25 +24,48 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlin.native.concurrent.FreezableAtomicReference
-import kotlin.native.concurrent.freeze
-import kotlin.native.concurrent.isFrozen
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertSame
+import kotlin.test.assertTrue
 
-internal actual class AtomicRef<T> actual constructor(initialValue: T) {
-  private val atomic = FreezableAtomicReference(initialValue)
+class AtomicRefTest {
+  @Test
+  fun returns_initial_value_WHEN_created() {
+    val ref = AtomicRef(VALUE_1)
 
-  actual var value: T
-    get() = atomic.value
-    set(value) {
-      atomic.value = value.freezeIfNeeded()
-    }
+    assertEquals(VALUE_1, ref.value)
+  }
 
-  actual fun compareAndSet(expect: T, update: T): Boolean =
-    atomic.compareAndSet(expect, update.freezeIfNeeded())
+  @Test
+  fun returns_updated_value() {
+    val ref = AtomicRef(VALUE_1)
 
-  private inline fun T.freezeIfNeeded(): T = if (atomic.isFrozen) {
-    freeze()
-  } else {
-    this
+    ref.value = VALUE_2
+
+    assertEquals(VALUE_2, ref.value)
+  }
+
+  @Test
+  fun compareAndSet_success() {
+    val ref = AtomicRef(VALUE_1)
+    val result = ref.compareAndSet(VALUE_1, VALUE_2)
+    assertTrue(result)
+    assertSame(VALUE_2, ref.value)
+  }
+
+  @Test
+  fun compareAndSet_fail() {
+    val ref = AtomicRef(VALUE_1)
+    val result = ref.compareAndSet(VALUE_2, VALUE_3)
+    assertFalse(result)
+    assertSame(VALUE_1, ref.value)
+  }
+
+  private companion object {
+    private const val VALUE_1 = "a"
+    private const val VALUE_2 = "b"
+    private const val VALUE_3 = "c"
   }
 }

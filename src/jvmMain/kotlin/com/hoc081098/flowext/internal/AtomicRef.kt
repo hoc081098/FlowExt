@@ -26,8 +26,8 @@ package com.hoc081098.flowext.internal
 
 import java.util.concurrent.atomic.AtomicReference as JavaAtomicReference
 
-internal actual class AtomicRef<T> actual constructor(value: T) {
-  private val atomic = JavaAtomicReference(value)
+internal actual class AtomicRef<T> actual constructor(initialValue: T) {
+  private val atomic = JavaAtomicReference(initialValue)
 
   actual var value: T
     get() = atomic.get()
