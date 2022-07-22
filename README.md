@@ -506,6 +506,44 @@ flattenFirst: 5
 - Similar
   to [RxJava concatMapEager](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatMapEager-io.reactivex.rxjava3.functions.Function-)
 
+Transforms elements emitted by the original `Flow` by applying `transform`, that returns another `flow`,
+and then merging and flattening these flows.
+
+This operator calls `transform` *sequentially* and then concatenates the resulting flows with a `concurrency`
+limit on the number of concurrently collected flows.
+It is a shortcut for `map(transform).flattenConcatEager(concurrency)`.
+
+```kotlin
+range(1, 5)
+  .onEach { delay(100) }
+  .flatMapConcatEager(concurrency = 2) { v ->
+    timer(v, 130)
+      .onStart { println("flatMapConcatEager: onStart $v") }
+      .onCompletion { println("flatMapConcatEager: onCompletion $v") }
+  }
+  .collect { println("flatMapConcatEager: $it") }
+```
+
+Output:
+
+```none
+flatMapConcatEager: onStart 1
+flatMapConcatEager: onStart 2
+flatMapConcatEager: 1
+flatMapConcatEager: onCompletion 1
+flatMapConcatEager: onStart 3
+flatMapConcatEager: 2
+flatMapConcatEager: onCompletion 2
+flatMapConcatEager: onStart 4
+flatMapConcatEager: 3
+flatMapConcatEager: onCompletion 3
+flatMapConcatEager: onStart 5
+flatMapConcatEager: 4
+flatMapConcatEager: onCompletion 4
+flatMapConcatEager: 5
+flatMapConcatEager: onCompletion 5
+```
+
 #### mapTo
 
 - Similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo)
