@@ -83,7 +83,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - [`exhaustAll`](#flattenfirst--exhaustall)
   - `mapIndexed`
   - [`mapTo`](#mapTo)
-  - `mapToUnit`
+  - [`mapToUnit`](#mapToUnit)
   - [`materialize`](#materialize)
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
@@ -547,6 +547,40 @@ flatMapConcatEager: onCompletion 5
 #### mapTo
 
 - Similar to [RxJS mapTo](https://rxjs.dev/api/operators/mapTo)
+
+Emits the given constant value on the output `Flow` every time the source `Flow` emits a value.
+
+```kotlin
+range(1, 3)
+  .mapTo("Value")
+  .collect { println("mapTo: $it") }
+```
+
+Output:
+
+```none
+mapTo: Value
+mapTo: Value
+mapTo: Value
+```
+
+#### mapToUnit
+
+Emits `kotlin.Unit` value on the output `Flow` every time the source `Flow` emits a value.
+
+```kotlin
+range(1, 3)
+  .mapToUnit()
+  .collect { println("mapToUnit: $it") }
+```
+
+Output:
+
+```none
+mapToUnit: kotlin.Unit
+mapToUnit: kotlin.Unit
+mapToUnit: kotlin.Unit
+```
 
 #### materialize
 
