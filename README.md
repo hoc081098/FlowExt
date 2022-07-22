@@ -382,7 +382,6 @@ Output:
 cast: 1
 cast: 2
 cast: 3
----
 ```
 
 ##### castNotNull
@@ -404,7 +403,6 @@ Output:
 castNotNull: 1
 castNotNull: 2
 castNotNull: 3
----
 ```
 
 #### concatWith
@@ -430,7 +428,6 @@ concatWith: 3
 concatWith: 4
 concatWith: 5
 concatWith: 6
----
 ```
 
 #### startWith
@@ -454,7 +451,6 @@ startWith: 0
 startWith: 1
 startWith: 2
 startWith: 3
----
 ```
 
 #### flatMapFirst / exhaustMap
@@ -462,6 +458,26 @@ startWith: 3
 - Similar to [RxJS exhaustMap](https://rxjs.dev/api/operators/exhaustMap)
 - Similar
   to [RxSwift flatMapFirst](https://github.com/ReactiveX/RxSwift/blob/b48f2e9536cd985d912126709b97bd743e58c8fc/RxSwift/Observables/Merge.swift#L37)
+
+Projects each source value to a `Flow` which is merged in the output `Flow` only if the previous projected `Flow` has completed.
+If value is received while there is some projected `Flow` sequence being merged, it will simply be ignored.
+
+This method is a shortcut for `map(transform).flattenFirst()`.
+
+```kotlin
+range(1, 5)
+  .onEach { delay(100) }
+  .flatMapFirst { timer(it, 130) }
+  .collect { println("flatMapFirst: $it") }
+```
+
+Output:
+
+```none
+flatMapFirst: 1
+flatMapFirst: 3
+flatMapFirst: 5
+```
 
 #### flattenFirst / exhaustAll
 

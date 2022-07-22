@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 
 /**
  * Projects each source value to a [Flow] which is merged in the output [Flow] only if the previous projected [Flow] has completed.
- * If value is received while there is some projected [Flow] sequence being merged it will simply be ignored.
+ * If value is received while there is some projected [Flow] sequence being merged, it will simply be ignored.
  *
  * This method is a shortcut for `map(transform).flattenFirst()`. See [flattenFirst].
  *
