@@ -735,6 +735,29 @@ takeUntil: 1
 - RxMarbles: https://rxmarbles.com/#withLatestFrom
 - Similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom)
 
+Merges two `Flow`s into one `Flow` by combining each value from self with the latest value from the second `Flow`, if any.
+Values emitted by self before the second `Flow` has emitted any values will be omitted.
+
+```kotlin
+range(0, 5)
+  .onEach { delay(100) }
+  .withLatestFrom(
+    range(0, 10)
+      .onEach { delay(70) }
+  )
+  .collect { println("withLatestFrom: $it") }
+```
+
+Output:
+
+```none
+withLatestFrom: (0, 0)
+withLatestFrom: (1, 1)
+withLatestFrom: (2, 3)
+withLatestFrom: (3, 4)
+withLatestFrom: (4, 6)
+```
+
 ... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs
 snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
 
