@@ -1,4 +1,4 @@
-## 0.4.0
+## 0.4.0 - Jul 22, 2022
 
 - Update
   - `KotlinX Coroutines` to `1.6.4`.
