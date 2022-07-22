@@ -183,7 +183,7 @@ public fun <T> Flow<T>.throttleTime(
 
 /**
  * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
- * for a duration determined by another [Flow], then repeats this process for the next source value.
+ * for a duration determined by [durationSelector], then repeats this process for the next source value.
  *
  * * Example [ThrottleConfiguration.LEADING]:
  *
