@@ -95,7 +95,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
   - [`skipUntil`](#skipuntil--dropuntil)
   - [`dropUntil`](#skipuntil--dropuntil)
   - [`takeUntil`](#takeUntil)
-  - `throttleTime`
+  - [`throttleTime`](#throttleTime)
   - [`withLatestFrom`](#withLatestFrom)
 
 #### bufferCount
@@ -728,6 +728,31 @@ Output:
 ```none
 takeUntil: 0
 takeUntil: 1
+```
+
+#### throttleTime
+
+- ReactiveX docs: https://reactivex.io/documentation/operators/debounce.html
+- Similar to [RxJS throttleTime](https://rxjs.dev/api/operators/throttleTime)
+
+Returns a `Flow` that emits a value from the source `Flow`, then ignores subsequent source values
+for a duration determined by `durationSelector`, then repeats this process for the next source value.
+
+```kotlin
+(1..10)
+  .asFlow()
+  .onEach { delay(200) }
+  .throttleTime(500)
+  .collect { println("throttleTime: $it") }
+```
+
+Output:
+
+```none
+throttleTime: 1
+throttleTime: 4
+throttleTime: 7
+throttleTime: 10
 ```
 
 #### withLatestFrom
