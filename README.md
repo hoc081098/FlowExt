@@ -636,6 +636,34 @@ dematerialize: 3
   .
 - Similar to [RxJS raceWith](https://rxjs.dev/api/operators/raceWith)
 
+Mirrors the current `Flow` or the other `Flow`s provided of which the first either emits a value
+or sends a termination event (error or complete event).
+
+```kotlin
+
+flow {
+  delay(100)
+  emit(1)
+  emit(2)
+  emit(3)
+}.raceWith(
+  flow {
+    delay(200)
+    emit(2)
+    emit(3)
+    emit(4)
+  }
+).collect { println("raceWith: $it") }
+```
+
+Output:
+
+```none
+raceWith: 1
+raceWith: 2
+raceWith: 3
+```
+
 #### pairwise
 
 - Similar to [RxJS pairwise](https://rxjs.dev/api/operators/pairwise)
