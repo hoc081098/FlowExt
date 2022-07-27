@@ -1029,7 +1029,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.4.0-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.5.0-SNAPSHOT")
 }
 ```
 
