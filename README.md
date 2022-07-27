@@ -30,8 +30,6 @@
 
 ## Author: [Petrus Nguyễn Thái Học](https://github.com/hoc081098)
 
-## Buy me a coffee
-
 Liked some of my work? Buy me a coffee (or more likely a beer)
 
 [!["Buy Me A Coffee"](https://cdn.buymeacoffee.com/buttons/default-orange.png)](https://www.buymeacoffee.com/hoc081098)
@@ -49,6 +47,8 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 - `linuxX64`
 
 ## API
+
+> **Note**: This is still a relatively early version of FlowExt, with much more to be desired. I gladly accept PRs, ideas, opinions, or improvements. Thank you! :)
 
 ### 0.x release docs: https://hoc081098.github.io/FlowExt/docs/0.x
 
@@ -162,6 +162,8 @@ concat: 5
 concat: 6
 ```
 
+----
+
 #### defer
 
 - Similar to [RxJS defer](https://rxjs.dev/api/index/function/defer)
@@ -196,6 +198,8 @@ defer: 1
 defer: 2
 ```
 
+----
+
 #### flowFromSuspend
 
 - Similar
@@ -227,6 +231,8 @@ flowFromSuspend: 1
 flowFromSuspend: 2
 ```
 
+----
+
 #### interval
 
 - Similar to [RxJS interval](https://rxjs.dev/api/index/function/interval)
@@ -250,6 +256,8 @@ interval: 3
 interval: 4
 ```
 
+----
+
 #### neverFlow
 
 - Similar to [RxJS NEVER](https://rxjs.dev/api/index/const/NEVER)
@@ -270,6 +278,8 @@ Output:
 neverFlow: 7
 // Never prints "Completed!"
 ```
+
+----
 
 #### race / amb
 
@@ -312,6 +322,8 @@ race: 2
 race: 3
 ```
 
+----
+
 #### range
 
 - ReactiveX docs: http://reactivex.io/documentation/operators/range.html
@@ -333,6 +345,8 @@ range: 3
 range: 4
 ```
 
+----
+
 #### timer
 
 - ReactiveX docs: http://reactivex.io/documentation/operators/timer.html
@@ -352,15 +366,21 @@ Output:
 timer: kotlin.Unit
 ```
 
+----
+
 #### combine
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/combinelatest.html
 - `combine` versions for `6 - 12` `Flow`s.
 
+----
+
 #### cast / castNotNull / castNullable
 
 - Similar
   to [RxJava cast](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#cast-java.lang.Class-)
+
+----
 
 ##### cast
 Adapt this `Flow` to be a `Flow<R>`.
@@ -385,6 +405,8 @@ cast: 2
 cast: 3
 ```
 
+----
+
 ##### castNotNull
 
 Adapt this `Flow<T?>` to be a `Flow<T>`.
@@ -405,6 +427,8 @@ castNotNull: 1
 castNotNull: 2
 castNotNull: 3
 ```
+
+----
 
 #### concatWith
 
@@ -431,6 +455,8 @@ concatWith: 5
 concatWith: 6
 ```
 
+----
+
 #### startWith
 
 - Similar to [RxJS startWith](https://rxjs.dev/api/operators/startWith)
@@ -453,6 +479,8 @@ startWith: 1
 startWith: 2
 startWith: 3
 ```
+
+----
 
 #### flatMapFirst / exhaustMap
 
@@ -480,6 +508,8 @@ flatMapFirst: 3
 flatMapFirst: 5
 ```
 
+----
+
 #### flattenFirst / exhaustAll
 
 - Similar to [RxJS exhaustAll](https://rxjs.dev/api/operators/exhaustAll)
@@ -501,6 +531,8 @@ flattenFirst: 1
 flattenFirst: 3
 flattenFirst: 5
 ```
+
+----
 
 #### flatMapConcatEager
 
@@ -545,6 +577,8 @@ flatMapConcatEager: 5
 flatMapConcatEager: onCompletion 5
 ```
 
+----
+
 #### mapIndexed
 
 Returns a flow containing the results of applying the given `transform` function
@@ -563,6 +597,8 @@ mapIndexed: (0, 1)
 mapIndexed: (1, 2)
 mapIndexed: (2, 3)
 ```
+
+----
 
 #### mapTo
 
@@ -584,6 +620,8 @@ mapTo: Value
 mapTo: Value
 ```
 
+----
+
 #### mapToUnit
 
 Emits `kotlin.Unit` value on the output `Flow` every time the source `Flow` emits a value.
@@ -601,6 +639,8 @@ mapToUnit: kotlin.Unit
 mapToUnit: kotlin.Unit
 mapToUnit: kotlin.Unit
 ```
+
+----
 
 #### materialize
 
@@ -625,6 +665,8 @@ materialize: Event.Value(3)
 materialize: Event.Complete
 ```
 
+----
+
 #### dematerialize
 
 - Similar to [RxJS dematerialize](https://rxjs.dev/api/operators/dematerialize)
@@ -647,6 +689,8 @@ dematerialize: 1
 dematerialize: 2
 dematerialize: 3
 ```
+
+----
 
 #### raceWith / ambWith
 
@@ -684,6 +728,8 @@ raceWith: 2
 raceWith: 3
 ```
 
+----
+
 #### pairwise
 
 - Similar to [RxJS pairwise](https://rxjs.dev/api/operators/pairwise)
@@ -705,6 +751,8 @@ pairwise: (0, 1)
 pairwise: (1, 2)
 pairwise: (2, 3)
 ```
+
+----
 
 #### retryWhenWithDelayStrategy
 
@@ -743,6 +791,8 @@ Call count=1
 retryWhenWithDelayStrategy: Result: count=1
 ```
 
+----
+
 #### retryWhenWithExponentialBackoff
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/retry.html
@@ -778,6 +828,8 @@ Call count=0
 Call count=1
 retryWhenWithExponentialBackoff: Result: count=1
 ```
+
+----
 
 #### retryWithExponentialBackoff
 
@@ -816,6 +868,8 @@ Call count=1
 retryWithExponentialBackoff: Result: count=1
 ```
 
+----
+
 #### skipUntil / dropUntil
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/skipuntil.html
@@ -839,6 +893,8 @@ skipUntil: 2
 skipUntil: 3
 ```
 
+----
+
 #### takeUntil
 
 - ReactiveX docs: http://reactivex.io/documentation/operators/takeuntil.html
@@ -859,6 +915,8 @@ Output:
 takeUntil: 0
 takeUntil: 1
 ```
+
+----
 
 #### throttleTime
 
@@ -884,6 +942,8 @@ throttleTime: 4
 throttleTime: 7
 throttleTime: 10
 ```
+
+----
 
 #### withLatestFrom
 
