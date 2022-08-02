@@ -1,3 +1,10 @@
+## 0.5.0
+
+- Update
+  - `KotlinX Coroutines` to `1.7.10`.
+
+- Remove unnecessary `@ExperimentalCoroutinesApi` and `@ExperimentalTime` on `skipUntil`/`dropUntil`.
+
 ## 0.4.0 - Jul 22, 2022
 
 - Update

@@ -26,8 +26,6 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.AtomicBoolean
 import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -41,8 +39,6 @@ import kotlinx.coroutines.launch
  * @param notifier The second [Flow] that has to emit a value before the source [Flow]'s values
  * begin to be mirrored by the resulting [Flow].
  */
-@FlowPreview
-@ExperimentalCoroutinesApi
 public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
   coroutineScope {
     val shouldEmit = AtomicBoolean(false)
@@ -68,6 +64,4 @@ public fun <T> Flow<T>.skipUntil(notifier: Flow<Any?>): Flow<T> = flow {
  * @see skipUntil
  */
 @Suppress("NOTHING_TO_INLINE")
-@FlowPreview
-@ExperimentalCoroutinesApi
 public inline fun <T> Flow<T>.dropUntil(notifier: Flow<Any?>): Flow<T> = skipUntil(notifier)
