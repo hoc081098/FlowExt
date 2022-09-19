@@ -1,7 +1,7 @@
 ## 0.5.0
 
 - Update
-  - `KotlinX Coroutines` to `1.7.10`.
+  - `Kotlin` to `1.7.10`.
 
 - Remove unnecessary `@ExperimentalCoroutinesApi` and `@ExperimentalTime` on `skipUntil`/`dropUntil`.
 
