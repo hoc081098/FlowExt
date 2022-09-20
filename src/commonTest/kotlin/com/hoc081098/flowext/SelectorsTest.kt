@@ -213,6 +213,7 @@ class SelectorsTest : BaseTest() {
     )
     assertEquals(8, searchTermCount) // 0..7
     assertEquals(8, itemsCount) // 0..7
+    assertEquals(8, titleCount) // 0..7
     assertEquals(4, projectorCount) // [0 3 5 6]
   }
 
