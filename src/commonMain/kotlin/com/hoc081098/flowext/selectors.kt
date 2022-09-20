@@ -51,7 +51,7 @@ private fun <State, SubState, Result> Flow<State>.selectInternal(
   check(selectors.isNotEmpty()) { "selectors must not be empty" }
 
   return flow {
-    var latestSubStates: Array<SubState>? = null
+    var latestSubStates: Array<Any?>? = null // Array<SubState>?
     var latestState: Any? = NULL_VALUE // Result | NULL_VALUE
     var reusableSubStates: Array<Any?>? = null
 
@@ -65,9 +65,9 @@ private fun <State, SubState, Result> Flow<State>.selectInternal(
 
       if (latestSubStates === null || !currentSubStates.contentEquals(latestSubStates)) {
         val currentState = projector(
-          (currentSubStates as Array<SubState>)
+          (currentSubStates)
             .copyOf()
-            .also { latestSubStates = it }
+            .also { latestSubStates = it } as Array<SubState>
         )
 
         if (latestState === NULL_VALUE || (latestState as Result) != currentState) {
