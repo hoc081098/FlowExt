@@ -36,15 +36,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-private inline fun <T, R> Array<T>.mapArray(
-  output: Array<Any?>? = null,
-  transform: (T) -> R
-): Array<R> {
-  val result = output ?: arrayOfNulls<Any?>(size)
+private inline fun <T, R> Array<T>.mapArray(transform: (T) -> R): Array<R> {
+  val result = arrayOfNulls<Any?>(size) as Array<R>
   for (i in 0 until size) {
     result[i] = transform(this[i])
   }
-  return result as Array<R>
+  return result
 }
 
 private fun <State, SubState, Result> Flow<State>.selectInternal(
@@ -59,14 +56,16 @@ private fun <State, SubState, Result> Flow<State>.selectInternal(
     var reusableSubStates: Array<Any?>? = null
 
     collect { state ->
-      val currentSubStates = selectors.mapArray(
-        reusableSubStates ?: arrayOfNulls<Any?>(selectors.size)
-          .also { reusableSubStates = it }
-      ) { it(state) }
+      val currentSubStates = reusableSubStates
+        ?: arrayOfNulls<Any?>(selectors.size).also { reusableSubStates = it }
+
+      for (i in 0 until selectors.size) {
+        currentSubStates[i] = selectors[i](state)
+      }
 
       if (latestSubStates === null || !currentSubStates.contentEquals(latestSubStates)) {
         val currentState = projector(
-          currentSubStates
+          (currentSubStates as Array<SubState>)
             .copyOf()
             .also { latestSubStates = it }
         )
