@@ -37,11 +37,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 private inline fun <T, R> Array<T>.mapArray(transform: (T) -> R): Array<R> {
-  val result = arrayOfNulls<Any?>(size) as Array<R>
+  val result = arrayOfNulls<Any?>(size)
   for (i in 0 until size) {
     result[i] = transform(this[i])
   }
-  return result
+  return result as Array<R>
 }
 
 private fun <State, SubState, Result> Flow<State>.selectInternal(
