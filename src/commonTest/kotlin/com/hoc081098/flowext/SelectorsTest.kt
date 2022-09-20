@@ -61,7 +61,9 @@ private suspend fun <T> TestScope.useScope(f: suspend CoroutineScope.() -> T): T
 private data class State(
   val isLoading: Boolean,
   val items: List<String>,
-  val searchTerm: String?
+  val searchTerm: String?,
+  val title: String,
+  val error: Throwable?
 )
 
 private fun <T, R> Flow<T>.scanSkipFirst(
@@ -93,7 +95,9 @@ class SelectorsTest : BaseTest() {
         State(
           isLoading = true,
           items = emptyList(),
-          searchTerm = null
+          searchTerm = null,
+          title = "Loading...",
+          error = null
         )
       ) { state, action ->
         when (action) {
@@ -129,14 +133,87 @@ class SelectorsTest : BaseTest() {
 
     flow.test(
       listOf(
-        Event.Value(List(10) { it.toString() }),
-        Event.Value(listOf("4")),
+        Event.Value(List(10) { it.toString() }), // 0 - items
+        Event.Value(listOf("4")), // 3 - searchTerm
         Event.Complete
       )
     )
     assertEquals(6, searchTermCount) // 0..5
     assertEquals(6, itemsCount) // 0..5
     assertEquals(3, projectorCount) // [0 3 5]
+  }
+
+  @Test
+  fun testSelect3() = runTest {
+    var searchTermCount = 0
+    var itemsCount = 0
+    var titleCount = 0
+    var projectorCount = 0
+
+    val flow = (0..7).asFlow()
+      .flowOnStandardTestDispatcher(this)
+      .onEach { delay(100) }
+      .scanSkipFirst(
+        State(
+          isLoading = true,
+          items = emptyList(),
+          searchTerm = null,
+          title = "Loading...",
+          error = null
+        )
+      ) { state, action ->
+        when (action) {
+          // items
+          0 -> state.copy(items = List(10) { it.toString() })
+          // loading
+          1 -> state.copy(isLoading = !state.isLoading)
+          // loading
+          2 -> state.copy(isLoading = !state.isLoading)
+          // searchTerm
+          3 -> state.copy(searchTerm = "4")
+          // loading
+          4 -> state.copy(isLoading = !state.isLoading)
+          // items
+          5 -> state.copy(items = state.items + "11")
+          // title
+          6 -> state.copy(title = "Title")
+          // loading
+          7 -> state.copy(isLoading = !state.isLoading)
+          else -> error("Unknown action")
+        }
+      }
+      .select3(
+        selector1 = {
+          ++searchTermCount
+          it.searchTerm
+        },
+        selector2 = {
+          ++itemsCount
+          it.items
+        },
+        selector3 = {
+          ++titleCount
+          it.title
+        },
+        projector = { searchTerm, items, title ->
+          ++projectorCount
+          items
+            .filter { it.contains(searchTerm ?: "") }
+            .map { "$it # $title" }
+        }
+      )
+
+    flow.test(
+      listOf(
+        Event.Value(List(10) { it.toString() }.map { "$it # Loading..." }), // 0 - items
+        Event.Value(listOf("4 # Loading...")), // 3 - searchTerm
+        Event.Value(listOf("4 # Title")), // 6 - title
+        Event.Complete
+      )
+    )
+    assertEquals(8, searchTermCount) // 0..7
+    assertEquals(8, itemsCount) // 0..7
+    assertEquals(4, projectorCount) // [0 3 5 6]
   }
 
   // ----------------------------------------------
