@@ -107,8 +107,8 @@ class SelectorsTest : BaseTest() {
           3 -> state.copy(searchTerm = "4")
           // loading
           4 -> state.copy(isLoading = !state.isLoading)
-          // loading
-          5 -> state.copy(isLoading = !state.isLoading)
+          // items
+          5 -> state.copy(items = state.items + "11")
           else -> error("Unknown action")
         }
       }
@@ -136,7 +136,7 @@ class SelectorsTest : BaseTest() {
     )
     assertEquals(6, searchTermCount) // 0..5
     assertEquals(6, itemsCount) // 0..5
-    assertEquals(2, projectorCount) // [0 3]
+    assertEquals(3, projectorCount) // [0 3 5]
   }
 
   // ----------------------------------------------
