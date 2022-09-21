@@ -36,24 +36,21 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-private inline fun <T, R> Array<T>.mapArray(transform: (T) -> R): Array<R> {
-  val result = arrayOfNulls<Any?>(size)
-  for (i in 0 until size) {
-    result[i] = transform(this[i])
-  }
-  return result as Array<R>
-}
+private typealias SubState = Any?
 
-private fun <State, SubState, Result> Flow<State>.selectInternal(
+private inline fun <T, reified R> Array<T>.mapArray(transform: (T) -> R): Array<R> =
+  Array(size) { transform(this[it]) }
+
+private fun <State, Result> Flow<State>.selectInternal(
   selectors: Array<suspend (State) -> SubState>,
   projector: suspend (Array<SubState>) -> Result
 ): Flow<Result> {
-  check(selectors.isNotEmpty()) { "selectors must not be empty" }
+  require(selectors.isNotEmpty()) { "selectors must not be empty" }
 
   return flow {
-    var latestSubStates: Array<Any?>? = null // Array<SubState>?
+    var latestSubStates: Array<SubState>? = null
     var latestState: Any? = NULL_VALUE // Result | NULL_VALUE
-    var reusableSubStates: Array<Any?>? = null
+    var reusableSubStates: Array<SubState>? = null
 
     collect { state ->
       val currentSubStates = reusableSubStates
@@ -65,9 +62,9 @@ private fun <State, SubState, Result> Flow<State>.selectInternal(
 
       if (latestSubStates === null || !currentSubStates.contentEquals(latestSubStates)) {
         val currentState = projector(
-          (currentSubStates)
+          currentSubStates
             .copyOf()
-            .also { latestSubStates = it } as Array<SubState>
+            .also { latestSubStates = it }
         )
 
         if (latestState === NULL_VALUE || (latestState as Result) != currentState) {
@@ -79,12 +76,14 @@ private fun <State, SubState, Result> Flow<State>.selectInternal(
   }
 }
 
-private fun <State, SubState, Result> StateFlow<State>.selectStateInternal(
+private fun <State, Result> StateFlow<State>.selectStateInternal(
   scope: CoroutineScope,
   started: SharingStarted,
   selectors: Array<(State) -> SubState>,
   projector: (Array<SubState>) -> Result
 ): StateFlow<Result> {
+  require(selectors.isNotEmpty()) { "selectors must not be empty" }
+
   return selectInternal(
     selectors = selectors.mapArray { selector ->
       val f: suspend (State) -> SubState = { selector(it) }
