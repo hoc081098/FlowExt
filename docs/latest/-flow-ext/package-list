@@ -119,6 +119,8 @@ $dokka.location:com.hoc081098.flowext/ThrottleConfiguration.LEADING///PointingTo
 $dokka.location:com.hoc081098.flowext/ThrottleConfiguration.LEADING_AND_TRAILING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}-flow-ext/com.hoc081098.flowext/-throttle-configuration/-l-e-a-d-i-n-g_-a-n-d_-t-r-a-i-l-i-n-g/index.html
 $dokka.location:com.hoc081098.flowext/ThrottleConfiguration.TRAILING///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}-flow-ext/com.hoc081098.flowext/-throttle-configuration/-t-r-a-i-l-i-n-g/index.html
 $dokka.location:com.hoc081098.flowext/ThrottleConfiguration///PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-throttle-configuration/index.html
+$dokka.location:com.hoc081098.flowext/ThrottleConfiguration/valueOf/#kotlin.String/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-throttle-configuration/value-of.html
+$dokka.location:com.hoc081098.flowext/ThrottleConfiguration/values/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/-throttle-configuration/values.html
 com.hoc081098.flowext
 com.hoc081098.flowext.utils
 
