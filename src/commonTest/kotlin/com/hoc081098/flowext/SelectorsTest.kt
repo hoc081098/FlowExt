@@ -72,7 +72,7 @@ private fun <T, R> Flow<T>.scanSkipFirst(
 ): Flow<R> = scan(initial, operation).drop(1)
 
 @ExperimentalCoroutinesApi
-class SelectorsTest : BaseTest() {
+class SelectTest : BaseTest() {
   @Test
   fun testSelect() = runTest {
     val flow = (0..1_000 step 10)
@@ -81,7 +81,10 @@ class SelectorsTest : BaseTest() {
 
     flow.test((1..4).map { Event.Value(it) } + Event.Complete)
   }
+}
 
+@ExperimentalCoroutinesApi
+class Select2Test : BaseTest() {
   @Test
   fun testSelect2() = runTest {
     var searchTermCount = 0
@@ -142,7 +145,10 @@ class SelectorsTest : BaseTest() {
     assertEquals(6, itemsCount) // 0..5
     assertEquals(3, projectorCount) // [0 3 5]
   }
+}
 
+@ExperimentalCoroutinesApi
+class Select3Test : BaseTest() {
   @Test
   fun testSelect3() = runTest {
     var searchTermCount = 0
@@ -216,9 +222,10 @@ class SelectorsTest : BaseTest() {
     assertEquals(8, titleCount) // 0..7
     assertEquals(4, projectorCount) // [0 3 5 6]
   }
+}
 
-  // ----------------------------------------------
-
+@ExperimentalCoroutinesApi
+class SelectAsStateFlowTest : BaseTest() {
   @Test
   fun testSelectAsStateFlow() = runTest {
     useScope {
