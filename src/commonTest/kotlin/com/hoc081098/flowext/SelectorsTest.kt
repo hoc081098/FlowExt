@@ -72,12 +72,12 @@ private fun <T, R> Flow<T>.scanSkipFirst(
 ): Flow<R> = scan(initial, operation).drop(1)
 
 @ExperimentalCoroutinesApi
-class SelectTest : BaseTest() {
+class Select1Test : BaseTest() {
   @Test
-  fun testSelect() = runTest {
+  fun testSelect1() = runTest {
     val flow = (0..1_000 step 10)
       .asFlow()
-      .select { it.toString().length }
+      .select1 { it.toString().length }
 
     flow.test((1..4).map { Event.Value(it) } + Event.Complete)
   }
@@ -225,9 +225,9 @@ class Select3Test : BaseTest() {
 }
 
 @ExperimentalCoroutinesApi
-class SelectAsStateFlowTest : BaseTest() {
+class Select1AsStateFlowTest : BaseTest() {
   @Test
-  fun testSelectAsStateFlow() = runTest {
+  fun testSelect1AsStateFlow() = runTest {
     useScope {
       val stateFlow = (0..1_000 step 10)
         .asFlow()
@@ -238,7 +238,7 @@ class SelectAsStateFlowTest : BaseTest() {
           started = SharingStarted.WhileSubscribed(),
           initialValue = 0
         )
-        .selectAsStateFlow(
+        .select1AsStateFlow(
           scope = this,
           started = SharingStarted.WhileSubscribed()
         ) { it.toString().length }

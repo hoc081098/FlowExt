@@ -36,21 +36,21 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-private typealias SubState = Any?
+private typealias SubStateT = Any?
 
 private inline fun <T, reified R> Array<T>.mapArray(transform: (T) -> R): Array<R> =
   Array(size) { transform(this[it]) }
 
 private fun <State, Result> Flow<State>.selectInternal(
-  selectors: Array<suspend (State) -> SubState>,
-  projector: suspend (Array<SubState>) -> Result
+  selectors: Array<out suspend (State) -> SubStateT>,
+  projector: suspend (Array<SubStateT>) -> Result
 ): Flow<Result> {
   require(selectors.isNotEmpty()) { "selectors must not be empty" }
 
   return flow {
-    var latestSubStates: Array<SubState>? = null
+    var latestSubStates: Array<SubStateT>? = null
     var latestState: Any? = NULL_VALUE // Result | NULL_VALUE
-    var reusableSubStates: Array<SubState>? = null
+    var reusableSubStates: Array<SubStateT>? = null
 
     collect { state ->
       val currentSubStates = reusableSubStates
@@ -79,14 +79,14 @@ private fun <State, Result> Flow<State>.selectInternal(
 private fun <State, Result> StateFlow<State>.selectStateInternal(
   scope: CoroutineScope,
   started: SharingStarted,
-  selectors: Array<(State) -> SubState>,
-  projector: (Array<SubState>) -> Result
+  selectors: Array<(State) -> SubStateT>,
+  projector: (Array<SubStateT>) -> Result
 ): StateFlow<Result> {
   require(selectors.isNotEmpty()) { "selectors must not be empty" }
 
   return selectInternal(
     selectors = selectors.mapArray { selector ->
-      val f: suspend (State) -> SubState = { selector(it) }
+      val f: suspend (State) -> SubStateT = { selector(it) }
       f
     },
     projector = projector
@@ -99,7 +99,7 @@ private fun <State, Result> StateFlow<State>.selectStateInternal(
 
 // -------------------------------------------------------------------------------------------------
 
-public fun <State, Result> Flow<State>.select(selector: (State) -> Result): Flow<Result> =
+public fun <State, Result> Flow<State>.select1(selector: (State) -> Result): Flow<Result> =
   map(selector).distinctUntilChanged()
 
 public fun <State, SubState1, SubState2, Result> Flow<State>.select2(
@@ -180,9 +180,17 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result
   }
 )
 
+public fun <State, SubState, Result> Flow<State>.select(
+  vararg selectors: suspend (State) -> SubState,
+  projector: suspend (Array<SubState>) -> Result
+): Flow<Result> = selectInternal(
+  selectors = selectors,
+  projector = { projector(it as Array<SubState>) }
+)
+
 // -------------------------------------------------------------------------------------------------
 
-public fun <State, Result> StateFlow<State>.selectAsStateFlow(
+public fun <State, Result> StateFlow<State>.select1AsStateFlow(
   scope: CoroutineScope,
   started: SharingStarted,
   selector: (State) -> Result
