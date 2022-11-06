@@ -27,14 +27,10 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.NULL_VALUE
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 private typealias SubStateT = Any?
 
@@ -74,27 +70,6 @@ private fun <State, Result> Flow<State>.selectInternal(
       }
     }
   }
-}
-
-private fun <State, Result> StateFlow<State>.selectStateInternal(
-  scope: CoroutineScope,
-  started: SharingStarted,
-  selectors: Array<(State) -> SubStateT>,
-  projector: (Array<SubStateT>) -> Result
-): StateFlow<Result> {
-  require(selectors.isNotEmpty()) { "selectors must not be empty" }
-
-  return selectInternal(
-    selectors = selectors.mapArray { selector ->
-      val f: suspend (State) -> SubStateT = { selector(it) }
-      f
-    },
-    projector = projector
-  ).stateIn(
-    scope = scope,
-    started = started,
-    initialValue = projector(selectors.mapArray { it(value) })
-  )
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -162,109 +137,6 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result
   selector5: suspend (State) -> SubState5,
   projector: suspend (subState1: SubState1, subState2: SubState2, subState3: SubState3, subState4: SubState4, subState5: SubState5) -> Result
 ): Flow<Result> = selectInternal(
-  selectors = arrayOf(
-    selector1,
-    selector2,
-    selector3,
-    selector4,
-    selector5
-  ),
-  projector = {
-    projector(
-      it[0] as SubState1,
-      it[1] as SubState2,
-      it[2] as SubState3,
-      it[3] as SubState4,
-      it[4] as SubState5
-    )
-  }
-)
-
-// -------------------------------------------------------------------------------------------------
-
-public fun <State, Result> StateFlow<State>.selectAsStateFlow(
-  scope: CoroutineScope,
-  started: SharingStarted,
-  selector: (State) -> Result
-): StateFlow<Result> = map(selector).stateIn(
-  scope = scope,
-  started = started,
-  initialValue = selector(value)
-)
-
-public fun <State, SubState1, SubState2, Result> StateFlow<State>.selectAsStateFlow(
-  scope: CoroutineScope,
-  started: SharingStarted,
-  selector1: (State) -> SubState1,
-  selector2: (State) -> SubState2,
-  projector: (subState1: SubState1, subState2: SubState2) -> Result
-): StateFlow<Result> = selectStateInternal(
-  scope = scope,
-  started = started,
-  selectors = arrayOf(selector1, selector2),
-  projector = { projector(it[0] as SubState1, it[1] as SubState2) }
-)
-
-public fun <State, SubState1, SubState2, SubState3, Result> StateFlow<State>.selectAsStateFlow(
-  scope: CoroutineScope,
-  started: SharingStarted,
-  selector1: (State) -> SubState1,
-  selector2: (State) -> SubState2,
-  selector3: (State) -> SubState3,
-  projector: (subState1: SubState1, subState2: SubState2, subState3: SubState3) -> Result
-): StateFlow<Result> = selectStateInternal(
-  scope = scope,
-  started = started,
-  selectors = arrayOf(selector1, selector2, selector3),
-  projector = {
-    projector(
-      it[0] as SubState1,
-      it[1] as SubState2,
-      it[2] as SubState3
-    )
-  }
-)
-
-public fun <State, SubState1, SubState2, SubState3, SubState4, Result> StateFlow<State>.selectAsStateFlow(
-  scope: CoroutineScope,
-  started: SharingStarted,
-  selector1: (State) -> SubState1,
-  selector2: (State) -> SubState2,
-  selector3: (State) -> SubState3,
-  selector4: (State) -> SubState4,
-  projector: (subState1: SubState1, subState2: SubState2, subState3: SubState3, subState4: SubState4) -> Result
-): StateFlow<Result> = selectStateInternal(
-  scope = scope,
-  started = started,
-  selectors = arrayOf(selector1, selector2, selector3, selector4),
-  projector = {
-    projector(
-      it[0] as SubState1,
-      it[1] as SubState2,
-      it[2] as SubState3,
-      it[3] as SubState4
-    )
-  }
-)
-
-public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result> StateFlow<State>.selectAsStateFlow(
-  scope: CoroutineScope,
-  started: SharingStarted,
-  selector1: (State) -> SubState1,
-  selector2: (State) -> SubState2,
-  selector3: (State) -> SubState3,
-  selector4: (State) -> SubState4,
-  selector5: (State) -> SubState5,
-  projector: (
-    subState1: SubState1,
-    subState2: SubState2,
-    subState3: SubState3,
-    subState4: SubState4,
-    subState5: SubState5
-  ) -> Result
-): StateFlow<Result> = selectStateInternal(
-  scope = scope,
-  started = started,
   selectors = arrayOf(
     selector1,
     selector2,

@@ -33,14 +33,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 
@@ -221,33 +218,5 @@ class Select3Test : BaseTest() {
     assertEquals(8, itemsCount) // 0..7
     assertEquals(8, titleCount) // 0..7
     assertEquals(4, projectorCount) // [0 3 5 6]
-  }
-}
-
-@ExperimentalCoroutinesApi
-class Select1AsStateFlowTest : BaseTest() {
-  @Test
-  fun testSelect1AsStateFlow() = runTest {
-    useScope {
-      val stateFlow = (0..1_000 step 10)
-        .asFlow()
-        .flowOnStandardTestDispatcher(this@runTest)
-        .onEach { delay(100) }
-        .stateIn(
-          scope = this,
-          started = SharingStarted.WhileSubscribed(),
-          initialValue = 0
-        )
-        .selectAsStateFlow(
-          scope = this,
-          started = SharingStarted.WhileSubscribed()
-        ) { it.toString().length }
-
-      assertEquals(1, stateFlow.value)
-      stateFlow
-        .take(4)
-        .test((1..4).map { Event.Value(it) } + Event.Complete)
-      assertEquals(4, stateFlow.value)
-    }
   }
 }
