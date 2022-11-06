@@ -34,9 +34,6 @@ import kotlinx.coroutines.flow.map
 
 private typealias SubStateT = Any?
 
-private inline fun <T, reified R> Array<T>.mapArray(transform: (T) -> R): Array<R> =
-  Array(size) { transform(this[it]) }
-
 private fun <State, Result> Flow<State>.selectInternal(
   selectors: Array<out suspend (State) -> SubStateT>,
   projector: suspend (Array<SubStateT>) -> Result
