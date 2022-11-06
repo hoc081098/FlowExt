@@ -77,7 +77,7 @@ class Select1Test : BaseTest() {
   fun testSelect1() = runTest {
     val flow = (0..1_000 step 10)
       .asFlow()
-      .select1 { it.toString().length }
+      .select { it.toString().length }
 
     flow.test((1..4).map { Event.Value(it) } + Event.Complete)
   }
@@ -119,7 +119,7 @@ class Select2Test : BaseTest() {
           else -> error("Unknown action")
         }
       }
-      .select2(
+      .select(
         selector1 = {
           ++searchTermCount
           it.searchTerm
@@ -188,7 +188,7 @@ class Select3Test : BaseTest() {
           else -> error("Unknown action")
         }
       }
-      .select3(
+      .select(
         selector1 = {
           ++searchTermCount
           it.searchTerm
@@ -238,7 +238,7 @@ class Select1AsStateFlowTest : BaseTest() {
           started = SharingStarted.WhileSubscribed(),
           initialValue = 0
         )
-        .select1AsStateFlow(
+        .selectAsStateFlow(
           scope = this,
           started = SharingStarted.WhileSubscribed()
         ) { it.toString().length }

@@ -99,10 +99,10 @@ private fun <State, Result> StateFlow<State>.selectStateInternal(
 
 // -------------------------------------------------------------------------------------------------
 
-public fun <State, Result> Flow<State>.select1(selector: (State) -> Result): Flow<Result> =
+public fun <State, Result> Flow<State>.select(selector: (State) -> Result): Flow<Result> =
   map(selector).distinctUntilChanged()
 
-public fun <State, SubState1, SubState2, Result> Flow<State>.select2(
+public fun <State, SubState1, SubState2, Result> Flow<State>.select(
   selector1: suspend (State) -> SubState1,
   selector2: suspend (State) -> SubState2,
   projector: suspend (subState1: SubState1, subState2: SubState2) -> Result
@@ -111,7 +111,7 @@ public fun <State, SubState1, SubState2, Result> Flow<State>.select2(
   projector = { projector(it[0] as SubState1, it[1] as SubState2) }
 )
 
-public fun <State, SubState1, SubState2, SubState3, Result> Flow<State>.select3(
+public fun <State, SubState1, SubState2, SubState3, Result> Flow<State>.select(
   selector1: suspend (State) -> SubState1,
   selector2: suspend (State) -> SubState2,
   selector3: suspend (State) -> SubState3,
@@ -131,7 +131,7 @@ public fun <State, SubState1, SubState2, SubState3, Result> Flow<State>.select3(
   }
 )
 
-public fun <State, SubState1, SubState2, SubState3, SubState4, Result> Flow<State>.select4(
+public fun <State, SubState1, SubState2, SubState3, SubState4, Result> Flow<State>.select(
   selector1: suspend (State) -> SubState1,
   selector2: suspend (State) -> SubState2,
   selector3: suspend (State) -> SubState3,
@@ -154,7 +154,7 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, Result> Flow<Stat
   }
 )
 
-public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result> Flow<State>.select5(
+public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result> Flow<State>.select(
   selector1: suspend (State) -> SubState1,
   selector2: suspend (State) -> SubState2,
   selector3: suspend (State) -> SubState3,
@@ -180,17 +180,9 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result
   }
 )
 
-public fun <State, SubState, Result> Flow<State>.select(
-  vararg selectors: suspend (State) -> SubState,
-  projector: suspend (Array<SubState>) -> Result
-): Flow<Result> = selectInternal(
-  selectors = selectors,
-  projector = { projector(it as Array<SubState>) }
-)
-
 // -------------------------------------------------------------------------------------------------
 
-public fun <State, Result> StateFlow<State>.select1AsStateFlow(
+public fun <State, Result> StateFlow<State>.selectAsStateFlow(
   scope: CoroutineScope,
   started: SharingStarted,
   selector: (State) -> Result
@@ -200,7 +192,7 @@ public fun <State, Result> StateFlow<State>.select1AsStateFlow(
   initialValue = selector(value)
 )
 
-public fun <State, SubState1, SubState2, Result> StateFlow<State>.select2AsStateFlow(
+public fun <State, SubState1, SubState2, Result> StateFlow<State>.selectAsStateFlow(
   scope: CoroutineScope,
   started: SharingStarted,
   selector1: (State) -> SubState1,
@@ -213,7 +205,7 @@ public fun <State, SubState1, SubState2, Result> StateFlow<State>.select2AsState
   projector = { projector(it[0] as SubState1, it[1] as SubState2) }
 )
 
-public fun <State, SubState1, SubState2, SubState3, Result> StateFlow<State>.select3AsStateFlow(
+public fun <State, SubState1, SubState2, SubState3, Result> StateFlow<State>.selectAsStateFlow(
   scope: CoroutineScope,
   started: SharingStarted,
   selector1: (State) -> SubState1,
@@ -233,7 +225,7 @@ public fun <State, SubState1, SubState2, SubState3, Result> StateFlow<State>.sel
   }
 )
 
-public fun <State, SubState1, SubState2, SubState3, SubState4, Result> StateFlow<State>.select4AsStateFlow(
+public fun <State, SubState1, SubState2, SubState3, SubState4, Result> StateFlow<State>.selectAsStateFlow(
   scope: CoroutineScope,
   started: SharingStarted,
   selector1: (State) -> SubState1,
@@ -255,7 +247,7 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, Result> StateFlow
   }
 )
 
-public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result> StateFlow<State>.select5AsStateFlow(
+public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result> StateFlow<State>.selectAsStateFlow(
   scope: CoroutineScope,
   started: SharingStarted,
   selector1: (State) -> SubState1,
