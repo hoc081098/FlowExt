@@ -26,6 +26,7 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.test
+import kotlin.native.concurrent.SharedImmutable
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -72,8 +73,10 @@ private fun <T, R> Flow<T>.scanSkipFirst(
   operation: suspend (acc: R, value: T) -> R
 ): Flow<R> = scan(initial, operation).drop(1)
 
+@SharedImmutable
 private val zeroToTen = List(10) { it.toString() }
 
+@SharedImmutable
 private val reducer: (acc: State, value: Int) -> State = { state, action ->
   when (action) {
     // items
