@@ -15,6 +15,11 @@
 
 5. Publish release on Github.
 
+or
+   ```
+   $ git push origin X.Y.Z
+   ```
+
 6. Update the `VERSION_NAME` in `gradle.properties` to the next "SNAPSHOT" version.
 
 7. Commit
