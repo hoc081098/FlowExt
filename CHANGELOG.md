@@ -1,7 +1,7 @@
 ## 0.5.0
 
 - Update
-  - `Kotlin` to `1.7.10`.
+  - `Kotlin` to `1.7.20` (The new Kotlin/Native memory manager enabled by default).
   - `Gradle` to `7.5.1`.
 
 - Remove unnecessary `@ExperimentalCoroutinesApi` and `@ExperimentalTime` on `skipUntil`/`dropUntil`.
