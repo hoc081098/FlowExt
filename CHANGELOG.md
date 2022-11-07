@@ -2,6 +2,7 @@
 
 - Update
   - `Kotlin` to `1.7.10`.
+  - `Gradle` to `7.5.1`.
 
 - Remove unnecessary `@ExperimentalCoroutinesApi` and `@ExperimentalTime` on `skipUntil`/`dropUntil`.
 
