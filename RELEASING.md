@@ -17,6 +17,7 @@
 
 or
    ```
+   $ git tag X.Y.Z
    $ git push origin X.Y.Z
    ```
 
