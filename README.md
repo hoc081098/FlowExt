@@ -1073,13 +1073,13 @@ allprojects {
 ### Multiplatform
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt:0.4.0")
+implementation("io.github.hoc081098:FlowExt:0.5.0")
 ```
 
 ### JVM / Android only
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt-jvm:0.4.0")
+implementation("io.github.hoc081098:FlowExt-jvm:0.5.0")
 ```
 
 ### Snapshot
@@ -1097,7 +1097,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.5.0-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.6.0-SNAPSHOT")
 }
 ```
 
@@ -1112,7 +1112,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.5.0-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.6.0-SNAPSHOT")
 }
 ```
 
