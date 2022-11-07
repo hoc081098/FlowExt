@@ -130,7 +130,7 @@ jobs:
         shell: bash
 
       - name: Publish snapshot
-        run: ./gradlew publish --no-parallel --stacktrace
+        run: ./gradlew publish --stacktrace
         if: ${{ endsWith(env.VERSION_NAME, '-SNAPSHOT') && matrix.os == 'macos-11' }}
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}

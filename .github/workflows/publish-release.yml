@@ -61,7 +61,7 @@ jobs:
         run: ./gradlew assemble
 
       - name: Publish release
-        run: ./gradlew publish --no-parallel --stacktrace
+        run: ./gradlew publish --stacktrace
         if: matrix.os == 'macos-11'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
@@ -78,11 +78,11 @@ jobs:
       #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_PRIVATE_KEY }}
       #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
-      - name: Publish release
-        run: ./gradlew closeAndReleaseRepository --no-parallel
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+      #- name: Publish release
+      #  run: ./gradlew closeAndReleaseRepository --no-parallel
+      #  env:
+      #    ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+      #    ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
       - name: Generate docs
         run: ./gradlew dokkaHtml --no-parallel --stacktrace
