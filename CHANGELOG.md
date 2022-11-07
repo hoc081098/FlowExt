@@ -5,6 +5,9 @@
 
 - Remove unnecessary `@ExperimentalCoroutinesApi` and `@ExperimentalTime` on `skipUntil`/`dropUntil`.
 
+- Add
+  - `Flow.select` operator (from `1` to `5`).
+
 ## 0.4.0 - Jul 22, 2022
 
 - Update
