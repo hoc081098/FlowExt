@@ -7,6 +7,8 @@ on:
   pull_request:
     branches: [ master ]
     paths-ignore: [ '**.md', '**.MD' ]
+  tags-ignore:
+    - '**'
   workflow_dispatch:
 
 env:

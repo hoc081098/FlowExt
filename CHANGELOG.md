@@ -1,15 +1,20 @@
-## 0.5.0
+## [Unreleased]
 
-- Update
+## [0.5.0] - Nov 7, 2022
+
+### Changed
+
+- Update dependencies
   - `Kotlin` to `1.7.20` (The new Kotlin/Native memory manager enabled by default).
   - `Gradle` to `7.5.1`.
 
 - Remove unnecessary `@ExperimentalCoroutinesApi` and `@ExperimentalTime` on `skipUntil`/`dropUntil`.
 
-- Add
-  - `Flow.select` operator (from `1` to `5`).
+### Added
 
-## 0.4.0 - Jul 22, 2022
+- `Flow.select` operator (from `1` to `5`).
+
+## [0.4.0] - Jul 22, 2022
 
 - Update
   - `KotlinX Coroutines` to `1.6.4`.
@@ -39,7 +44,7 @@
 
 - Enable compatibility with non-hierarchical multiplatform projects.
 
-## 0.3.0 - May 2, 2022
+## [0.3.0] - May 2, 2022
 
 - Update
   - `Kotlin` to `1.6.21`.
@@ -68,7 +73,7 @@
 
 - Internal bug fixes.
 
-## 0.2.0 - Jan 3, 2022
+## [0.2.0] - Jan 3, 2022
 
 - Update
   - `Kotlin` to `1.6.10`.
@@ -90,7 +95,7 @@
   - `Flow.retryWhenWithExponentialBackoff`.
   - `Flow.retryWithExponentialBackoff`.
 
-## 0.1.0 - Nov 13, 2021
+## [0.1.0] - Nov 13, 2021
 
 - Update
   - `Kotlin` to `1.5.31`.
@@ -111,6 +116,6 @@
 - Add docs and docs site.
 - Internal bug fixes.
 
-## 0.0.1 -> 0.0.6 - Jul 13, 2021
+## [0.0.1] -> [0.0.6] - Jul 13, 2021
 
 - Test for Publishing.
