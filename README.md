@@ -870,6 +870,88 @@ retryWithExponentialBackoff: Result: count=1
 
 ----
 
+#### select
+
+- Inspirited by [NgRx memoized selector](https://ngrx.io/guide/store/selectors).
+- Selectors are pure functions used for obtaining slices of a Flow of state.
+  `FlowExt` provides a few helper functions for optimizing this selection.
+
+  - Selectors can compute derived data, to store the minimal possible state.
+  - Selectors are efficient. A selector is not recomputed unless one of its arguments changes.
+  - When using the [select] functions, it will keep track of the latest arguments in which your selector function was invoked.
+    Because selectors are pure functions, the last result can be returned
+    when the arguments match without re-invoking your selector function.
+    This can provide performance benefits, particularly with selectors that perform expensive computation.
+    This practice is known as memoization.
+
+```kotlin
+data class UiState(
+  val items: List<String> = emptyList(),
+  val term: String? = null,
+  val isLoading: Boolean = false,
+  val error: Throwable? = null
+)
+
+flow {
+  println("select: emit 1")
+  emit(UiState())
+
+  println("select: emit 2")
+  emit(
+    UiState(
+      items = listOf("a", "b", "c"),
+      term = "a",
+      isLoading = true,
+      error = Throwable("error")
+    )
+  )
+
+  println("select: emit 3")
+  emit(
+    UiState(
+      items = listOf("a", "b", "c"),
+      term = "a",
+      isLoading = false,
+      error = Throwable("error")
+    )
+  )
+
+  println("select: emit 4")
+  emit(
+    UiState(
+      items = listOf("a", "b", "c"),
+      term = "b",
+      isLoading = false,
+      error = Throwable("error")
+    )
+  )
+}
+  .select(
+    selector1 = { it.items },
+    selector2 = { it.term },
+    projector = { items, term ->
+      term?.let { v ->
+        items.filter { it.contains(v, ignoreCase = true) }
+      }
+    }
+  )
+  .collect { println("select: $it") }
+```
+
+Output:
+
+```none
+select: emit 1
+select: null
+select: emit 2
+select: [a]
+select: emit 3
+select: emit 4
+select: [b]
+```
+
+----
+
 #### skipUntil / dropUntil
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/skipuntil.html
