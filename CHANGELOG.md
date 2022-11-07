@@ -14,7 +14,8 @@
 
 ### Added
 
-- `Flow.select` operator (from `1` to `5`).
+- [`Flow.select`](https://hoc081098.github.io/FlowExt/docs/0.x/-flow-ext/com.hoc081098.flowext/select.html) operator (from `1` to `5`).
+  See [Readme#select](https://github.com/hoc081098/FlowExt#select) for more details.
 
 ## [0.4.0] - Jul 22, 2022
 
