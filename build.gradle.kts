@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
   kotlin("multiplatform") version "1.7.21"
-  id("com.diffplug.spotless") version "6.14.0"
+  id("com.diffplug.spotless") version "6.15.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.24.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.12.1"
