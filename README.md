@@ -54,6 +54,63 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 ### Snapshot docs: https://hoc081098.github.io/FlowExt/docs/latest
 
+## Installation
+
+```groovy
+allprojects {
+  repositories {
+    ...
+    mavenCentral()
+  }
+}
+```
+
+### Multiplatform
+
+```groovy
+implementation("io.github.hoc081098:FlowExt:0.5.0")
+```
+
+### JVM / Android only
+
+```groovy
+implementation("io.github.hoc081098:FlowExt-jvm:0.5.0")
+```
+
+### Snapshot
+
+Snapshots of the development version are available in Sonatype's snapshots repository.
+
+- Kotlin
+
+```kotlin
+allprojects {
+  repositories {
+    ...
+    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
+  }
+}
+
+dependencies {
+  implementation("io.github.hoc081098:FlowExt:0.6.0-SNAPSHOT")
+}
+```
+
+- Groovy
+
+```groovy
+allprojects {
+  repositories {
+    ...
+    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
+  }
+}
+
+dependencies {
+  implementation("io.github.hoc081098:FlowExt:0.6.0-SNAPSHOT")
+}
+```
+
 ### Table of contents
 
 - Create
@@ -1058,63 +1115,6 @@ withLatestFrom: (4, 6)
 
 ... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs
 snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
-
-## Installation
-
-```groovy
-allprojects {
-  repositories {
-    ...
-    mavenCentral()
-  }
-}
-```
-
-### Multiplatform
-
-```groovy
-implementation("io.github.hoc081098:FlowExt:0.5.0")
-```
-
-### JVM / Android only
-
-```groovy
-implementation("io.github.hoc081098:FlowExt-jvm:0.5.0")
-```
-
-### Snapshot
-
-Snapshots of the development version are available in Sonatype's snapshots repository.
-
-- Kotlin
-
-```kotlin
-allprojects {
-  repositories {
-    ...
-    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
-  }
-}
-
-dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.6.0-SNAPSHOT")
-}
-```
-
-- Groovy
-
-```groovy
-allprojects {
-  repositories {
-    ...
-    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
-  }
-}
-
-dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.6.0-SNAPSHOT")
-}
-```
 
 ## License
 
