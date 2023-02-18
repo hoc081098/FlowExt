@@ -111,7 +111,7 @@ dependencies {
 }
 ```
 
-### Table of contents
+## Table of contents
 
 - Create
   - [`concat`](#concat)
