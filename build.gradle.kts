@@ -14,7 +14,7 @@ plugins {
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.24.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.12.1"
-  id("org.jetbrains.dokka") version "1.7.20"
+  id("org.jetbrains.dokka") version "1.8.10"
   id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
 
