@@ -10,6 +10,13 @@
   - `Gradle` to `8.0.2`.
 
 - Only support JS IR.
+- Supports more targets:
+  - `linuxArm64`
+  - `watchosDeviceArm64`
+  - `androidNativeArm32`
+  - `androidNativeArm64`
+  - `androidNativeX86`
+  - `androidNativeX64`
 
 ## [0.5.0] - Nov 7, 2022
 

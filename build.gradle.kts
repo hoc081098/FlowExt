@@ -59,6 +59,8 @@ kotlin {
     }
   }
 
+  // According to https://kotlinlang.org/docs/native-target-support.html
+
   iosArm64()
   iosArm32()
   iosX64()
@@ -68,6 +70,7 @@ kotlin {
   macosArm64()
   mingwX64()
   linuxX64()
+  linuxArm64()
 
   tvosX64()
   tvosSimulatorArm64()
@@ -78,6 +81,12 @@ kotlin {
   watchosX64()
   watchosX86()
   watchosSimulatorArm64()
+  watchosDeviceArm64()
+
+  androidNativeArm32()
+  androidNativeArm64()
+  androidNativeX86()
+  androidNativeX64()
 
   sourceSets {
     val commonMain by getting {
@@ -132,10 +141,24 @@ kotlin {
       "watchosArm64",
       "watchosX86",
       "watchosSimulatorArm64",
-      "watchosX64"
+      "watchosX64",
+      "watchosSimulatorArm64",
     )
 
-    (appleTargets + listOf("mingwX64", "linuxX64")).forEach {
+    val desktopTargets = listOf(
+      "mingwX64",
+      "linuxX64",
+      "linuxArm64"
+    )
+
+    val androidNativeTargets = listOf(
+      "androidNativeArm32",
+      "androidNativeArm64",
+      "androidNativeX86",
+      "androidNativeX64",
+    )
+
+    (appleTargets + desktopTargets + androidNativeTargets).forEach {
       getByName("${it}Main") {
         dependsOn(nativeMain)
       }
