@@ -18,7 +18,7 @@ plugins {
   id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
 
-val coroutinesVersion = "1.6.4"
+val coroutinesVersion = "1.7.0-Beta"
 val ktlintVersion = "0.46.1"
 
 repositories {
@@ -29,13 +29,17 @@ repositories {
 
 kotlin {
   explicitApi()
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(8))
+    vendor.set(JvmVendorSpec.AZUL)
+  }
 
   jvm {
     compilations.all {
-      kotlinOptions.jvmTarget = "1.8"
+      kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
   }
-  js(BOTH) {
+  js(IR) {
     compilations.all {
       kotlinOptions {
         sourceMap = true

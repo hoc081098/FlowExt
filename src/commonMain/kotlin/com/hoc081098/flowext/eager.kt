@@ -24,6 +24,7 @@
 
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -48,6 +49,7 @@ import kotlinx.coroutines.launch
  * Transformations performed parallel with given [concurrency] limit and preserving the order of elements.
  */
 @FlowPreview
+@ExperimentalCoroutinesApi
 public fun <T, R> Flow<T>.mapEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
   transform: suspend (value: T) -> R
@@ -78,6 +80,7 @@ public fun <T, R> Flow<T>.mapEager(
  * more than [bufferSize] values before being concatenated to output, then it will be suspended
  */
 @FlowPreview
+@ExperimentalCoroutinesApi
 public fun <T, R> Flow<T>.flatMapConcatEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
   bufferSize: Int = Channel.BUFFERED,
@@ -107,6 +110,7 @@ public fun <T, R> Flow<T>.flatMapConcatEager(
  * more than [bufferSize] values before being concatenated to output, then it will be suspended
  */
 @FlowPreview
+@ExperimentalCoroutinesApi
 public fun <T> Flow<Flow<T>>.flattenConcatEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
   bufferSize: Int = Channel.BUFFERED

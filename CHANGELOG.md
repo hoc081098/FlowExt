@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Update dependencies
+  - `Kotlin` to `1.8.10`.
+  - `KotlinX Coroutines` to `1.7.0-Beta`.
+  - `Gradle` to `8.0.2`.
+
+- Only support JS IR.
+
 ## [0.5.0] - Nov 7, 2022
 
 ### Changed

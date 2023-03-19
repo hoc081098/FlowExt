@@ -25,11 +25,9 @@
 package com.hoc081098.flowext.internal
 
 import com.hoc081098.flowext.utils.Symbol
-import kotlin.native.concurrent.SharedImmutable
 
 /*
  * Symbol used to indicate that the flow is complete.
  * It should never leak to the outside world.
  */
-@SharedImmutable
 internal val DONE_VALUE = Symbol("DONE_VALUE")
