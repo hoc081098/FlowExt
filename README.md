@@ -36,15 +36,16 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 ## Supported targets
 
-- `android`
-- `jvm`
-- `js` (`IR` and `LEGACY`)
-- `iosArm64`, `iosArm32`, `iosX64`, `iosSimulatorArm64`
-- `watchosArm32`, `watchosArm64`, `watchosX64`, `watchosX86`, `watchosSimulatorArm64`
+- `android`.
+- `jvm`.
+- `js` (`IR`).
+- `iosArm64`, `iosArm32`, `iosX64`, `iosSimulatorArm64`.
+- `watchosArm32`, `watchosArm64`, `watchosX64`, `watchosX86`, `watchosSimulatorArm64`, `watchosDeviceArm64`.
 - `tvosX64`, `tvosSimulatorArm64`, `tvosArm64`.
-- `macosX64`, `macosArm64`
+- `macosX64`, `macosArm64`.
 - `mingwX64`
-- `linuxX64`
+- `linuxX64`, `linuxArm64`.
+- `androidNativeArm32`, `androidNativeArm64`, `androidNativeX86`, `androidNativeX64`.
 
 ## API
 
