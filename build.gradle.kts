@@ -143,7 +143,7 @@ kotlin {
       "watchosSimulatorArm64",
       "watchosX64",
       "watchosSimulatorArm64",
-      "watchosDeviceArm64",
+      "watchosDeviceArm64"
     )
 
     val desktopTargets = listOf(
@@ -156,7 +156,7 @@ kotlin {
       "androidNativeArm32",
       "androidNativeArm64",
       "androidNativeX86",
-      "androidNativeX64",
+      "androidNativeX64"
     )
 
     (appleTargets + desktopTargets + androidNativeTargets).forEach {
