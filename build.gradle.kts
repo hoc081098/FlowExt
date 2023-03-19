@@ -143,6 +143,7 @@ kotlin {
       "watchosSimulatorArm64",
       "watchosX64",
       "watchosSimulatorArm64",
+      "watchosDeviceArm64",
     )
 
     val desktopTargets = listOf(
