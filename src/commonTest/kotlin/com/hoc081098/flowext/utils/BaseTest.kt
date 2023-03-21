@@ -24,17 +24,53 @@
 
 package com.hoc081098.flowext.utils
 
+import kotlin.test.assertTrue
+import kotlin.test.fail
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.fold
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
+internal val DEFAULT_DISPATCH_TIMEOUT_DURATION = 60_000L.milliseconds
+
 abstract class BaseTest {
   @ExperimentalCoroutinesApi
-  protected fun runTest(testBody: suspend TestScope.() -> Unit): TestResult {
+  protected fun runTest(
+    testDispatcher: TestDispatcher? = null,
+    dispatchTimeout: Duration = DEFAULT_DISPATCH_TIMEOUT_DURATION,
+    testBody: suspend TestScope.() -> Unit
+  ): TestResult {
     return kotlinx.coroutines.test.runTest(
-      context = UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatchers"),
-      testBody = testBody,
+      context = testDispatcher
+        ?: UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatcher"),
+      dispatchTimeoutMs = dispatchTimeout.inWholeMilliseconds,
+      testBody = testBody
     )
   }
 }
+
+suspend inline fun hang(onCancellation: () -> Unit) {
+  try {
+    suspendCancellableCoroutine<Unit> { }
+  } finally {
+    onCancellation()
+  }
+}
+
+suspend inline fun <reified T : Throwable> assertFailsWith(flow: Flow<*>) {
+  try {
+    flow.collect()
+    fail("Should be unreached")
+  } catch (e: Throwable) {
+    assertTrue(e is T, "Expected exception ${T::class}, but had $e instead")
+  }
+}
+
+suspend fun Flow<Int>.sum() = fold(0) { acc, value -> acc + value }

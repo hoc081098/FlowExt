@@ -27,6 +27,9 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -38,9 +41,6 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 /*
  * MIT License
@@ -93,7 +93,7 @@ class RaceTest : BaseTest() {
   fun race2WithoutDelay() = runTest {
     race(
       flowOf(1, 2).log(1),
-      flowOf(3, 4).log(2),
+      flowOf(3, 4).log(2)
     ).test(
       listOf(
         Event.Value(1),
@@ -108,7 +108,7 @@ class RaceTest : BaseTest() {
     race(
       flowOf(1, 2).onEach { delay(200) }.log(1),
       flowOf(3, 4).onEach { delay(100) }.log(2),
-      flowOf(5, 6).onEach { delay(50) }.log(3),
+      flowOf(5, 6).onEach { delay(50) }.log(3)
     ).test(
       listOf(
         Event.Value(5),
@@ -138,7 +138,7 @@ class RaceTest : BaseTest() {
         Event.Value(1),
         Event.Value(2),
         Event.Value(3),
-        Event.Complete,
+        Event.Complete
       )
     )
   }
@@ -238,7 +238,7 @@ class RaceTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -259,7 +259,7 @@ class RaceTest : BaseTest() {
     ).test(null) { events ->
       assertEquals(
         message,
-        assertIs<CancellationException>(events.single().errorOrThrow()).message,
+        assertIs<CancellationException>(events.single().errorOrThrow()).message
       )
     }
   }

@@ -25,7 +25,6 @@
 package com.hoc081098.flowext.utils
 
 import kotlin.jvm.JvmField
-import kotlin.native.concurrent.SharedImmutable
 
 /**
  * This is a work-around for having nested nulls in generic code.
@@ -33,5 +32,4 @@ import kotlin.native.concurrent.SharedImmutable
  * This is only used as an optimisation technique in low-level code.
  */
 @JvmField
-@SharedImmutable
 public val NULL_VALUE: Symbol = Symbol("NULL_VALUE")

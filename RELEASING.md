@@ -13,7 +13,11 @@
    $ git commit -am "Prepare version X.Y.Z"
    ```
 
-5. Publish release on Github.
+5. Tag
+
+   ```
+   $ git tag -am "Version X.Y.Z" X.Y.Z
+   ```
 
 6. Update the `VERSION_NAME` in `gradle.properties` to the next "SNAPSHOT" version.
 

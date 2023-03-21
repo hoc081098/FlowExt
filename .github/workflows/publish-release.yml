@@ -1,14 +1,33 @@
 name: Publish Release
 
 on:
-  release:
-    types: [ published ]
+  push:
+    tags:
+      - '**'
 
 env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx2g -Dorg.gradle.daemon=false -Dkotlin.incremental=false -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
 
 jobs:
+  create-gh-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract release notes
+        id: release_notes
+        uses: ffurrer2/extract-release-notes@v1
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.release_notes.outputs.release_notes }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publish:
+    needs: create-gh-release
     strategy:
       matrix:
         os: [ macos-11 ]
@@ -61,7 +80,7 @@ jobs:
         run: ./gradlew assemble
 
       - name: Publish release
-        run: ./gradlew publish --no-parallel --stacktrace
+        run: ./gradlew publish --stacktrace
         if: matrix.os == 'macos-11'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
@@ -78,15 +97,18 @@ jobs:
       #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_PRIVATE_KEY }}
       #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
-      - name: Publish release
-        run: ./gradlew closeAndReleaseRepository --no-parallel
-        env:
-          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+      #- name: Publish release
+      #  run: ./gradlew closeAndReleaseRepository --no-parallel
+      #  env:
+      #    ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
+      #    ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+
+      - name: Generate docs
+        run: ./gradlew dokkaHtml --no-parallel --stacktrace
 
       - name: Deploy docs 🚀 to website
         if: ${{ matrix.os == 'macos-11' }}
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build/dokka/html # The folder the action should deploy.

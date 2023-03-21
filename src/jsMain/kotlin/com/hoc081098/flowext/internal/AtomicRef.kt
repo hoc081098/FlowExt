@@ -24,4 +24,13 @@
 
 package com.hoc081098.flowext.internal
 
-internal actual class AtomicRef<T> actual constructor(actual var value: T)
+internal actual class AtomicRef<T> actual constructor(initialValue: T) {
+  actual var value: T = initialValue
+
+  actual fun compareAndSet(expect: T, update: T): Boolean = if (expect == value) {
+    value = update
+    true
+  } else {
+    false
+  }
+}

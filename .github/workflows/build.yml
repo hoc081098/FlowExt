@@ -4,6 +4,8 @@ on:
   push:
     branches: [ master ]
     paths-ignore: [ '**.md', '**.MD' ]
+    tags-ignore:
+      - '**'
   pull_request:
     branches: [ master ]
     paths-ignore: [ '**.md', '**.MD' ]
@@ -18,6 +20,7 @@ jobs:
       matrix:
         os: [ macos-11, ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v3
 
@@ -65,7 +68,7 @@ jobs:
         run: ./gradlew koverXmlReport
 
       - name: Upload Test Report
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3.1.1
 
       - name: Upload test report artifact
         if: ${{ failure() }}
@@ -129,7 +132,7 @@ jobs:
         shell: bash
 
       - name: Publish snapshot
-        run: ./gradlew publish --no-parallel --stacktrace
+        run: ./gradlew publish --stacktrace
         if: ${{ endsWith(env.VERSION_NAME, '-SNAPSHOT') && matrix.os == 'macos-11' }}
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
@@ -146,9 +149,12 @@ jobs:
       #     ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.MAVEN_SIGNING_PRIVATE_KEY }}
       #     ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.MAVEN_SIGNING_PASSWORD }}
 
+      - name: Generate docs
+        run: ./gradlew dokkaHtml --no-parallel --stacktrace
+
       - name: Deploy docs 🚀 to website
         if: ${{ github.ref == 'refs/heads/master' && github.repository == 'hoc081098/FlowExt' && matrix.os == 'macos-11' }}
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build/dokka/html # The folder the action should deploy.

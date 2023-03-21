@@ -29,6 +29,8 @@ import com.hoc081098.flowext.ThrottleConfiguration.LEADING_AND_TRAILING
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.internal.DONE_VALUE
 import com.hoc081098.flowext.utils.NULL_VALUE
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
@@ -36,12 +38,11 @@ import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
-import kotlin.time.Duration
 
 /**
  * Define leading and trailing behavior.
@@ -122,11 +123,8 @@ private inline val ThrottleConfiguration.isTrailing: Boolean
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   duration: Duration,
-  throttleConfiguration: ThrottleConfiguration = LEADING,
-): Flow<T> {
-  val timerFlow = timer(Unit, duration)
-  return throttle(throttleConfiguration) { timerFlow }
-}
+  throttleConfiguration: ThrottleConfiguration = LEADING
+): Flow<T> = throttleTime(throttleConfiguration) { duration }
 
 /**
  * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
@@ -180,15 +178,12 @@ public fun <T> Flow<T>.throttleTime(
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   timeMillis: Long,
-  throttleConfiguration: ThrottleConfiguration = LEADING,
-): Flow<T> {
-  val timerFlow = timer(Unit, timeMillis)
-  return throttle(throttleConfiguration) { timerFlow }
-}
+  throttleConfiguration: ThrottleConfiguration = LEADING
+): Flow<T> = throttleTime(throttleConfiguration) { timeMillis.milliseconds }
 
 /**
  * Returns a [Flow] that emits a value from the source [Flow], then ignores subsequent source values
- * for a duration determined by another [Flow], then repeats this process for the next source value.
+ * for a duration determined by [durationSelector], then repeats this process for the next source value.
  *
  * * Example [ThrottleConfiguration.LEADING]:
  *
@@ -196,7 +191,7 @@ public fun <T> Flow<T>.throttleTime(
  * (1..10)
  *     .asFlow()
  *     .onEach { delay(200) }
- *     .throttle { timer(Unit, 500) }
+ *     .throttleTime { 500.milliseconds }
  * ```
  *
  * produces the following emissions
@@ -211,7 +206,7 @@ public fun <T> Flow<T>.throttleTime(
  * (1..10)
  *     .asFlow()
  *     .onEach { delay(200) }
- *     .throttle(TRAILING) { timer(Unit, 500) }
+ *     .throttleTime(TRAILING) { 500.milliseconds }
  * ```
  *
  * produces the following emissions
@@ -226,7 +221,7 @@ public fun <T> Flow<T>.throttleTime(
  * (1..10)
  *     .asFlow()
  *     .onEach { delay(200) }
- *     .throttle(LEADING_AND_TRAILING) { timer(Unit, 500) }
+ *     .throttleTime(LEADING_AND_TRAILING) { 500.milliseconds }
  * ```
  *
  * produces the following emissions
@@ -236,9 +231,9 @@ public fun <T> Flow<T>.throttleTime(
  * ```
  */
 @ExperimentalCoroutinesApi
-public fun <T> Flow<T>.throttle(
+public fun <T> Flow<T>.throttleTime(
   throttleConfiguration: ThrottleConfiguration = LEADING,
-  durationSelector: (value: T) -> Flow<Unit>,
+  durationSelector: (value: T) -> Duration
 ): Flow<T> = flow {
   val leading = throttleConfiguration.isLeading
   val trailing = throttleConfiguration.isTrailing
@@ -267,18 +262,20 @@ public fun <T> Flow<T>.throttle(
       }
     }
 
+    val onWindowClosed = suspend {
+      throttled = null
+
+      if (trailing) {
+        trySend()
+      }
+    }
+
     // Now consume the values until the original flow is complete.
     while (lastValue !== DONE_VALUE) {
       // wait for the next value
       select<Unit> {
         // When a throttling window ends, send the value if there is a pending value.
-        throttled?.onJoin?.invoke {
-          throttled = null
-
-          if (trailing) {
-            trySend()
-          }
-        }
+        throttled?.onJoin?.invoke(onWindowClosed)
 
         values.onReceiveCatching { result ->
           result
@@ -292,9 +289,11 @@ public fun <T> Flow<T>.throttle(
               if (leading) {
                 trySend()
               }
-              throttled = durationSelector(NULL_VALUE.unbox(value))
-                .take(1)
-                .launchIn(scope)
+
+              when (val duration = durationSelector(NULL_VALUE.unbox(value))) {
+                Duration.ZERO -> onWindowClosed()
+                else -> throttled = scope.launch { delay(duration) }
+              }
             }
             .onFailure {
               it?.let { throw it }
@@ -302,10 +301,12 @@ public fun <T> Flow<T>.throttle(
               // Once the original flow has completed, there may still be a pending value
               // waiting to be emitted. If so, wait for the throttling window to end and then
               // send it. That will complete this throttled flow.
-              if (trailing && throttled != null && lastValue != null) {
-                throttled!!.join()
-                throttled = null
-                trySend()
+              if (trailing && lastValue != null) {
+                throttled?.run {
+                  throttled = null
+                  join()
+                  trySend()
+                }
               }
 
               lastValue = DONE_VALUE

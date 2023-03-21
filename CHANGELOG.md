@@ -1,7 +1,74 @@
-## 0.3.0
+# Change Log
+
+## [Unreleased]
+
+### Changed
+
+- Update dependencies
+  - `Kotlin` to `1.8.10`.
+  - `KotlinX Coroutines` to `1.7.0-Beta`.
+  - `Gradle` to `8.0.2`.
+
+- Only support JS IR.
+- Supports more targets:
+  - `linuxArm64`
+  - `watchosDeviceArm64`
+  - `androidNativeArm32`
+  - `androidNativeArm64`
+  - `androidNativeX86`
+  - `androidNativeX64`
+
+## [0.5.0] - Nov 7, 2022
+
+### Changed
+
+- Update dependencies
+  - `Kotlin` to `1.7.20` (The new Kotlin/Native memory manager enabled by default).
+  - `Gradle` to `7.5.1`.
+
+- Remove unnecessary `@ExperimentalCoroutinesApi` and `@ExperimentalTime` on `skipUntil`/`dropUntil`.
+
+### Added
+
+- [`Flow.select`](https://hoc081098.github.io/FlowExt/docs/0.x/-flow-ext/com.hoc081098.flowext/select.html) operator (from `1` to `5`).
+  See [Readme#select](https://github.com/hoc081098/FlowExt#select) for more details.
+
+## [0.4.0] - Jul 22, 2022
 
 - Update
-  - `Gradle` to `7.4.1`.
+  - `KotlinX Coroutines` to `1.6.4`.
+  - `Gradle` to `7.5`.
+
+- Add
+  - `defer`.
+  - `flowFromSuspend`.
+  - `mapEager`, `flatMapConcatEager`, `flattenConcatEager`.
+  - `skipUntil`, `dropUntil`.
+  - `pairwise`.
+  - `NeverFlow` interface and `NeverFlow.Companion` object.
+  - `cast`, `castNotNull`, `castNullable`.
+  - `combine` versions for `6 - 12` `Flow`s.
+
+- Refactor
+  - `neverFlow()` now returns `NeverFlow`.
+  - `takeUntil`: change `notifier`'s type to `Flow<Any?>`
+
+- Internal fix for `AtomicRef`: freeze `value` if `AtomicRef` is frozen.
+
+- Support for Apple Silicon targets
+  - `iosSimulatorArm64`.
+  - `macosArm64`.
+  - `tvosSimulatorArm64`.
+  - `watchosSimulatorArm64`.
+
+- Enable compatibility with non-hierarchical multiplatform projects.
+
+## [0.3.0] - May 2, 2022
+
+- Update
+  - `Kotlin` to `1.6.21`.
+  - `KotlinX Coroutines` to `1.6.1`.
+  - `Gradle` to `7.4.2`.
 
 - Refactor `withLatestFrom`'s implementation.
 
@@ -10,13 +77,12 @@
 - Add `Symbol` class.
 
 - Add
-  - `Flow.throttle`.
   - `Flow.throttleTime`.
   - `Event.flatMap`.
   - `Event.valueOrDefault`.
   - `Event.valueOrElse`.
   - `race`, `amb`.
-  - `raceWith`, `ambWith`.
+  - `Flow.raceWith`, `Flow.ambWith`.
   - `Flow.mapToUnit`.
   - `Flow.startWith { }` that accepts a lambda parameter.
 
@@ -26,7 +92,7 @@
 
 - Internal bug fixes.
 
-## 0.2.0 - Jan 3, 2022
+## [0.2.0] - Jan 3, 2022
 
 - Update
   - `Kotlin` to `1.6.10`.
@@ -48,7 +114,7 @@
   - `Flow.retryWhenWithExponentialBackoff`.
   - `Flow.retryWithExponentialBackoff`.
 
-## 0.1.0 - Nov 13, 2021
+## [0.1.0] - Nov 13, 2021
 
 - Update
   - `Kotlin` to `1.5.31`.
@@ -69,6 +135,15 @@
 - Add docs and docs site.
 - Internal bug fixes.
 
-## 0.0.1 -> 0.0.6 - Jul 13, 2021
+## [0.0.1] -> [0.0.6] - Jul 13, 2021
 
 - Test for Publishing.
+
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.5.0
+[0.4.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.4.0
+[0.3.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.3.0
+[0.2.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.2.0
+[0.1.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.1.0
+[0.0.6]: https://github.com/hoc081098/FlowExt/releases/tag/0.0.6
+[0.0.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.0.1

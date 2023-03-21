@@ -28,6 +28,12 @@ import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertIs
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -39,11 +45,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
 
 @ExperimentalCoroutinesApi
 class ThrottleFirstTest : BaseTest() {
@@ -59,7 +62,7 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(4),
           Event.Value(7),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -90,7 +93,7 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(1),
           Event.Value(3),
           Event.Value(7),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -116,7 +119,7 @@ class ThrottleFirstTest : BaseTest() {
   fun throttleWithCompletedAndNotDelay_C() = runTest {
     (1..10)
       .asFlow()
-      .throttle { emptyFlow() }
+      .throttleTime { Duration.ZERO }
       .test((1..10).map { Event.Value(it) } + Event.Complete)
   }
 
@@ -133,7 +136,7 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(4),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -145,7 +148,7 @@ class ThrottleFirstTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -172,13 +175,15 @@ class ThrottleFirstTest : BaseTest() {
   }
 
   @Test
-  fun throttleFailureUpstream() = runTest {
+  fun throttleFailureUpstream() = runTest(StandardTestDispatcher()) {
     flow {
       emit(1)
       throw TestException("Broken!")
     }.throttleTime(200).test(null) {
       assertIs<TestException>(it.single().errorOrThrow())
     }
+
+    println("-".repeat(50))
 
     flow {
       emit(1)
@@ -187,13 +192,15 @@ class ThrottleFirstTest : BaseTest() {
       delay(500)
       throw TestException("Broken!")
     }.throttleTime(200).test(null) { events ->
-      assertEquals(3, events.size)
+      assertEquals(3, events.size, "[size]")
       val (a, b, c) = events
 
-      assertEquals(1, a.valueOrThrow())
-      assertEquals(2, b.valueOrThrow())
-      assertIs<TestException>(c.errorOrThrow())
+      assertEquals(1, a.valueOrThrow(), "[1]")
+      assertEquals(2, b.valueOrThrow(), "[2]")
+      assertIs<TestException>(c.errorOrThrow(), "[3]")
     }
+
+    println("-".repeat(50))
 
     flow {
       emit(1) // Should be published since it is first
@@ -202,6 +209,7 @@ class ThrottleFirstTest : BaseTest() {
       delay(100) // Should be published as soon as the timeout expires.
       throw TestException("Broken!")
     }.throttleTime(400).test(null) { events ->
+      println(events)
       assertEquals(2, events.size)
       val (a, b) = events
 
@@ -214,7 +222,7 @@ class ThrottleFirstTest : BaseTest() {
   fun throttleFailureSelector() = runTest {
     (1..10)
       .asFlow()
-      .throttle { throw TestException("Broken!") }
+      .throttleTime { throw TestException("Broken!") }
       .test(null) { events ->
         assertEquals(2, events.size)
         val (a, b) = events
@@ -230,11 +238,11 @@ class ThrottleFirstTest : BaseTest() {
       delay(400)
       emit(3)
     }
-      .throttle {
+      .throttleTime {
         when (it) {
-          1 -> timer(Unit, 400)
-          3 -> flow { throw TestException("1") }
-          else -> flow { throw TestException("2") }
+          1 -> 400.milliseconds
+          3 -> throw TestException("1")
+          else -> throw TestException("2")
         }
       }
       .test(null) { events ->
@@ -258,14 +266,11 @@ class ThrottleFirstTest : BaseTest() {
       delay(600)
       emit(4)
     }
-      .throttle {
+      .throttleTime {
         when (it) {
-          1 -> timer(Unit, 400)
-          3 -> flow {
-            delay(500)
-            throw TestException("1")
-          }
-          else -> flow { throw TestException("2") }
+          1 -> 400.milliseconds
+          3 -> throw TestException("1")
+          else -> throw TestException("2")
         }
       }
       .test(null) { events ->
@@ -304,24 +309,19 @@ class ThrottleFirstTest : BaseTest() {
     var count = 0
     (1..10).asFlow()
       .onEach { delay(200) }
-      .throttle {
+      .throttleTime {
         if (count++ % 2 == 0) {
-          flow { throw CancellationException("") }
+          throw CancellationException("")
         } else {
-          timer(Unit, 500)
+          500.milliseconds
         }
       }
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(9),
-          Event.Value(10),
-          Event.Complete,
-        )
-      )
+      .test(null) { events ->
+        assertEquals(2, events.size)
+        val (a, b) = events
+        assertEquals(1, a.valueOrThrow())
+        assertIs<CancellationException>(b.errorOrThrow())
+      }
   }
 }
 
@@ -347,7 +347,7 @@ class ThrottleLastTest : BaseTest() {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -373,7 +373,7 @@ class ThrottleLastTest : BaseTest() {
         listOf(
           Event.Value(2),
           Event.Value(4),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -400,7 +400,7 @@ class ThrottleLastTest : BaseTest() {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -426,7 +426,7 @@ class ThrottleLastTest : BaseTest() {
   fun throttleWithCompletedAndNotDelay_C() = runTest {
     (1..10)
       .asFlow()
-      .throttle(TRAILING) { emptyFlow() }
+      .throttleTime(TRAILING) { Duration.ZERO }
       .test((1..10).map { Event.Value(it) } + Event.Complete)
   }
 
@@ -443,7 +443,7 @@ class ThrottleLastTest : BaseTest() {
           Event.Value(6),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -455,7 +455,7 @@ class ThrottleLastTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -526,7 +526,7 @@ class ThrottleLastTest : BaseTest() {
   fun throttleFailureSelector() = runTest {
     (1..10)
       .asFlow()
-      .throttle(TRAILING) { throw TestException("Broken!") }
+      .throttleTime(TRAILING) { throw TestException("Broken!") }
       .test(null) { events ->
         assertIs<TestException>(events.single().errorOrThrow())
       }
@@ -541,11 +541,11 @@ class ThrottleLastTest : BaseTest() {
       delay(400)
       emit(3)
     }
-      .throttle(TRAILING) {
+      .throttleTime(TRAILING) {
         when (it) {
-          1 -> timer(Unit, 400)
-          3 -> flow { throw TestException("1") }
-          else -> flow { throw TestException("2") }
+          1 -> 400.milliseconds
+          3 -> throw TestException("1")
+          else -> throw TestException("2")
         }
       }
       .test(null) { events ->
@@ -571,14 +571,11 @@ class ThrottleLastTest : BaseTest() {
       delay(600)
       emit(4)
     }
-      .throttle(TRAILING) {
+      .throttleTime(TRAILING) {
         when (it) {
-          1 -> timer(Unit, 400)
-          3 -> flow {
-            delay(500)
-            throw TestException("1")
-          }
-          else -> flow { throw TestException("2") }
+          1 -> 400.milliseconds
+          3 -> throw TestException("1")
+          else -> throw TestException("2")
         }
       }
       .test(null) { events ->
@@ -615,26 +612,21 @@ class ThrottleLastTest : BaseTest() {
   fun throttleCancellation() = runTest {
     // --1--2--3--4--5--6--7--8--9--10
 
-    var count = 0
+    var count = 1
     (1..10).asFlow()
       .onEach { delay(200) }
-      .throttle(TRAILING) {
+      .throttleTime(TRAILING) {
         if (count++ % 2 == 0) {
-          flow { throw CancellationException("") }
+          throw CancellationException("")
         } else {
-          timer(Unit, 500)
+          500.milliseconds
         }
       }
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(8),
-          Event.Value(9),
-          Event.Value(10),
-          Event.Complete,
-        )
-      )
+      .test(null) { events ->
+        assertEquals(2, events.size)
+        val (a, b) = events
+        assertEquals(3, a.valueOrThrow())
+        assertIs<CancellationException>(b.errorOrThrow())
+      }
   }
 }

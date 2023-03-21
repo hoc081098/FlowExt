@@ -1,22 +1,25 @@
+import com.vanniktech.maven.publish.MavenPublishBaseExtension
+import com.vanniktech.maven.publish.MavenPublishBasePlugin
+import com.vanniktech.maven.publish.SonatypeHost
+import java.net.URL
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.6.10"
-  id("com.diffplug.spotless") version "6.4.1"
+  kotlin("multiplatform") version "1.8.10"
+  id("com.diffplug.spotless") version "6.17.0"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.19.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.8.0"
-  id("org.jetbrains.dokka") version "1.6.10"
-  id("org.jetbrains.kotlinx.kover") version "0.5.0"
+  id("com.vanniktech.maven.publish") version "0.24.0"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.0"
+  id("org.jetbrains.dokka") version "1.8.10"
+  id("org.jetbrains.kotlinx.kover") version "0.6.1"
 }
 
-val coroutinesVersion = "1.6.0"
-val ktlintVersion = "0.44.0"
+val coroutinesVersion = "1.7.0-Beta"
+val ktlintVersion = "0.46.1"
 
 repositories {
   mavenCentral()
@@ -26,13 +29,17 @@ repositories {
 
 kotlin {
   explicitApi()
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(8))
+    vendor.set(JvmVendorSpec.AZUL)
+  }
 
   jvm {
     compilations.all {
-      kotlinOptions.jvmTarget = "1.8"
+      kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
   }
-  js(BOTH) {
+  js(IR) {
     compilations.all {
       kotlinOptions {
         sourceMap = true
@@ -52,26 +59,39 @@ kotlin {
     }
   }
 
+  // According to https://kotlinlang.org/docs/native-target-support.html
+
   iosArm64()
   iosArm32()
   iosX64()
+  iosSimulatorArm64()
 
   macosX64()
+  macosArm64()
   mingwX64()
   linuxX64()
+  linuxArm64()
 
   tvosX64()
+  tvosSimulatorArm64()
   tvosArm64()
 
   watchosArm32()
   watchosArm64()
   watchosX64()
   watchosX86()
+  watchosSimulatorArm64()
+  watchosDeviceArm64()
+
+  androidNativeArm32()
+  androidNativeArm64()
+  androidNativeX86()
+  androidNativeX64()
 
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+        api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
       }
     }
     val commonTest by getting {
@@ -109,18 +129,37 @@ kotlin {
 
     val appleTargets = listOf(
       "iosX64",
+      "iosSimulatorArm64",
       "iosArm64",
       "iosArm32",
       "macosX64",
+      "macosArm64",
       "tvosArm64",
       "tvosX64",
+      "tvosSimulatorArm64",
       "watchosArm32",
       "watchosArm64",
       "watchosX86",
+      "watchosSimulatorArm64",
       "watchosX64",
+      "watchosSimulatorArm64",
+      "watchosDeviceArm64"
     )
 
-    (appleTargets + listOf("mingwX64", "linuxX64")).forEach {
+    val desktopTargets = listOf(
+      "mingwX64",
+      "linuxX64",
+      "linuxArm64"
+    )
+
+    val androidNativeTargets = listOf(
+      "androidNativeArm32",
+      "androidNativeArm64",
+      "androidNativeX86",
+      "androidNativeX64"
+    )
+
+    (appleTargets + desktopTargets + androidNativeTargets).forEach {
       getByName("${it}Main") {
         dependsOn(nativeMain)
       }
@@ -148,19 +187,32 @@ kotlin {
 }
 
 spotless {
+  val EDITOR_CONFIG_KEYS: Set<String> = hashSetOf(
+    "ij_kotlin_imports_layout",
+    "indent_size",
+    "end_of_line",
+    "charset",
+    "continuation_indent_size",
+    "disabled_rules"
+  )
+
   kotlin {
     target("**/*.kt")
 
-    ktlint(ktlintVersion).userData(
-      mapOf(
-        // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
-        "indent_size" to "2",
-        "ij_kotlin_imports_layout" to "*",
-        "end_of_line" to "lf",
-        "charset" to "utf-8",
-        "disabled_rules" to "filename"
-      )
+    // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
+    val data = mapOf(
+      "indent_size" to "2",
+      "continuation_indent_size" to "4",
+      "ij_kotlin_imports_layout" to "*",
+      "end_of_line" to "lf",
+      "charset" to "utf-8",
+      "disabled_rules" to arrayOf("filename").joinToString(separator = ",")
     )
+
+    ktlint(ktlintVersion)
+      .setUseExperimental(true)
+      .userData(data.filterKeys { it !in EDITOR_CONFIG_KEYS })
+      .editorConfigOverride(data.filterKeys { it in EDITOR_CONFIG_KEYS })
 
     trimTrailingWhitespace()
     indentWithSpaces()
@@ -172,14 +224,17 @@ spotless {
   kotlinGradle {
     target("**/*.kts")
 
-    ktlint(ktlintVersion).userData(
-      mapOf(
-        "indent_size" to "2",
-        "ij_kotlin_imports_layout" to "*",
-        "end_of_line" to "lf",
-        "charset" to "utf-8"
-      )
+    val data = mapOf(
+      "indent_size" to "2",
+      "continuation_indent_size" to "4",
+      "ij_kotlin_imports_layout" to "*",
+      "end_of_line" to "lf",
+      "charset" to "utf-8"
     )
+    ktlint(ktlintVersion)
+      .setUseExperimental(true)
+      .userData(data.filterKeys { it !in EDITOR_CONFIG_KEYS })
+      .editorConfigOverride(data.filterKeys { it in EDITOR_CONFIG_KEYS })
 
     trimTrailingWhitespace()
     indentWithSpaces()
@@ -188,9 +243,10 @@ spotless {
 }
 
 allprojects {
-  plugins.withId("com.vanniktech.maven.publish") {
-    mavenPublish {
-      sonatypeHost = com.vanniktech.maven.publish.SonatypeHost.S01
+  plugins.withType<MavenPublishBasePlugin> {
+    extensions.configure<MavenPublishBaseExtension> {
+      publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
+      signAllPublications()
     }
   }
 }
@@ -217,6 +273,12 @@ tasks.withType<DokkaTask>().configureEach {
     configureEach {
       externalDocumentationLink {
         url.set(URL("https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/"))
+      }
+
+      sourceLink {
+        localDirectory.set(file("src/commonMain/kotlin"))
+        remoteUrl.set(URL("https://github.com/hoc081098/FlowExt/tree/master/src/commonMain/kotlin"))
+        remoteLineSuffix.set("#L")
       }
     }
   }

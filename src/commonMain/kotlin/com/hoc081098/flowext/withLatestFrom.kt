@@ -26,11 +26,11 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.AtomicRef
 import com.hoc081098.flowext.utils.NULL_VALUE
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 /**
  * Merges two [Flow]s into one [Flow] by combining each value from self with the latest value from the second [Flow], if any.
@@ -48,16 +48,16 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 
     try {
       coroutineScope {
-        other
-          .onEach { otherRef.value = it ?: NULL_VALUE }
-          .launchIn(this)
+        launch(start = CoroutineStart.UNDISPATCHED) {
+          other.collect { otherRef.value = it ?: NULL_VALUE }
+        }
 
         collect { value ->
           emit(
             transform(
               value,
               NULL_VALUE.unbox(otherRef.value ?: return@collect)
-            ),
+            )
           )
         }
       }

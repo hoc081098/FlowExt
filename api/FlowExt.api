@@ -3,6 +3,20 @@ public final class com/hoc081098/flowext/BufferCountKt {
 	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;II)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/CastKt {
+	public static final fun castNullable (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/hoc081098/flowext/CombineKt {
+	public static final fun combine (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function7;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun combine (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function8;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun combine (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function9;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun combine (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function10;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun combine (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function11;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun combine (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function12;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun combine (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function13;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/ConcatKt {
 	public static final fun concat (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun concat (Lkotlin/sequences/Sequence;)Lkotlinx/coroutines/flow/Flow;
@@ -30,6 +44,10 @@ public final class com/hoc081098/flowext/ConcatKt {
 	public static final fun startWith (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/DeferKt {
+	public static final fun defer (Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public abstract interface class com/hoc081098/flowext/DelayStrategy {
 	public abstract fun nextDelay-3nIYWDw (Ljava/lang/Throwable;J)J
 }
@@ -47,6 +65,15 @@ public final class com/hoc081098/flowext/DelayStrategy$FixedTimeDelayStrategy : 
 public final class com/hoc081098/flowext/DelayStrategy$NoDelayStrategy : com/hoc081098/flowext/DelayStrategy {
 	public static final field INSTANCE Lcom/hoc081098/flowext/DelayStrategy$NoDelayStrategy;
 	public fun nextDelay-3nIYWDw (Ljava/lang/Throwable;J)J
+}
+
+public final class com/hoc081098/flowext/EagerKt {
+	public static final fun flatMapConcatEager (Lkotlinx/coroutines/flow/Flow;IILkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun flatMapConcatEager$default (Lkotlinx/coroutines/flow/Flow;IILkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun flattenConcatEager (Lkotlinx/coroutines/flow/Flow;II)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun flattenConcatEager$default (Lkotlinx/coroutines/flow/Flow;IIILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun mapEager (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun mapEager$default (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public abstract interface class com/hoc081098/flowext/Event {
@@ -97,6 +124,10 @@ public final class com/hoc081098/flowext/FlatMapFirstKt {
 	public static final fun flattenFirst (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/FlowFromSuspendKt {
+	public static final fun flowFromSuspend (Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/IntervalKt {
 	public static final fun interval (JJ)Lkotlinx/coroutines/flow/Flow;
 	public static final fun interval-QTBD994 (JJ)Lkotlinx/coroutines/flow/Flow;
@@ -116,8 +147,21 @@ public final class com/hoc081098/flowext/Materialize_dematerializeKt {
 	public static final fun materialize (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public abstract interface class com/hoc081098/flowext/NeverFlow : kotlinx/coroutines/flow/Flow {
+	public static final field Companion Lcom/hoc081098/flowext/NeverFlow$Companion;
+	public abstract fun collect (Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/hoc081098/flowext/NeverFlow$Companion : com/hoc081098/flowext/NeverFlow {
+	public fun collect (Lkotlinx/coroutines/flow/FlowCollector;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class com/hoc081098/flowext/NeverFlowKt {
-	public static final fun neverFlow ()Lkotlinx/coroutines/flow/Flow;
+	public static final fun neverFlow ()Lcom/hoc081098/flowext/NeverFlow;
+}
+
+public final class com/hoc081098/flowext/PairwiseKt {
+	public static final fun pairwise (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/RaceKt {
@@ -141,6 +185,19 @@ public final class com/hoc081098/flowext/RetryWhenWithDelayStrategyKt {
 	public static synthetic fun retryWithExponentialBackoff-f6PB7jA$default (Lkotlinx/coroutines/flow/Flow;JDJJLkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/SelectorsKt {
+	public static final fun select (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun select (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function6;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun select (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function5;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun select (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function4;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun select (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/hoc081098/flowext/SkipUntilKt {
+	public static final fun dropUntil (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun skipUntil (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/TakeUntilKt {
 	public static final fun takeUntil (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
@@ -154,10 +211,10 @@ public final class com/hoc081098/flowext/ThrottleConfiguration : java/lang/Enum 
 }
 
 public final class com/hoc081098/flowext/ThrottleKt {
-	public static final fun throttle (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
-	public static synthetic fun throttle$default (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun throttleTime (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun throttleTime (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun throttleTime$default (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun throttleTime$default (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/ThrottleConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun throttleTime-8Mi8wO0 (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun throttleTime-8Mi8wO0$default (Lkotlinx/coroutines/flow/Flow;JLcom/hoc081098/flowext/ThrottleConfiguration;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
 }

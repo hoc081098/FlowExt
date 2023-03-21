@@ -24,10 +24,13 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlin.native.concurrent.AtomicReference as NativeAtomicReference
+import kotlin.native.concurrent.AtomicReference
 
-internal actual class AtomicRef<T> actual constructor(value: T) {
-  private val atomic = NativeAtomicReference(value)
+internal actual class AtomicRef<T> actual constructor(initialValue: T) {
+  private val atomic = AtomicReference(initialValue)
 
   actual var value: T by atomic::value
+
+  actual fun compareAndSet(expect: T, update: T): Boolean =
+    atomic.compareAndSet(expect, update)
 }

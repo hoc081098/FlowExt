@@ -26,10 +26,11 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.take
-import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -37,6 +38,13 @@ class IntervalTest : BaseTest() {
   @Test
   fun run() = runTest {
     interval(100, 200)
+      .take(20)
+      .test((0L until 20).map { Event.Value(it) } + Event.Complete)
+  }
+
+  @Test
+  fun intervalDuration() = runTest {
+    interval(100.milliseconds, 200.milliseconds)
       .take(20)
       .test((0L until 20).map { Event.Value(it) } + Event.Complete)
   }

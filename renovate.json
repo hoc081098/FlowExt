@@ -1,5 +1,12 @@
 {
   "extends": [
     "config:base"
+  ],
+  "semanticCommits": "enabled",
+  "labels": [
+    "dependencies"
+  ],
+  "assignees": [
+    "hoc081098"
   ]
 }
