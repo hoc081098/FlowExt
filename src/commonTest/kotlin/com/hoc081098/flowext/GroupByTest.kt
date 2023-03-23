@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,12 @@ import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+
+private fun <T> Flow<T>.toListFlow(): Flow<List<T>> = flowFromSuspend { toList() }
 
 @ExperimentalCoroutinesApi
 class GroupByTest : BaseTest() {
@@ -40,9 +41,7 @@ class GroupByTest : BaseTest() {
   fun basic() = runTest {
     range(1, 10)
       .groupBy { it % 2 }
-      .flatMapMerge {
-        flow { emit(it.toList()) }
-      }
+      .flatMapMerge { it.toListFlow() }
       .test(
         listOf(
           Event.Value(listOf(1, 3, 5, 7, 9)),
@@ -56,14 +55,12 @@ class GroupByTest : BaseTest() {
   fun basicValueSelector() = runTest {
     range(1, 10)
       .groupBy(keySelector = { it % 2 }) { it + 1 }
-      .flatMapMerge {
-        flow { emit(it.toList()) }
-      }
+      .flatMapMerge { it.toListFlow() }
       .test(
         listOf(
           Event.Value(listOf(2, 4, 6, 8, 10)),
           Event.Value(listOf(3, 5, 7, 9, 11)),
-          Event.Complete,
+          Event.Complete
         )
       )
   }
@@ -73,8 +70,9 @@ class GroupByTest : BaseTest() {
     range(1, 10)
       .groupBy { it % 2 }
       .flatMapMerge { it.take(1) }
-      .toList()
-      .let { println(it) }
+      .test(
+        (1..10).map { Event.Value(it) } + Event.Complete
+      )
   }
 
   @Test
@@ -82,11 +80,11 @@ class GroupByTest : BaseTest() {
     range(1, 10)
       .groupBy { it % 3 }
       .take(2)
-      .flatMapMerge { it.take(1) }
+      .flatMapMerge { it.toListFlow() }
       .test(
         listOf(
-          Event.Value(listOf(1, 4, 7, 10)),
           Event.Value(listOf(2, 5, 8)),
+          Event.Value(listOf(1, 4, 7, 10)),
           Event.Complete
         )
       )
@@ -114,7 +112,12 @@ class GroupByTest : BaseTest() {
       .take(2)
       .flatMapMerge { it }
       .take(2)
-      .toList()
-      .let { println(it) }
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Complete
+        )
+      )
   }
 }

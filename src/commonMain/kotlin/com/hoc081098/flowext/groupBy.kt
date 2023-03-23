@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,15 @@
 
 package com.hoc081098.flowext
 
-import com.hoc081098.flowext.internal.DONE_VALUE
-import com.hoc081098.flowext.utils.NULL_VALUE
+import com.hoc081098.flowext.internal.AtomicBoolean
+import com.hoc081098.flowext.internal.ClosedException
+import com.hoc081098.flowext.internal.ConcurrentHashMap
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.AbstractFlow
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.takeWhile
 
 /**
  * Represents a Flow of values that have a common key.
@@ -50,11 +44,12 @@ public interface GroupedFlow<K, T> : Flow<T> {
   public val key: K
 }
 
-@ExperimentalCoroutinesApi
+internal val defaultChannel: (Any?) -> Channel<Any?> = { Channel(Channel.RENDEZVOUS) }
+
 public fun <T, K, V> Flow<T>.groupBy(
-  channelBuilder: (key: K) -> MutableSharedFlow<V> = { MutableSharedFlow() },
+  channelBuilder: (key: K) -> Channel<V> = defaultChannel as (Any?) -> Channel<V>,
   keySelector: suspend (T) -> K,
-  valueSelector: suspend (T) -> V,
+  valueSelector: suspend (T) -> V
 ): Flow<GroupedFlow<K, V>> = GroupByFlow(
   source = this,
   keySelector = keySelector,
@@ -62,10 +57,9 @@ public fun <T, K, V> Flow<T>.groupBy(
   channelBuilder = channelBuilder
 )
 
-@ExperimentalCoroutinesApi
 public fun <T, K> Flow<T>.groupBy(
-  channelBuilder: (key: K) -> MutableSharedFlow<T> = { MutableSharedFlow() },
-  keySelector: suspend (T) -> K,
+  channelBuilder: (key: K) -> Channel<T> = defaultChannel as (Any?) -> Channel<T>,
+  keySelector: suspend (T) -> K
 ): Flow<GroupedFlow<K, T>> = GroupByFlow(
   source = this,
   keySelector = keySelector,
@@ -73,56 +67,105 @@ public fun <T, K> Flow<T>.groupBy(
   channelBuilder = channelBuilder
 )
 
-internal class GroupedFlowImpl<K, T>(
+internal class GroupedFlowImpl<K, V>(
   override val key: K,
-  internal val channel: MutableSharedFlow<Any>,
-) : GroupedFlow<K, T>, Flow<T> {
-  override suspend fun collect(collector: FlowCollector<T>) =
-    channel
-      .takeWhile { it !== DONE_VALUE }
-      .map { NULL_VALUE.unbox<T>(it) }
-      .collect(collector)
+  private val channel: Channel<V>,
+  private val onCancel: () -> Unit
+) : GroupedFlow<K, V>, Flow<V> {
+  internal suspend fun send(element: V) = channel.send(element)
 
-  override fun toString() = "GroupedFlow(key=$key)"
+  internal fun close(cause: Throwable?) = channel.close(cause)
+
+  override suspend fun collect(collector: FlowCollector<V>) {
+    try {
+      channel.consumeEach { collector.emit(it) }
+    } catch (e: Throwable) {
+      onCancel()
+      println("Group cancel $this $e")
+      throw e
+    }
+  }
+
+  override fun toString() = "${super.toString()}(key=$key, channel=$channel)"
 }
 
-@ExperimentalCoroutinesApi
 internal class GroupByFlow<T, K, V>(
   private val source: Flow<T>,
   private val keySelector: suspend (T) -> K,
   private val valueSelector: suspend (T) -> V,
-  private val channelBuilder: (key: K) -> MutableSharedFlow<V>,
-) : Flow<GroupedFlow<K, V>> by (flow {
-  val groups = hashMapOf<K, GroupedFlowImpl<K, V>>()
+  private val channelBuilder: (key: K) -> Channel<V>
+) : Flow<GroupedFlow<K, V>> by (
+  flow {
+    val collector = this
 
-  try {
-    source.collect { v ->
-      val key = keySelector(v)
-      val value = valueSelector(v)
+    val groups = ConcurrentHashMap<K, GroupedFlowImpl<K, V>>()
+    val cancelled = AtomicBoolean()
 
-      val group = groups[key]
-      val channel = if (group === null) {
-        val g = GroupedFlowImpl<K, V>(key, MutableSharedFlow(extraBufferCapacity = Channel.UNLIMITED))
-        groups[key] = g
-        println("[START EMIT] key=$key -> $g")
-        emit(g)
-        println("[DONE EMIT] key=$key -> $g")
-        g.channel
-      } else {
-        group.channel
+    try {
+      source.collect { value ->
+        val key = keySelector(value)
+        val g = groups[key]
+
+        println("key=$key")
+        println("cancelled=${cancelled.value}")
+        println("groups=$groups")
+        println("g=$g")
+
+        if (g !== null) {
+          emitToGroup(valueSelector, value, g)
+        } else {
+          if (cancelled.value) {
+            // if the main has been cancelled, stop creating groups
+            // and skip this value
+            if (groups.isEmpty()) {
+              throw ClosedException(collector)
+            }
+          } else {
+            val group = GroupedFlowImpl(
+              key = key,
+              channel = channelBuilder(key),
+              onCancel = { groups.remove(key) }
+            )
+            groups[key] = group
+
+            try {
+              collector.emit(group)
+            } catch (e: CancellationException) {
+              // cancelling the main source means we don't want any more groups
+              // but running groups still require new values
+              cancelled.value = true
+              if (groups.isEmpty()) {
+                throw ClosedException(collector)
+              }
+            }
+
+            emitToGroup(valueSelector, value, group)
+          }
+        }
       }
 
-      println("[START EMIT VALUE] key=$key -> value=$value flow=$channel")
-      channel.emit(value ?: NULL_VALUE)
-      println("[DONE EMIT VALUE] key=$key -> value=$value flow=$channel")
-    }
-  } catch (e: CancellationException) {
-    throw e
-  } catch (e: Throwable) {
+      groups.forEach { it.value.close(null) }
+    } catch (e: ClosedException) {
+      if (e.owner === collector) {
+        groups.forEach { it.value.close(null) }
+      } else {
+        groups.forEach { it.value.close(e) }
 
-  } finally {
-    println("Finally")
-    groups.forEach { it.value.channel.emit(DONE_VALUE) }
-    groups.clear()
+        throw e
+      }
+    } catch (e: Throwable) {
+      groups.forEach { it.value.close(e) }
+
+      throw e
+    }
   }
-})
+  )
+
+private suspend inline fun <K, T, V> emitToGroup(
+  crossinline valueSelector: suspend (T) -> V,
+  value: T,
+  group: GroupedFlowImpl<K, V>
+) {
+  group.send(valueSelector(value))
+  println("emitToGroup $group")
+}
