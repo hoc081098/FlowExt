@@ -50,7 +50,7 @@ public fun <T, K, V> Flow<T>.groupBy(
   channelBuilder: (key: K) -> Channel<V> = defaultChannel as (Any?) -> Channel<V>,
   keySelector: suspend (T) -> K,
   valueSelector: suspend (T) -> V
-): Flow<GroupedFlow<K, V>> = GroupByFlow(
+): Flow<GroupedFlow<K, V>> = groupByInternal(
   source = this,
   keySelector = keySelector,
   valueSelector = valueSelector,
@@ -60,14 +60,14 @@ public fun <T, K, V> Flow<T>.groupBy(
 public fun <T, K> Flow<T>.groupBy(
   channelBuilder: (key: K) -> Channel<T> = defaultChannel as (Any?) -> Channel<T>,
   keySelector: suspend (T) -> K
-): Flow<GroupedFlow<K, T>> = GroupByFlow(
+): Flow<GroupedFlow<K, T>> = groupByInternal(
   source = this,
   keySelector = keySelector,
   valueSelector = { it },
   channelBuilder = channelBuilder
 )
 
-internal class GroupedFlowImpl<K, V>(
+private class GroupedFlowImpl<K, V>(
   override val key: K,
   private val channel: Channel<V>,
   private val onCancel: () -> Unit
@@ -79,7 +79,7 @@ internal class GroupedFlowImpl<K, V>(
   override suspend fun collect(collector: FlowCollector<V>) {
     try {
       channel.consumeEach { collector.emit(it) }
-    } catch (e: Throwable) {
+    } catch (e: CancellationException) {
       onCancel()
       println("Group cancel $this $e")
       throw e
@@ -89,77 +89,86 @@ internal class GroupedFlowImpl<K, V>(
   override fun toString() = "${super.toString()}(key=$key, channel=$channel)"
 }
 
-internal class GroupByFlow<T, K, V>(
-  private val source: Flow<T>,
-  private val keySelector: suspend (T) -> K,
-  private val valueSelector: suspend (T) -> V,
-  private val channelBuilder: (key: K) -> Channel<V>
-) : Flow<GroupedFlow<K, V>> by (
-  flow {
-    val collector = this
+private fun <T, K, V> groupByInternal(
+  source: Flow<T>,
+  keySelector: suspend (T) -> K,
+  valueSelector: suspend (T) -> V,
+  channelBuilder: (key: K) -> Channel<V>
+): Flow<GroupedFlow<K, V>> = flow {
+  val collector = this
 
-    val groups = ConcurrentHashMap<K, GroupedFlowImpl<K, V>>()
-    val cancelled = AtomicBoolean()
+  val groups = ConcurrentHashMap<K, GroupedFlowImpl<K, V>>()
+  val cancelled = AtomicBoolean()
 
-    try {
-      source.collect { value ->
-        val key = keySelector(value)
-        val g = groups[key]
+  try {
+    source.collect { value ->
+      val key = keySelector(value)
+      val g = groups[key]
 
-        println("key=$key")
-        println("cancelled=${cancelled.value}")
-        println("groups=$groups")
-        println("g=$g")
+      println("key=$key")
+      println("cancelled=${cancelled.value}")
+      println("groups=$groups")
+      println("g=$g")
 
-        if (g !== null) {
-          emitToGroup(valueSelector, value, g)
+      if (g !== null) {
+        emitToGroup(valueSelector, value, g)
+      } else {
+        if (cancelled.value) {
+          // if the main has been cancelled, stop creating groups
+          // and skip this value
+          if (groups.isEmpty()) {
+            throw ClosedException(collector)
+          }
         } else {
-          if (cancelled.value) {
-            // if the main has been cancelled, stop creating groups
-            // and skip this value
-            if (groups.isEmpty()) {
-              throw ClosedException(collector)
-            }
-          } else {
-            val group = GroupedFlowImpl(
-              key = key,
-              channel = channelBuilder(key),
-              onCancel = { groups.remove(key) }
-            )
-            groups[key] = group
-
-            try {
-              collector.emit(group)
-            } catch (e: CancellationException) {
-              // cancelling the main source means we don't want any more groups
-              // but running groups still require new values
-              cancelled.value = true
-              if (groups.isEmpty()) {
+          val group = GroupedFlowImpl(
+            key = key,
+            channel = channelBuilder(key),
+            onCancel = {
+              groups.remove(key)
+              if (groups.isEmpty() && cancelled.value) {
                 throw ClosedException(collector)
               }
             }
+          )
+          groups[key] = group
 
-            emitToGroup(valueSelector, value, group)
+          try {
+            collector.emit(group)
+          } catch (e: CancellationException) {
+            // cancelling the main source means we don't want any more groups
+            // but running groups still require new values
+            cancelled.value = true
+
+            // we only kill our subscription to the source if we have
+            // no active groups. As stated above, consider this scenario:
+            // source.groupBy(fn).take(2).
+            if (groups.isEmpty()) {
+              throw ClosedException(collector)
+            }
           }
+
+          emitToGroup(valueSelector, value, group)
         }
       }
+    }
 
+    groups.forEach { it.value.close(null) }
+  } catch (e: ClosedException) {
+    if (e.owner === collector) {
       groups.forEach { it.value.close(null) }
-    } catch (e: ClosedException) {
-      if (e.owner === collector) {
-        groups.forEach { it.value.close(null) }
-      } else {
-        groups.forEach { it.value.close(e) }
-
-        throw e
-      }
-    } catch (e: Throwable) {
+    } else {
       groups.forEach { it.value.close(e) }
 
       throw e
     }
+  } catch (e: Throwable) {
+    groups.forEach { it.value.close(e) }
+
+    throw e
+  } finally {
+    groups.clear()
   }
-  )
+}
 
 private suspend inline fun <K, T, V> emitToGroup(
   crossinline valueSelector: suspend (T) -> V,
