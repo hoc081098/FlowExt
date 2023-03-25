@@ -24,27 +24,47 @@
 
 package com.hoc081098.flowext.internal
 
-internal actual class ConcurrentHashMap<K, V> actual constructor() : AbstractMap<K, V>(), MutableMap<K, V> {
+/**
+ * Concurrent map implementation. Please do not use it.
+ */
+internal actual class ConcurrentHashMap<K, V> internal actual constructor() : MutableMap<K, V> {
+  private val delegate = LinkedHashMap<K, V>()
+  private val lock = Lock()
+
+  override val size: Int get() = delegate.size
+
+  override fun containsKey(key: K): Boolean = synchronized(lock) { delegate.containsKey(key) }
+
+  override fun containsValue(value: V): Boolean =
+    synchronized(lock) { delegate.containsValue(value) }
+
+  override fun get(key: K): V? = synchronized(lock) { delegate[key] }
+
+  override fun isEmpty(): Boolean = delegate.isEmpty()
+
   override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
-    get() = TODO("Not yet implemented")
+    get() = synchronized(lock) { delegate.entries }
+
   override val keys: MutableSet<K>
-    get() = TODO("Not yet implemented")
+    get() = synchronized(lock) { delegate.keys }
+
   override val values: MutableCollection<V>
-    get() = TODO("Not yet implemented")
+    get() = synchronized(lock) { delegate.values }
 
-  override fun clear() {
-    TODO("Not yet implemented")
+  override fun clear() = synchronized(lock, delegate::clear)
+
+  override fun put(key: K, value: V): V? = synchronized(lock) { delegate.put(key, value) }
+
+  override fun putAll(from: Map<out K, V>) = synchronized(lock) { delegate.putAll(from) }
+
+  override fun remove(key: K): V? = synchronized(lock) { delegate.remove(key) }
+
+  override fun hashCode(): Int = synchronized(lock, delegate::hashCode)
+
+  override fun equals(other: Any?): Boolean = synchronized(lock) {
+    if (other !is Map<*, *>) return false
+    return other == delegate
   }
 
-  override fun remove(key: K): V? {
-    TODO("Not yet implemented")
-  }
-
-  override fun putAll(from: Map<out K, V>) {
-    TODO("Not yet implemented")
-  }
-
-  override fun put(key: K, value: V): V? {
-    TODO("Not yet implemented")
-  }
+  override fun toString(): String = "ConcurrentHashMap.native by $delegate"
 }

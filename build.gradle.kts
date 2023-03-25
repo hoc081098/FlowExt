@@ -127,6 +127,27 @@ kotlin {
       dependsOn(commonTest)
     }
 
+    val darwinMain by creating {
+      dependsOn(nativeMain)
+    }
+    val darwinTest by creating {
+      dependsOn(nativeTest)
+    }
+
+    val linuxMain by creating {
+      dependsOn(nativeMain)
+    }
+    val linuxTest by creating {
+      dependsOn(nativeTest)
+    }
+
+    val pthreadAndroidMain by creating {
+      dependsOn(nativeMain)
+    }
+    val pthreadAndroidTest by creating {
+      dependsOn(nativeTest)
+    }
+
     val appleTargets = listOf(
       "iosX64",
       "iosSimulatorArm64",
@@ -146,11 +167,12 @@ kotlin {
       "watchosDeviceArm64"
     )
 
-    val desktopTargets = listOf(
-      "mingwX64",
+    val linuxTargets = listOf(
       "linuxX64",
       "linuxArm64"
     )
+
+    val desktopTargets = listOf("mingwX64") + linuxTargets
 
     val androidNativeTargets = listOf(
       "androidNativeArm32",
@@ -165,6 +187,24 @@ kotlin {
       }
       getByName("${it}Test") {
         dependsOn(nativeTest)
+      }
+    }
+
+    appleTargets.forEach {
+      getByName("${it}Main") {
+        dependsOn(darwinMain)
+      }
+    }
+
+    linuxTargets.forEach {
+      getByName("${it}Main") {
+        dependsOn(linuxMain)
+      }
+    }
+
+    androidNativeTargets.forEach {
+      getByName("${it}Main") {
+        dependsOn(pthreadAndroidMain)
       }
     }
   }

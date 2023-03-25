@@ -99,6 +99,7 @@ private fun <T, K, V> groupByInternal(
 
   val groups = ConcurrentHashMap<K, GroupedFlowImpl<K, V>>()
   val cancelled = AtomicBoolean()
+  val completed = AtomicBoolean()
 
   try {
     coroutineScope {
@@ -120,8 +121,10 @@ private fun <T, K, V> groupByInternal(
               key = key,
               channel = Channel<V>(innerBufferSize),
               onCompletion = {
-                println("onCompletion $key")
-                groups.remove(key)
+                println("onCompletion $key, ${completed.value}")
+                if (!completed.value) {
+                  groups.remove(key)
+                }
                 // TODO: check if this is correct
               }
             )
@@ -147,25 +150,36 @@ private fun <T, K, V> groupByInternal(
         }
       }
 
-      groups.forEach { it.value.close(null) }
+      if (completed.compareAndSet(expect = false, update = true)) {
+        println("normal completion 1")
+        groups.forEach { it.value.close(null) }
+        println("normal completion 2")
+      }
     }
   } catch (e: ClosedException) {
-    println("closed $e ${e.owner === collector}")
+    if (completed.compareAndSet(expect = false, update = true)) {
+      println("closed $e ${e.owner === collector} 1")
 
-    if (e.owner === collector) {
-      groups.forEach { it.value.close(null) }
-    } else {
-      groups.forEach { it.value.close(e) }
-      throw e
+      if (e.owner === collector) {
+        groups.forEach { it.value.close(null) }
+        println("closed $e ${e.owner === collector} 2")
+      } else {
+        groups.forEach { it.value.close(e) }
+        println("closed $e ${e.owner === collector} 3")
+        throw e
+      }
     }
   } catch (e: Throwable) {
-    println("error $e")
-    groups.forEach { it.value.close(e) }
-
-    throw e
+    if (completed.compareAndSet(expect = false, update = true)) {
+      println("error $e 1")
+      groups.forEach { it.value.close(e) }
+      println("error $e 2")
+      throw e
+    }
   } finally {
-    println("finally")
+    println("finally clearing...")
     groups.clear()
+    println("finally cleared")
   }
 }
 
