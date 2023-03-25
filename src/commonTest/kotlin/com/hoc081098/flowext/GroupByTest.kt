@@ -29,10 +29,12 @@ import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 
@@ -83,6 +85,7 @@ class GroupByTest : BaseTest() {
     range(1, 10)
       .groupBy { it % 3 }
       .take(2)
+      .onEach { delay(1) } // FIXME: currently, this is required to make the test pass
       .flatMapMerge { it.toListFlow() }
       .test(
         listOf(

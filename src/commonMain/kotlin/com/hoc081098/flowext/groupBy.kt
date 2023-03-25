@@ -28,12 +28,15 @@ import com.hoc081098.flowext.internal.AtomicBoolean
 import com.hoc081098.flowext.internal.ClosedException
 import com.hoc081098.flowext.internal.ConcurrentHashMap
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 
 /**
  * Represents a Flow of values that have a common key.
@@ -100,9 +103,12 @@ private fun <T, K, V> groupByInternal(
   val groups = ConcurrentHashMap<K, GroupedFlowImpl<K, V>>()
   val cancelled = AtomicBoolean()
   val completed = AtomicBoolean()
+  val teardown = CompletableDeferred<Nothing>()
 
   try {
     coroutineScope {
+      val job = launch(start = CoroutineStart.UNDISPATCHED) { teardown.await() }
+
       source.collect { value ->
         val key = keySelector(value)
         val g = groups[key]
@@ -121,11 +127,22 @@ private fun <T, K, V> groupByInternal(
               key = key,
               channel = Channel<V>(innerBufferSize),
               onCompletion = {
-                println("onCompletion $key, ${completed.value}")
+                println("onCompletion  group $key")
+
                 if (!completed.value) {
-                  groups.remove(key)
+                  if (
+                    groups.remove(key) != null &&
+                    groups.isEmpty() &&
+                    cancelled.value
+                  ) {
+                    println("onCompletion group $key cancelled")
+                    teardown.completeExceptionally(ClosedException(collector))
+                  } else {
+                    println("onCompletion group $key not yet")
+                  }
+                } else {
+                  println("onCompletion group $key, completed ignored..")
                 }
-                // TODO: check if this is correct
               }
             )
             groups[key] = group
@@ -150,6 +167,8 @@ private fun <T, K, V> groupByInternal(
         }
       }
 
+      job.cancel()
+
       if (completed.compareAndSet(expect = false, update = true)) {
         println("normal completion 1")
         groups.forEach { it.value.close(null) }
@@ -172,6 +191,7 @@ private fun <T, K, V> groupByInternal(
   } catch (e: Throwable) {
     if (completed.compareAndSet(expect = false, update = true)) {
       println("error $e 1")
+      e.printStackTrace()
       groups.forEach { it.value.close(e) }
       println("error $e 2")
       throw e
@@ -187,4 +207,6 @@ private suspend inline fun <K, T, V> emitToGroup(
   crossinline valueSelector: suspend (T) -> V,
   value: T,
   group: GroupedFlowImpl<K, V>
-) = group.send(valueSelector(value))
+) = group.send(valueSelector(value)).also {
+  println("send $value to group ${group.key}")
+}
