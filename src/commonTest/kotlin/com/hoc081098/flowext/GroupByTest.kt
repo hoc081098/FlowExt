@@ -25,11 +25,14 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 
@@ -83,8 +86,8 @@ class GroupByTest : BaseTest() {
       .flatMapMerge { it.toListFlow() }
       .test(
         listOf(
-          Event.Value(listOf(2, 5, 8)),
           Event.Value(listOf(1, 4, 7, 10)),
+          Event.Value(listOf(2, 5, 8)),
           Event.Complete
         )
       )
@@ -119,5 +122,27 @@ class GroupByTest : BaseTest() {
           Event.Complete
         )
       )
+  }
+
+  @Test
+  fun mainErrorsNoItems() = runTest {
+    assertFailsWith<IllegalStateException>(
+      (1..10)
+        .asFlow()
+        .map { if (it < 5) throw IllegalStateException("oops") else it }
+        .groupBy { it % 2 == 0 }
+        .flatMapMerge { it }
+    )
+  }
+
+  @Test
+  fun mainErrorsSomeItems() = runTest {
+    assertFailsWith<IllegalStateException>(
+      (1..10)
+        .asFlow()
+        .map { if (it > 5) throw IllegalStateException("oops") else it }
+        .groupBy { it % 2 == 0 }
+        .flatMapMerge { it }
+    )
   }
 }

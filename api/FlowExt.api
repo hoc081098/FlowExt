@@ -128,6 +128,17 @@ public final class com/hoc081098/flowext/FlowFromSuspendKt {
 	public static final fun flowFromSuspend (Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/GroupByKt {
+	public static final fun groupBy (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun groupBy (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun groupBy$default (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun groupBy$default (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public abstract interface class com/hoc081098/flowext/GroupedFlow : kotlinx/coroutines/flow/Flow {
+	public abstract fun getKey ()Ljava/lang/Object;
+}
+
 public final class com/hoc081098/flowext/IntervalKt {
 	public static final fun interval (JJ)Lkotlinx/coroutines/flow/Flow;
 	public static final fun interval-QTBD994 (JJ)Lkotlinx/coroutines/flow/Flow;
