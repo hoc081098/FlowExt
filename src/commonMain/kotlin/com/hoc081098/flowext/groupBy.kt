@@ -161,84 +161,81 @@ private fun <T, K, V> groupByInternal(
       var done = false
       var cancelled = false
 
-      suspend fun handle(value: T) {
-        val key = keySelector(value)
-        val g = groups[key]
-
-        if (g !== null) {
-          emitToGroup(valueSelector, value, g)
-        } else {
-          if (cancelled) {
-            // if the main has been cancelled, stop creating groups
-            // and skip this value
-            if (groups.isEmpty()) {
-              done = true
-            }
-          } else {
-            val channel = Channel<Any?>(innerBufferSize)
-            val group = GroupedFlowImpl<K, V>(
-              key = key,
-              channel = channel,
-              onCancelHandler = {
-                // we send the cancellation event to the main coroutine
-                // to serialize the access to the groups map
-                // and to avoid concurrent modification exceptions.
-                //
-                // use trySend is safe because the channel is unbounded,
-                // and the send is only failed if the channel is closed.
-                groupCancellationChannel
-                  .trySend(GroupCancellation(key))
-              }
-            )
-            groups[key] = group
-
-            try {
-              collector.emit(group)
-            } catch (e: CancellationException) {
-              // cancelling the main source means we don't want any more groups
-              // but running groups still require new values
-              cancelled = true
-
-              // we only kill our subscription to the source if we have
-              // no active groups. As stated above, consider this scenario:
-              // source.groupBy(fn).take(2).
-              if (groups.isEmpty()) {
-                done = true
-              }
-            }
-
-            emitToGroup(valueSelector, value, group)
-          }
-        }
-      }
-
-      fun handleCancellation(event: GroupCancellation) {
-        @Suppress("UNCHECKED_CAST")
-        val key = event.key as K
-
-        // remove the group from the map
-        // and check if we have no more groups and the main has been cancelled
-        // to stop the loop.
-        groups.remove(key)
-        if (groups.isEmpty() && cancelled) {
-          done = true
-        }
-      }
-
       while (!done) {
         // receive groupCancellationChannel until it is empty or channel is closed or faied.
         while (true) {
           val groupCancellationChannelResult = groupCancellationChannel
             .tryReceive()
-            .onSuccess { handleCancellation(it) }
+            .onSuccess {
+              @Suppress("UNCHECKED_CAST")
+              val key = it.key as K
+              // remove the group from the map
+              // and check if we have no more groups and the main has been cancelled
+              // to stop the loop.
+              groups.remove(key)
+              if (groups.isEmpty() && cancelled) {
+                done = true
+              }
+            }
 
           if (!groupCancellationChannelResult.isSuccess) {
             break
           }
         }
 
-        values.receiveCatching()
-          .onSuccess { handle(it) }
+        // now, we can receive from the values channel
+        values
+          .receiveCatching()
+          .onSuccess {
+            val key = keySelector(it)
+            val g = groups[key]
+
+            if (g !== null) {
+              emitToGroup(valueSelector, it, g)
+            } else {
+              if (cancelled) {
+                // if the main has been cancelled, stop creating groups
+                // and skip this value
+                if (groups.isEmpty()) {
+                  done = true
+                }
+              } else {
+                val channel = Channel<Any?>(innerBufferSize)
+                val group = GroupedFlowImpl<K, V>(
+                  key = key,
+                  channel = channel,
+                  onCancelHandler = {
+                    // we send the cancellation event to the main coroutine
+                    // to serialize the access to the groups map
+                    // and to avoid concurrent modification exceptions.
+                    //
+                    // use trySend is safe because the channel is unbounded,
+                    // and the send is only failed if the channel is closed.
+                    groupCancellationChannel
+                      .trySend(GroupCancellation(key))
+                  }
+                )
+                groups[key] = group
+
+                try {
+                  collector.emit(group)
+                } catch (e: CancellationException) {
+                  // cancelling the main source means we don't want any more groups
+                  // but running groups still require new values
+                  cancelled = true
+
+                  // we only kill our subscription to the source if we have
+                  // no active groups. As stated above, consider this scenario:
+                  // source.groupBy(fn).take(2).
+                  if (groups.isEmpty()) {
+                    done = true
+                  }
+                }
+
+                emitToGroup(valueSelector, it, group)
+              }
+            }
+          }
           .onFailure {
             it?.let { throw it }
             done = true
