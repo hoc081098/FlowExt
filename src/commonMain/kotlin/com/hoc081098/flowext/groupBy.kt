@@ -180,8 +180,6 @@ private fun <T, K, V> groupByInternal(
               key = key,
               channel = channel,
               onCancelHandler = {
-                println("    [group] onClose group $key sending...")
-
                 // we send the cancellation event to the main coroutine
                 // to serialize the access to the groups map
                 // and to avoid concurrent modification exceptions.
@@ -190,7 +188,6 @@ private fun <T, K, V> groupByInternal(
                 // and the send is only failed if the channel is closed.
                 groupCancellationChannel
                   .trySend(GroupCancellation(key))
-                  .also { println("    [group] onClose group $key sent $it") }
               }
             )
             groups[key] = group
@@ -216,7 +213,6 @@ private fun <T, K, V> groupByInternal(
       }
 
       fun handleCancellation(event: GroupCancellation) {
-        println("[main] received $event")
         @Suppress("UNCHECKED_CAST")
         val key = event.key as K
 
@@ -234,7 +230,6 @@ private fun <T, K, V> groupByInternal(
         while (true) {
           val groupCancellationChannelResult = groupCancellationChannel
             .tryReceive()
-            .also { println("[main] received groupCancellationChannelResult=$it") }
             .onSuccess { handleCancellation(it) }
 
           if (!groupCancellationChannelResult.isSuccess) {
@@ -243,7 +238,6 @@ private fun <T, K, V> groupByInternal(
         }
 
         values.receiveCatching()
-          .also { println("[main] received $it") }
           .onSuccess { handle(it) }
           .onFailure {
             it?.let { throw it }
@@ -252,16 +246,12 @@ private fun <T, K, V> groupByInternal(
       }
     }
 
-    println("normal completion 1")
     groupCancellationChannel.close()
     groups.values.forEach { it.close(null) }
-
-    println("normal completion 2")
   } catch (e: Throwable) {
-    println("error completion $e")
-
     groupCancellationChannel.close()
     groups.values.forEach { it.close(e) }
+
     throw e
   } finally {
     groups.clear()
