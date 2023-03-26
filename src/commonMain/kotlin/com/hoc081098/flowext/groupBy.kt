@@ -49,6 +49,7 @@ public interface GroupedFlow<K, T> : Flow<T> {
   public val key: K
 }
 
+@FlowExtPreview
 @ExperimentalCoroutinesApi
 public fun <T, K, V> Flow<T>.groupBy(
   keySelector: suspend (T) -> K,
@@ -59,6 +60,7 @@ public fun <T, K, V> Flow<T>.groupBy(
   valueSelector = valueSelector
 )
 
+@FlowExtPreview
 @ExperimentalCoroutinesApi
 public fun <T, K> Flow<T>.groupBy(
   keySelector: suspend (T) -> K
@@ -100,7 +102,6 @@ private class GroupedFlowImpl<K, V>(
     channel.close()
 
     completed.await()
-    println(">>>>> completed      close group $key")
   }
 
   override suspend fun collect(collector: FlowCollector<V>) {
@@ -137,6 +138,7 @@ private class GroupError(val cause: Throwable) {
   override fun toString(): String = "GroupError(cause=$cause)"
 }
 
+@FlowExtPreview
 @ExperimentalCoroutinesApi
 private fun <T, K, V> groupByInternal(
   source: Flow<T>,

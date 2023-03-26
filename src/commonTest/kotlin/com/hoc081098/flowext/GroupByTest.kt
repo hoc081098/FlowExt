@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.toList
 
 private fun <T> Flow<T>.toListFlow(): Flow<List<T>> = flowFromSuspend { toList() }
 
+@FlowExtPreview
 @ExperimentalCoroutinesApi
 class GroupByTest : BaseTest() {
   @Test

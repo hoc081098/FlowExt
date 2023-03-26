@@ -124,6 +124,9 @@ public final class com/hoc081098/flowext/FlatMapFirstKt {
 	public static final fun flattenFirst (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public abstract interface annotation class com/hoc081098/flowext/FlowExtPreview : java/lang/annotation/Annotation {
+}
+
 public final class com/hoc081098/flowext/FlowFromSuspendKt {
 	public static final fun flowFromSuspend (Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
 }
