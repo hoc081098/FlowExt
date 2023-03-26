@@ -129,7 +129,7 @@ private class GroupedFlowImpl<K, V>(
   private val completed = AtomicBoolean()
 
   private inline fun markConsumed() {
-    check(!consumed.getAndSet(true)) { "GroupedFlowImpl can be collected just once" }
+    check(!consumed.getAndSet(true)) { "A GroupedFlow can be collected just once" }
   }
 
   fun isActive() = !completed.value
