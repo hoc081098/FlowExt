@@ -175,8 +175,8 @@ private class GroupedFlowImpl<K, V>(
   override fun toString() = "${super.toString()}(key=$key, channel=$channel)"
 }
 
-@PublishedApi
-internal fun ReceiveChannel<*>.cancelConsumed(cause: Throwable?) {
+@Suppress("NOTHING_TO_INLINE")
+private inline fun ReceiveChannel<*>.cancelConsumed(cause: Throwable?) {
   cancel(
     cause?.let {
       it as? CancellationException
@@ -185,6 +185,7 @@ internal fun ReceiveChannel<*>.cancelConsumed(cause: Throwable?) {
   )
 }
 
+@Suppress("NOTHING_TO_INLINE")
 @ExperimentalCoroutinesApi
 private suspend inline fun <K, T, V> emitToGroup(
   crossinline valueSelector: suspend (T) -> V,
@@ -215,39 +216,54 @@ private fun <T, K, V> groupByInternal(
       var done = false
       var cancelled = false
 
-      while (!done) {
+      outer@ while (!done) {
         // receive groupCancellationChannel until it is empty or channel is closed or failed.
         while (true) {
           val groupCancellationChannelResult = cancelledGroupChannel
             .tryReceive()
             .onSuccess { group ->
-              // remove the group from the map
+              // remove the group from the map,
+              // we must check both key and value to be sure that we remove the right group
+              // because new group with the same key may be created while old group becomes inactive
+              // we don't want to remove the new group.
+              groups.remove(group.key, group)
+
               // and check if we have no more groups and the main has been cancelled
               // to stop the loop.
-              groups.remove(group.key, group)
               if (groups.isEmpty() && cancelled) {
                 done = true
               }
             }
+
+          if (done) {
+            break@outer
+          }
 
           if (!groupCancellationChannelResult.isSuccess) {
             break
           }
         }
 
+        if (done) {
+          break@outer
+        }
+
         // now, we can receive from the values channel
         values
           .receiveCatching()
-          .onSuccess {
-            val key = keySelector(it)
+          .onSuccess { value ->
+            val key = keySelector(value)
             val g = groups[key]
 
             if (g !== null) {
+              // only emit to the group if it is active
               if (g.isActive()) {
-                emitToGroup(valueSelector, it, g)
+                emitToGroup(valueSelector, value, g)
                 return@onSuccess
               }
 
+              // if the group is not active, remove it from the map,
+              // and create a new one instead.
               groups.remove(key)
             }
 
@@ -258,18 +274,16 @@ private fun <T, K, V> groupByInternal(
                 done = true
               }
             } else {
-              val group = GroupedFlowImpl<K, V>(
+              val group = GroupedFlowImpl(
                 key = key,
                 channel = Channel(bufferSize),
-                onCancelHandler = {
-                  // we send the cancellation event to the main coroutine
-                  // to serialize the access to the groups map
-                  // and to avoid concurrent modification exceptions.
-                  //
-                  // use trySend is safe because the channel is unbounded,
-                  // and the send is only failed if the channel is closed.
-                  cancelledGroupChannel.trySend(it)
-                }
+                // we send the cancellation event to the main coroutine
+                // to serialize the access to the groups map
+                // and to avoid concurrent modification exceptions.
+                //
+                // use trySend is safe because the channel is unbounded,
+                // and the send is only failed if the channel is closed.
+                onCancelHandler = cancelledGroupChannel::trySend
               )
               groups[key] = group
 
@@ -288,7 +302,8 @@ private fun <T, K, V> groupByInternal(
                 }
               }
 
-              emitToGroup(valueSelector, it, group)
+              // FIXME: do we need to check if the group is active here?
+              emitToGroup(valueSelector, value, group)
             }
           }
           .onFailure {
@@ -298,9 +313,11 @@ private fun <T, K, V> groupByInternal(
       }
     }
 
+    // must close cancelledGroupChannel before closing the groups
     cancelledGroupChannel.close()
     groups.values.forEach { it.close(null) }
   } catch (e: Throwable) {
+    // must close cancelledGroupChannel before closing the groups
     cancelledGroupChannel.close()
     groups.values.forEach { it.close(e) }
 
