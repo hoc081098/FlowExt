@@ -28,10 +28,12 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
+@Suppress("Unused")
 internal expect class Lock() {
   inline fun <T> synchronizedImpl(block: () -> T): T
 }
 
+@Suppress("Unused")
 @OptIn(ExperimentalContracts::class)
 internal inline fun <T> synchronized(lock: Lock, block: () -> T): T {
   contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }

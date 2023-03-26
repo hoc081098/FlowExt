@@ -24,4 +24,5 @@
 
 package com.hoc081098.flowext.internal
 
+@Suppress("Unused")
 internal expect class ConcurrentHashMap<K, V> internal constructor() : MutableMap<K, V>
