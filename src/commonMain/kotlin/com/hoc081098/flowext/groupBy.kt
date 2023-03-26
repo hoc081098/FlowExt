@@ -128,6 +128,7 @@ private class GroupedFlowImpl<K, V>(
   private val completedDeferred = CompletableDeferred<Unit>()
   private val completed = AtomicBoolean()
 
+  @Suppress("NOTHING_TO_INLINE")
   private inline fun markConsumed() {
     check(!consumed.getAndSet(true)) { "A GroupedFlow can be collected just once" }
   }
