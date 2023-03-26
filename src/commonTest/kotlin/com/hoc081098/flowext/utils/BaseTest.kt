@@ -27,7 +27,7 @@ package com.hoc081098.flowext.utils
 import kotlin.test.assertTrue
 import kotlin.test.fail
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -38,19 +38,22 @@ import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
-internal val DEFAULT_DISPATCH_TIMEOUT_DURATION = 60_000L.milliseconds
+/**
+ * The default timeout to use when running a test.
+ */
+internal val DEFAULT_TIMEOUT = 10.seconds
 
 abstract class BaseTest {
   @ExperimentalCoroutinesApi
   protected fun runTest(
     testDispatcher: TestDispatcher? = null,
-    dispatchTimeout: Duration = DEFAULT_DISPATCH_TIMEOUT_DURATION,
+    timeout: Duration = DEFAULT_TIMEOUT,
     testBody: suspend TestScope.() -> Unit
   ): TestResult {
     return kotlinx.coroutines.test.runTest(
       context = testDispatcher
         ?: UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatcher"),
-      dispatchTimeoutMs = dispatchTimeout.inWholeMilliseconds,
+      timeout = timeout,
       testBody = testBody
     )
   }
