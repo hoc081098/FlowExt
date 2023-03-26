@@ -51,25 +51,21 @@ public interface GroupedFlow<K, T> : Flow<T> {
 
 @ExperimentalCoroutinesApi
 public fun <T, K, V> Flow<T>.groupBy(
-  innerBufferSize: Int = Channel.RENDEZVOUS,
   keySelector: suspend (T) -> K,
   valueSelector: suspend (T) -> V
 ): Flow<GroupedFlow<K, V>> = groupByInternal(
   source = this,
   keySelector = keySelector,
-  valueSelector = valueSelector,
-  innerBufferSize = innerBufferSize
+  valueSelector = valueSelector
 )
 
 @ExperimentalCoroutinesApi
 public fun <T, K> Flow<T>.groupBy(
-  innerBufferSize: Int = Channel.RENDEZVOUS,
   keySelector: suspend (T) -> K
 ): Flow<GroupedFlow<K, T>> = groupByInternal(
   source = this,
   keySelector = keySelector,
-  valueSelector = { it },
-  innerBufferSize = innerBufferSize
+  valueSelector = { it }
 )
 
 @ExperimentalCoroutinesApi
@@ -146,7 +142,7 @@ private fun <T, K, V> groupByInternal(
   source: Flow<T>,
   keySelector: suspend (T) -> K,
   valueSelector: suspend (T) -> V,
-  innerBufferSize: Int
+  innerBufferSize: Int = Channel.RENDEZVOUS // TODO: Consider making this configurable
 ): Flow<GroupedFlow<K, V>> = flow {
   val collector = this
 
