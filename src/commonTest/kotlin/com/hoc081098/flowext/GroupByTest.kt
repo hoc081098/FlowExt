@@ -31,12 +31,28 @@ import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 
 private fun <T> Flow<T>.toListFlow(): Flow<List<T>> = flowFromSuspend { toList() }
+
+private fun <T, R> Flow<T>.myFlatMapMerge(transform: suspend (T) -> Flow<R>): Flow<R> =
+  channelFlow {
+    collect { value ->
+      println("myFlatMapMerge: $value")
+      val transform1 = transform(value)
+      launch {
+        transform1.collect { value1 ->
+          println("myFlatMapMerge: $value -> $value")
+          send(value1)
+        }
+      }
+    }
+  }
 
 @ExperimentalCoroutinesApi
 class GroupByTest : BaseTest() {
@@ -44,7 +60,7 @@ class GroupByTest : BaseTest() {
   fun basic() = runTest {
     range(1, 10)
       .groupBy { it % 2 }
-      .flatMapMerge { it.toListFlow() }
+      .myFlatMapMerge { it.toListFlow() }
       .test(
         listOf(
           Event.Value(listOf(1, 3, 5, 7, 9)),

@@ -24,21 +24,18 @@
 
 package com.hoc081098.flowext
 
-import com.hoc081098.flowext.internal.ClosedException
-import com.hoc081098.flowext.internal.DONE_VALUE
-import com.hoc081098.flowext.utils.NULL_VALUE
+import com.hoc081098.flowext.internal.AtomicBoolean
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.onSuccess
+import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 
 /**
  * Represents a Flow of values that have a common key.
@@ -73,10 +70,22 @@ public fun <T, K> Flow<T>.groupBy(
   innerBufferSize = innerBufferSize
 )
 
+@ExperimentalCoroutinesApi
 private class GroupedFlowImpl<K, V>(
   override val key: K,
-  private val channel: Channel<V>
+  private val channel: Channel<V>,
+  private val onCloseHandler: (cause: Throwable?) -> Unit
 ) : GroupedFlow<K, V>, Flow<V> {
+  private val calledOnCloseHandler = AtomicBoolean()
+
+  init {
+    channel.invokeOnClose { throwable ->
+      if (calledOnCloseHandler.compareAndSet(expect = false, update = true)) {
+        onCloseHandler(throwable)
+      }
+    }
+  }
+
   suspend fun send(element: V) = channel.send(element)
 
   fun close(cause: Throwable?) = channel.close(cause)
@@ -198,18 +207,21 @@ private class GroupedFlowImpl<K, V>(
 //  }
 // }
 
+@ExperimentalCoroutinesApi
 private suspend inline fun <K, T, V> emitToGroup(
   crossinline valueSelector: suspend (T) -> V,
   value: T,
   group: GroupedFlowImpl<K, V>
-) = group.send(valueSelector(value)).also {
-  println("sent $value to group ${group.key}")
-}
+) = group
+  .also { println(" --> sending... $value to group ${group.key}") }
+  .send(valueSelector(value))
+  .also { println(" <-- sent $value to group ${group.key}") }
 
 private class GroupCancellation(val key: Any?) {
   override fun toString(): String = "GroupCancellation(key=$key)"
 }
 
+@Suppress("UNCHECKED_CAST")
 @ExperimentalCoroutinesApi
 private fun <T, K, V> groupByInternal2(
   source: Flow<T>,
@@ -220,113 +232,112 @@ private fun <T, K, V> groupByInternal2(
   val collector = this
 
   val groups = linkedMapOf<K, GroupedFlowImpl<K, V>>()
-  var cancelled = false
+  val groupCancellationChannel = Channel<GroupCancellation>(Channel.UNLIMITED)
 
   try {
     coroutineScope {
-      val values = Channel<Any>(Channel.RENDEZVOUS)
-
       // Produce the values using the default (rendezvous) channel
-      launch {
-        source.collect { values.send(it ?: NULL_VALUE) }
-        values.send(DONE_VALUE)
+      val values = produce {
+        source.collect { send(it) }
       }
 
-      while (true) {
-        values
-          .receiveCatching()
-          .also { println("received $it") }
-          .onSuccess { event ->
-            when (event) {
-              is GroupCancellation -> {
-                val key = event.key as K
+      var done = false
+      var cancelled = false
 
-                groups.remove(key)
-                if (groups.isEmpty() && cancelled) {
-                  throw ClosedException(collector)
-                }
+      suspend fun handle(value: T) {
+        val key = keySelector(value)
+        val g = groups[key]
+
+        if (g !== null) {
+          emitToGroup(valueSelector, value, g)
+        } else {
+          if (cancelled) {
+            // if the main has been cancelled, stop creating groups
+            // and skip this value
+            if (groups.isEmpty()) {
+              done = true
+            }
+          } else {
+            val channel = Channel<V>(innerBufferSize)
+            val group = GroupedFlowImpl(
+              key = key,
+              channel = channel,
+              onCloseHandler = { throwable ->
+                println("    [group] onClose group $key throwable=$throwable sending...")
+
+                // we send the cancellation event to the main coroutine
+                // to serialize the access to the groups map
+                // and to avoid concurrent modification exceptions.
+                //
+                // use trySend is safe because the channel is unbounded,
+                // and the send is only failed if the channel is closed.
+                groupCancellationChannel
+                  .trySend(GroupCancellation(key))
+                  .also { println("    [group] onClose group $key sent $it") }
               }
-              DONE_VALUE -> {
-                println("complete all groups")
-                throw ClosedException(collector)
-              }
-              else -> {
-                val value = NULL_VALUE.unbox<T>(event)
+            )
+            groups[key] = group
 
-                val key = keySelector(value)
-                val g = groups[key]
+            try {
+              collector.emit(group)
+            } catch (e: CancellationException) {
+              // cancelling the main source means we don't want any more groups
+              // but running groups still require new values
+              cancelled = true
 
-                if (g !== null) {
-                  emitToGroup(valueSelector, value, g)
-                } else {
-                  if (cancelled) {
-                    // if the main has been cancelled, stop creating groups
-                    // and skip this value
-                    if (groups.isEmpty()) {
-                      throw ClosedException(collector)
-                    }
-                  } else {
-                    val channel = Channel<V>(innerBufferSize).apply {
-                      invokeOnClose {
-                        println("onClose group $key")
-
-                        if (isActive) {
-                          launch {
-                            println("onClose group $key sending")
-                            values.send(GroupCancellation(key))
-                          }
-                        }
-                      }
-                    }
-
-                    val group = GroupedFlowImpl(key = key, channel = channel)
-                    groups[key] = group
-
-                    try {
-                      collector.emit(group)
-                    } catch (e: CancellationException) {
-                      // cancelling the main source means we don't want any more groups
-                      // but running groups still require new values
-                      cancelled = true
-
-                      // we only kill our subscription to the source if we have
-                      // no active groups. As stated above, consider this scenario:
-                      // source.groupBy(fn).take(2).
-                      if (groups.isEmpty()) {
-                        throw ClosedException(collector)
-                      }
-                    }
-
-                    emitToGroup(valueSelector, value, group)
-                  }
-                }
+              // we only kill our subscription to the source if we have
+              // no active groups. As stated above, consider this scenario:
+              // source.groupBy(fn).take(2).
+              if (groups.isEmpty()) {
+                done = true
               }
             }
+
+            emitToGroup(valueSelector, value, group)
           }
+        }
+      }
+
+      fun handleCancellation(event: GroupCancellation) {
+        println("[main] received $event")
+        val key = event.key as K
+
+        // remove the group from the map
+        // and check if we have no more groups and the main has been cancelled
+        // to stop the loop.
+        groups.remove(key)
+        if (groups.isEmpty() && cancelled) {
+          done = true
+        }
+      }
+
+      while (!done) {
+        groupCancellationChannel
+          .tryReceive()
+          .also { println("[main] received gr=$it") }
+          .onSuccess { handleCancellation(it) }
           .onFailure {
-            it?.let { e -> throw e }
-            return@coroutineScope
+            values.receiveCatching()
+              .also { println("[main] received $it") }
+              .onSuccess { handle(it) }
+              .onFailure {
+                it?.let { throw it }
+                done = true
+              }
           }
       }
     }
-  } catch (e: ClosedException) {
-    println("closed $e ${e.owner === collector} 1")
 
-    if (e.owner === collector) {
-      groups.values.forEach { it.close(null) }
-      println("closed $e ${e.owner === collector} 2")
-    } else {
-      groups.values.forEach { it.close(e) }
-      println("closed $e ${e.owner === collector} 3")
-      throw e
-    }
+    println("normal completion 1")
+    groupCancellationChannel.close()
+    groups.values.forEach { it.close(null) }
+
+    println("normal completion 2")
   } catch (e: Throwable) {
-    println("error $e 1")
+    println("error completion $e")
 
-    e.printStackTrace()
-    groups.forEach { it.value.close(e) }
-
-    println("error $e 2")
+    groupCancellationChannel.close()
+    groups.values.forEach { it.close(e) }
 
     throw e
   } finally {
