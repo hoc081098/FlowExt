@@ -26,6 +26,7 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.AtomicBoolean
 import com.hoc081098.flowext.internal.DONE_VALUE
+import com.hoc081098.flowext.internal.identitySuspendFunction
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,14 +42,34 @@ import kotlinx.coroutines.flow.flow
 
 /**
  * Represents a Flow of values that have a common key.
+ *
+ * Note: A [GroupedFlow] will cache the items it is to emit until such time as it is subscribed to.
+ * For this reason, in order to avoid memory leaks, you should not simply ignore those
+ * [GroupedFlow]s that do not concern you. Instead, you can signal to them that they may discard
+ * their buffers by applying an operator like `take(0)` to them.
  */
 public interface GroupedFlow<K, T> : Flow<T> {
   /**
-   * The key of this Flow.
+   * The key that identifies the group of items emitted by this [GroupedFlow].
    */
   public val key: K
 }
 
+/**
+ * Groups the items emitted by the current [Flow] according to a specified criterion,
+ * and emits these grouped items as [GroupedFlow]s.
+ *
+ * The emitted [GroupedFlow] allows only a single [FlowCollector] during its lifetime
+ * and if this [FlowCollector] cancels before the source terminates,
+ * the next emission by the source having the same key will trigger a new [GroupedFlow] emission.
+ *
+ * If the upstream throw an exception, the returned [Flow] and all active inner [GroupedFlow]s
+ * will signal the same exception.
+ *
+ * @param keySelector a function that extracts the key for each item
+ * @param valueSelector a function that extracts the return value for each item
+ * @see GroupedFlow
+ */
 @FlowExtPreview
 @ExperimentalCoroutinesApi
 public fun <T, K, V> Flow<T>.groupBy(
@@ -60,6 +81,21 @@ public fun <T, K, V> Flow<T>.groupBy(
   valueSelector = valueSelector
 )
 
+/**
+ * Groups the items emitted by the current [Flow] according to a specified criterion,
+ * and emits these grouped items as [GroupedFlow]s.
+ *
+ * The emitted [GroupedFlow] allows only a single [FlowCollector] during its lifetime
+ * and if this [FlowCollector] cancels before the source terminates,
+ * the next emission by the source having the same key will trigger a new [GroupedFlow] emission.
+ *
+ * If the upstream throw an exception, the returned [Flow] and all active inner [GroupedFlow]s
+ * will signal the same exception.
+ *
+ * @param keySelector a function that extracts the key for each item
+ * @see GroupedFlow
+ */
+@Suppress("UNCHECKED_CAST")
 @FlowExtPreview
 @ExperimentalCoroutinesApi
 public fun <T, K> Flow<T>.groupBy(
@@ -67,7 +103,7 @@ public fun <T, K> Flow<T>.groupBy(
 ): Flow<GroupedFlow<K, T>> = groupByInternal(
   source = this,
   keySelector = keySelector,
-  valueSelector = { it }
+  valueSelector = identitySuspendFunction as (suspend (T) -> T)
 )
 
 @ExperimentalCoroutinesApi
