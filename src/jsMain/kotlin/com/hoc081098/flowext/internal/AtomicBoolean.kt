@@ -31,4 +31,10 @@ internal actual class AtomicBoolean actual constructor(actual var value: Boolean
   } else {
     false
   }
+
+  actual fun getAndSet(value: Boolean): Boolean {
+    val oldValue = this.value
+    this.value = value
+    return oldValue
+  }
 }

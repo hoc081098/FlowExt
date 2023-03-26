@@ -29,13 +29,3 @@ internal expect class AtomicRef<T>(initialValue: T) {
 
   fun compareAndSet(expect: T, update: T): Boolean
 }
-
-@Suppress("Unused", "NOTHING_TO_INLINE")
-internal inline fun <T> AtomicRef<T>.getAndSet(update: T): T {
-  while (true) {
-    val expect = value
-    if (compareAndSet(expect, update)) {
-      return expect
-    }
-  }
-}
