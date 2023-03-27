@@ -209,10 +209,13 @@ private fun <T, K, V> groupByInternal(
       var done = false
       var cancelled = false
 
-      outer@ while (!done) {
-        // receive groupCancellationChannel until it is empty or channel is closed or failed.
+      /**
+       * Drains the cancelledGroupChannel until it is empty or closed or failed.
+       * @return true should stop the outer loop, false otherwise.
+       */
+      fun drainCancelledGroupChannel(): Boolean {
         while (true) {
-          val groupCancellationChannelResult = cancelledGroupChannel
+          cancelledGroupChannel
             .tryReceive()
             .onSuccess { group ->
               // remove the group from the map,
@@ -224,20 +227,16 @@ private fun <T, K, V> groupByInternal(
               // and check if we have no more groups and the main has been cancelled
               // to stop the loop.
               if (groups.isEmpty() && cancelled) {
-                done = true
+                return true
               }
             }
-
-          if (done) {
-            break@outer
-          }
-
-          if (!groupCancellationChannelResult.isSuccess) {
-            break
-          }
+            .onFailure { return false }
         }
+      }
 
-        if (done) {
+      outer@ while (!done) {
+        // receive groupCancellationChannel until it is empty or channel is closed or failed.
+        if (drainCancelledGroupChannel()) {
           break@outer
         }
 
@@ -246,12 +245,19 @@ private fun <T, K, V> groupByInternal(
           .receiveCatching()
           .onSuccess { value ->
             val key = keySelector(value)
-            val g = groups[key]
 
+            if (drainCancelledGroupChannel()) {
+              // will exit the outer loop
+              done = true
+              return@onSuccess
+            }
+
+            val g = groups[key]
             if (g !== null) {
               // only emit to the group if it is active
               if (g.isActive()) {
                 emitToGroup(valueSelector, value, g)
+                // continue the outer loop
                 return@onSuccess
               }
 

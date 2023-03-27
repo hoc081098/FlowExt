@@ -140,6 +140,7 @@ dependencies {
   - `mapEager`
   - `flattenEager`
   - [`exhaustAll`](#flattenfirst--exhaustall)
+  - [`groupBy`](#groupby)
   - [`mapIndexed`](#mapindexed)
   - [`mapTo`](#mapto)
   - [`mapToUnit`](#maptounit)
@@ -589,6 +590,41 @@ Output:
 flattenFirst: 1
 flattenFirst: 3
 flattenFirst: 5
+```
+
+----
+
+#### groupBy
+
+- Similar
+  to [RxJava groupBy](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#groupBy-io.reactivex.rxjava3.functions.Function-)
+
+Groups the items emitted by the current `Flow` according to a specified criterion,
+and emits these grouped items as `GroupedFlow`s.
+
+```kotlin
+range(1, 10)
+  .groupBy { it % 2 }
+  .flatMapMerge { groupedFlow ->
+    groupedFlow
+      .map { groupedFlow.key to it }
+  }
+  .collect { println("groupBy: $it") }
+```
+
+Output:
+
+```none
+groupBy: (1, 1)
+groupBy: (0, 2)
+groupBy: (1, 3)
+groupBy: (0, 4)
+groupBy: (1, 5)
+groupBy: (0, 6)
+groupBy: (1, 7)
+groupBy: (0, 8)
+groupBy: (1, 9)
+groupBy: (0, 10)
 ```
 
 ----

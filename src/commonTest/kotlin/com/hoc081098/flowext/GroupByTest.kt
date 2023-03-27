@@ -34,6 +34,7 @@ import kotlin.test.assertFalse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -276,6 +277,51 @@ class GroupByTest : BaseTest() {
           Event.Value(emptyList()),
           Event.Value(listOf(1)),
           Event.Value(listOf(1, 99)),
+          Event.Complete
+        )
+      )
+  }
+
+  @Test
+  fun groupByFlatMapXXX() = runTest {
+    val closeGroup = MutableSharedFlow<Unit>(extraBufferCapacity = Int.MAX_VALUE)
+
+    flow {
+      emit(1 to "1:a")
+      delay(100)
+      emit(1 to "1:b")
+      delay(50)
+      emit(1 to "1:c")
+
+      emit(2 to "2:a")
+      delay(100)
+      emit(2 to "2:b")
+      emit(2 to "2:c")
+      emit(2 to "2:d")
+
+      emit(3 to "3:a")
+      delay(400)
+      emit(3 to "3:b")
+
+      closeGroup.emit(Unit)
+
+      emit(1 to "1:a1")
+      emit(1 to "1:b1")
+      emit(1 to "1:c1")
+    }
+      .groupBy { it.first }
+      .flatMapMerge { g ->
+        g
+          .takeUntil(closeGroup)
+          .flatMapFirst { (_, v) -> timer(v, 300) }
+      }
+      .test(
+        listOf(
+          Event.Value("1:a"),
+          Event.Value("2:a"),
+          Event.Value("3:a"),
+          Event.Value("3:b"),
+          Event.Value("1:a1"),
           Event.Complete
         )
       )
