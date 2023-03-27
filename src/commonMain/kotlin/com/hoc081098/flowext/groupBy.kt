@@ -27,7 +27,7 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.internal.AtomicBoolean
 import com.hoc081098.flowext.internal.identitySuspendFunction
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -125,26 +125,24 @@ private class GroupedFlowImpl<K, V>(
   private val onCancelHandler: (self: GroupedFlowImpl<K, V>) -> Unit
 ) : GroupedFlow<K, V>, Flow<V> {
   private val consumed = AtomicBoolean()
-  private val completedDeferred = CompletableDeferred<Unit>()
-  private val completed = AtomicBoolean()
 
   @Suppress("NOTHING_TO_INLINE")
   private inline fun markConsumed() {
     check(!consumed.getAndSet(true)) { "A GroupedFlow can be collected just once" }
   }
 
-  fun isActive() = !completed.value
+  @OptIn(DelicateCoroutinesApi::class)
+  fun isActive() = !channel.isClosedForSend && !channel.isClosedForReceive
 
   suspend fun send(element: V) {
-    check(!completed.value) { "GroupedFlowImpl is already completed" }
+    check(isActive()) { "GroupedFlowImpl is already completed" }
     channel.send(element)
   }
 
-  suspend fun close(cause: Throwable?) {
+  fun close(cause: Throwable?) {
     // called when main flow is completed or throws an exception.
     // do not check done.value here because we may store this GroupedFlowImpl in the map.
     channel.close(cause)
-    completedDeferred.await()
   }
 
   override suspend fun collect(collector: FlowCollector<V>) {
@@ -159,17 +157,11 @@ private class GroupedFlowImpl<K, V>(
       cause = e
       throw e
     } finally {
-      // mark the GroupedFlowImpl as completed.
-      completed.value = true
-
-      // cancel the channel to unblock the senders
-      channel.cancelConsumed(cause)
-
       // call the onCancelHandler to remove the GroupedFlowImpl from the map
       onCancelHandler(this)
 
-      // complete the deferred to unblock the close
-      completedDeferred.complete(Unit)
+      // cancel the channel to unblock the senders
+      channel.cancelConsumed(cause)
     }
   }
 
