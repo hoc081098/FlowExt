@@ -172,8 +172,6 @@ kotlin {
       "linuxArm64"
     )
 
-    val desktopTargets = listOf("mingwX64") + linuxTargets
-
     val androidNativeTargets = listOf(
       "androidNativeArm32",
       "androidNativeArm64",
@@ -181,18 +179,12 @@ kotlin {
       "androidNativeX64"
     )
 
-    (appleTargets + desktopTargets + androidNativeTargets).forEach {
-      getByName("${it}Main") {
-        dependsOn(nativeMain)
-      }
-      getByName("${it}Test") {
-        dependsOn(nativeTest)
-      }
-    }
-
     appleTargets.forEach {
       getByName("${it}Main") {
         dependsOn(darwinMain)
+      }
+      getByName("${it}Test") {
+        dependsOn(darwinTest)
       }
     }
 
@@ -200,11 +192,17 @@ kotlin {
       getByName("${it}Main") {
         dependsOn(linuxMain)
       }
+      getByName("${it}Test") {
+        dependsOn(linuxTest)
+      }
     }
 
     androidNativeTargets.forEach {
       getByName("${it}Main") {
         dependsOn(pthreadAndroidMain)
+      }
+      getByName("${it}Test") {
+        dependsOn(pthreadAndroidTest)
       }
     }
   }
@@ -311,13 +309,11 @@ tasks.withType<AbstractTestTask> {
 tasks.withType<DokkaTask>().configureEach {
   dokkaSourceSets {
     configureEach {
-      externalDocumentationLink {
-        url.set(URL("https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/"))
-      }
+      externalDocumentationLink("https://kotlinlang.org/api/kotlinx.coroutines/")
 
       sourceLink {
-        localDirectory.set(file("src/commonMain/kotlin"))
-        remoteUrl.set(URL("https://github.com/hoc081098/FlowExt/tree/master/src/commonMain/kotlin"))
+        localDirectory.set(file("src"))
+        remoteUrl.set(URL("https://github.com/hoc081098/FlowExt/tree/master/src"))
         remoteLineSuffix.set("#L")
       }
     }
