@@ -205,6 +205,13 @@ kotlin {
         dependsOn(pthreadAndroidTest)
       }
     }
+
+    getByName("mingwX64Main") {
+      dependsOn(nativeMain)
+    }
+    getByName("mingwX64Test") {
+      dependsOn(nativeTest)
+    }
   }
 
   // enable running ios tests on a background thread as well
