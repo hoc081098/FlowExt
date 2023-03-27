@@ -18,6 +18,11 @@
   - `androidNativeX86`
   - `androidNativeX64`
 
+### Added
+
+- [`Flow.groupBy`](https://hoc081098.github.io/FlowExt/docs/0.x/-flow-ext/com.hoc081098.flowext/groupBy.html) operator.
+  See [Readme#groupBy](https://github.com/hoc081098/FlowExt#groupBy) for more details.
+
 ## [0.5.0] - Nov 7, 2022
 
 ### Changed
