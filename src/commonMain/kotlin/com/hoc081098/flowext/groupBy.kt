@@ -227,7 +227,7 @@ private fun <T, K, V> groupByInternal(
               // we must check both key and value to be sure that we remove the right group
               // because new group with the same key may be created while old group becomes inactive
               // we don't want to remove the new group.
-              groups.remove(group.key, group)
+              groups.removeEntry(group.key, group)
 
               // and check if we have no more groups and the main has been cancelled
               // to stop the loop.
@@ -331,7 +331,7 @@ private fun <T, K, V> groupByInternal(
 /**
  * Removes [key] from map if it is mapped to [value].
  */
-private fun <Key, Value> MutableMap<Key, Value>.remove(key: Key, value: Value): Boolean {
+private fun <Key, Value> MutableMap<Key, Value>.removeEntry(key: Key, value: Value): Boolean {
   if (this[key] != value) return false
   this.remove(key)
   return true
