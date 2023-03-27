@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,5 +26,6 @@ package com.hoc081098.flowext.internal
 
 internal expect class AtomicBoolean(value: Boolean = false) {
   fun compareAndSet(expect: Boolean, update: Boolean): Boolean
+  fun getAndSet(value: Boolean): Boolean
   var value: Boolean
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,15 @@ internal actual class AtomicBoolean actual constructor(value: Boolean) {
     set(value) {
       atomic.value = value.asInt
     }
+
+  actual fun getAndSet(value: Boolean): Boolean {
+    val iValue = value.asInt
+    while (true) {
+      val cur = atomic.value
+      if (cur == iValue) return value
+      if (atomic.compareAndSet(cur, iValue)) return cur != 0
+    }
+  }
 }
 
 private inline val Boolean.asInt: Int get() = if (this) 1 else 0
