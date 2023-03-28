@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-### Changed
+### [0.6.0] - Mar 28, 2023
 
 - Update dependencies
   - `Kotlin` to `1.8.10`.
@@ -144,7 +144,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.6.0
 [0.5.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.5.0
 [0.4.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.4.0
 [0.3.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.3.0
