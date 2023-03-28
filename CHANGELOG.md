@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-### [0.6.0] - Mar 28, 2023
+## [0.6.0] - Mar 28, 2023
+
+### Changed
 
 - Update dependencies
   - `Kotlin` to `1.8.10`.
