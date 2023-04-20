@@ -68,7 +68,7 @@ jobs:
         run: ./gradlew koverXmlReport
 
       - name: Upload Test Report
-        uses: codecov/codecov-action@v3.1.2
+        uses: codecov/codecov-action@v3.1.3
 
       - name: Upload test report artifact
         if: ${{ failure() }}
