@@ -5,8 +5,8 @@
 [![Build](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml)
 [![Validate Gradle Wrapper](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Kotlin version](https://img.shields.io/badge/Kotlin-1.8.20-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
-[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.7.0_RC-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.7.0-Beta)
+[![Kotlin version](https://img.shields.io/badge/Kotlin-1.8.21-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
+[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.7.1-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.7.1)
 ![badge][badge-jvm]
 ![badge][badge-android]
 ![badge][badge-ios]

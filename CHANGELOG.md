@@ -1,6 +1,11 @@
 # Change Log
 
-## [Unreleased]
+## [0.6.1] - May 18, 2023
+
+- Update dependencies
+  - `Kotlin` to `1.8.21`.
+  - `KotlinX Coroutines` to `1.7.1`.
+  - `Gradle` to `8.1.1`.
 
 ## [0.6.0] - Mar 28, 2023
 
