@@ -69,13 +69,13 @@ allprojects {
 ### Multiplatform
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt:0.6.0")
+implementation("io.github.hoc081098:FlowExt:0.6.1")
 ```
 
 ### JVM / Android only
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt-jvm:0.6.0")
+implementation("io.github.hoc081098:FlowExt-jvm:0.6.1")
 ```
 
 ### Snapshot
