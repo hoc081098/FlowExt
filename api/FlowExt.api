@@ -191,6 +191,15 @@ public final class com/hoc081098/flowext/RangeKt {
 	public static final fun range (II)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/RepeatKt {
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat-HG0u8IE (Lkotlinx/coroutines/flow/Flow;J)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat-SxA4cEA (Lkotlinx/coroutines/flow/Flow;IJ)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/RetryWhenWithDelayStrategyKt {
 	public static final fun retryWhenWithDelayStrategy (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/DelayStrategy;Lkotlin/jvm/functions/Function4;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun retryWhenWithExponentialBackoff-7Q0yyfQ (Lkotlinx/coroutines/flow/Flow;JDJLkotlin/jvm/functions/Function4;)Lkotlinx/coroutines/flow/Flow;
