@@ -24,6 +24,7 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.NULL_VALUE
 import kotlin.time.Duration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -86,25 +87,60 @@ private fun <T> repeatInternal(
   infinite: Boolean,
   delayDuration: ((count: Int) -> Duration)?
 ): Flow<T> = when {
-  infinite -> flow {
-    var soFar = 1
+  infinite -> repeatIndefinitely(
+    flow = flow,
+    delayDurationOrNullValue = delayDuration ?: NULL_VALUE
+  )
+  count <= 0 -> emptyFlow()
+  else -> repeatAtMostCount(
+    flow = flow,
+    count = count,
+    delayDurationOrNullValue = delayDuration ?: NULL_VALUE
+  )
+}
 
-    while (true) {
-      emitAll(flow)
+private inline fun <T> repeatIndefinitely(
+  flow: Flow<T>,
+  delayDurationOrNullValue: Any // NULL_VALUE | (Int) -> Duration
+): Flow<T> {
+  val delayDuration = NULL_VALUE.unbox<((Int) -> Duration)?>(delayDurationOrNullValue)
 
-      if (delayDuration != null) {
+  return if (delayDuration === null) {
+    flow {
+      while (true) {
+        emitAll(flow)
+      }
+    }
+  } else {
+    flow {
+      var soFar = 1
+
+      while (true) {
+        emitAll(flow)
         delay(delayDuration(soFar++))
       }
     }
   }
+}
 
-  count <= 0 -> emptyFlow()
-  else -> flow {
-    for (soFar in 1..count) {
-      emitAll(flow)
+private inline fun <T> repeatAtMostCount(
+  flow: Flow<T>,
+  count: Int,
+  delayDurationOrNullValue: Any // NULL_VALUE | (Int) -> Duration
+): Flow<T> {
+  val delayDuration = NULL_VALUE.unbox<((Int) -> Duration)?>(delayDurationOrNullValue)
 
-      if (delayDuration != null) {
-        delay(delayDuration(soFar + 1))
+  return if (delayDuration === null) {
+    flow {
+      repeat(count) {
+        emitAll(flow)
+      }
+    }
+  } else {
+    flow {
+      for (soFar in 1..count) {
+        emitAll(flow)
+        delay(delayDuration(soFar))
       }
     }
   }
