@@ -53,7 +53,7 @@ public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> 
  * with a fixed [delay] between each repetition.
  */
 public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
-  repeatInternal(flow = this, count = 0, infinite = true, delay = fixedDelay(delay))
+  repeatInternal(flow = this, count = 0, infinite = true, delay = fixedDelay(delay, true))
 
 // --------------------------------------------------- REPEAT COUNT ---------------------------------------------------
 
@@ -80,16 +80,31 @@ public fun <T> Flow<T>.repeat(
 public fun <T> Flow<T>.repeat(
   count: Int,
   delay: Duration
-): Flow<T> = repeatInternal(flow = this, count = count, infinite = false, delay = fixedDelay(delay))
+): Flow<T> =
+  repeatInternal(flow = this, count = count, infinite = false, delay = fixedDelay(delay, false))
 
 // ---------------------------------------------------- INTERNAL ----------------------------------------------------
 
 private typealias DelayDurationSelector = suspend (count: Int) -> Duration
 
 private inline fun noDelay(): DelayDurationSelector? = null
-private inline fun fixedDelay(delay: Duration): DelayDurationSelector = { delay }
+private inline fun fixedDelay(delay: Duration, infinite: Boolean): DelayDurationSelector =
+  if (infinite) {
+    FixedDelayDurationSelector(delay)
+  } else {
+    { delay }
+  }
+
 private inline fun delaySelector(noinline delay: DelayDurationSelector): DelayDurationSelector =
   delay
+
+/**
+ * Used when repeat count is infinite and delay is fixed.
+ * This is an optimization to avoid integer overflow.
+ */
+private class FixedDelayDurationSelector(val delay: Duration) : DelayDurationSelector {
+  override suspend fun invoke(count: Int): Duration = delay
+}
 
 private fun <T> repeatInternal(
   flow: Flow<T>,
@@ -116,6 +131,12 @@ private inline fun <T> repeatIndefinitely(
   null -> flow {
     while (true) {
       emitAll(flow)
+    }
+  }
+  is FixedDelayDurationSelector -> flow {
+    while (true) {
+      emitAll(flow)
+      coroutinesDelay(delay.delay)
     }
   }
   else -> flow {
