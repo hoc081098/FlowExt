@@ -39,21 +39,36 @@ import kotlinx.coroutines.flow.flow
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely.
  */
 public fun <T> Flow<T>.repeat(): Flow<T> =
-  repeatInternal(flow = this, count = 0, infinite = true, delay = noDelay())
+  repeatInternal(
+    flow = this,
+    count = 0,
+    infinite = true,
+    delay = noDelay()
+  )
 
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
  * with a delay computed by [delay] function between each repetition.
  */
 public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> =
-  repeatInternal(flow = this, count = 0, infinite = true, delay = delaySelector(delay))
+  repeatInternal(
+    flow = this,
+    count = 0,
+    infinite = true,
+    delay = delaySelector(delay)
+  )
 
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
  * with a fixed [delay] between each repetition.
  */
 public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
-  repeatInternal(flow = this, count = 0, infinite = true, delay = fixedDelay(delay, true))
+  repeatInternal(
+    flow = this,
+    count = 0,
+    infinite = true,
+    delay = fixedDelay(delay, true)
+  )
 
 // --------------------------------------------------- REPEAT COUNT ---------------------------------------------------
 
@@ -61,7 +76,12 @@ public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
  * Returns a [Flow] that repeats all values emitted by the original [Flow] at most [count] times.
  */
 public fun <T> Flow<T>.repeat(count: Int): Flow<T> =
-  repeatInternal(flow = this, count = count, infinite = false, delay = noDelay())
+  repeatInternal(
+    flow = this,
+    count = count,
+    infinite = false,
+    delay = noDelay()
+  )
 
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] at most [count] times,
@@ -71,7 +91,12 @@ public fun <T> Flow<T>.repeat(
   count: Int,
   delay: suspend (count: Int) -> Duration
 ): Flow<T> =
-  repeatInternal(flow = this, count = count, infinite = false, delay = delaySelector(delay))
+  repeatInternal(
+    flow = this,
+    count = count,
+    infinite = false,
+    delay = delaySelector(delay)
+  )
 
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
@@ -81,7 +106,12 @@ public fun <T> Flow<T>.repeat(
   count: Int,
   delay: Duration
 ): Flow<T> =
-  repeatInternal(flow = this, count = count, infinite = false, delay = fixedDelay(delay, false))
+  repeatInternal(
+    flow = this,
+    count = count,
+    infinite = false,
+    delay = fixedDelay(delay, false)
+  )
 
 // ---------------------------------------------------- INTERNAL ----------------------------------------------------
 
