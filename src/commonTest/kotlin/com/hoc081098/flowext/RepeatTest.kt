@@ -27,6 +27,8 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
@@ -122,6 +124,26 @@ class RepeatForeverTest : BaseTest() {
           Event.Complete
       )
   }
+
+  @Test
+  fun repeatFailureFlow() = runTest {
+    val flow = flow {
+      emit(1)
+      throw RuntimeException("Error")
+    }
+
+    flow
+      .repeat()
+      .test(null) { (a, b) ->
+        assertEquals(
+          expected = Event.Value(1),
+          actual = a
+        )
+        assertIs<RuntimeException>(
+          assertIs<Event.Error>(b).error
+        )
+      }
+  }
 }
 
 @FlowExtPreview
@@ -215,5 +237,25 @@ class RepeatAtMostTest : BaseTest() {
           .toList() +
           Event.Complete
       )
+  }
+
+  @Test
+  fun repeatFailureFlow() = runTest {
+    val flow = flow {
+      emit(1)
+      throw RuntimeException("Error")
+    }
+
+    flow
+      .repeat(count = 100)
+      .test(null) { (a, b) ->
+        assertEquals(
+          expected = Event.Value(1),
+          actual = a
+        )
+        assertIs<RuntimeException>(
+          assertIs<Event.Error>(b).error
+        )
+      }
   }
 }
