@@ -112,24 +112,18 @@ private fun <T> repeatInternal(
 private inline fun <T> repeatIndefinitely(
   flow: Flow<T>,
   noinline delay: DelayDurationSelector?
-): Flow<T> {
-  return when (delay) {
-    null -> {
-      flow {
-        while (true) {
-          emitAll(flow)
-        }
-      }
+): Flow<T> = when (delay) {
+  null -> flow {
+    while (true) {
+      emitAll(flow)
     }
-    else -> {
-      flow {
-        var soFar = 1
+  }
+  else -> flow {
+    var soFar = 1
 
-        while (true) {
-          emitAll(flow)
-          coroutinesDelay(delay(soFar++))
-        }
-      }
+    while (true) {
+      emitAll(flow)
+      coroutinesDelay(delay(soFar++))
     }
   }
 }
@@ -138,22 +132,16 @@ private inline fun <T> repeatAtMostCount(
   flow: Flow<T>,
   count: Int,
   noinline delay: DelayDurationSelector?
-): Flow<T> {
-  return when (delay) {
-    null -> {
-      flow {
-        repeat(count) {
-          emitAll(flow)
-        }
-      }
+): Flow<T> = when (delay) {
+  null -> flow {
+    repeat(count) {
+      emitAll(flow)
     }
-    else -> {
-      flow {
-        for (soFar in 1..count) {
-          emitAll(flow)
-          coroutinesDelay(delay(soFar))
-        }
-      }
+  }
+  else -> flow {
+    for (soFar in 1..count) {
+      emitAll(flow)
+      coroutinesDelay(delay(soFar))
     }
   }
 }
