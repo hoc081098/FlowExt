@@ -28,10 +28,12 @@ import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.take
@@ -115,6 +117,100 @@ class RepeatForeverTest : BaseTest() {
         listOf(1, 2, 3)
           .cycled()
           .take(100)
+          .map { Event.Value(it) }
+          .toList() +
+          Event.Complete
+      )
+  }
+}
+
+@FlowExtPreview
+@ExperimentalCoroutinesApi
+class RepeatAtMostTest : BaseTest() {
+  @Test
+  fun repeatWithZeroCount() = runTest {
+    assertTrue {
+      flowOf(1, 2, 3)
+        .repeat(count = 0)
+        .count() == 0
+    }
+  }
+
+  @Test
+  fun repeatWithNegativeCount() = runTest {
+    assertTrue {
+      flowOf(1, 2, 3)
+        .repeat(count = -1)
+        .count() == 0
+    }
+  }
+
+  @Test
+  fun repeat() = runTest {
+    flowOf(1, 2, 3)
+      .repeat(count = 100)
+      .test(
+        listOf(1, 2, 3)
+          .cycled()
+          .take(300)
+          .map { Event.Value(it) }
+          .toList() +
+          Event.Complete
+      )
+  }
+
+  @Test
+  fun repeatWithFixedDelay() = runTest {
+    var job: Job? = null
+    val delay = 500.milliseconds
+
+    flow {
+      assertNull(job, "Job must be null")
+
+      emit(1)
+      emit(2)
+      emit(3)
+
+      assertNull(job, "Job must be null")
+      job = launch {
+        delay(delay * 0.99)
+        job = null
+      }
+    }
+      .repeat(count = 100, delay = delay)
+      .test(
+        listOf(1, 2, 3)
+          .cycled()
+          .take(300)
+          .map { Event.Value(it) }
+          .toList() +
+          Event.Complete
+      )
+  }
+
+  @Test
+  fun repeatWithDelay() = runTest {
+    var job: Job? = null
+    var count = 1
+
+    flow {
+      assertNull(job, "Job must be null")
+
+      emit(1)
+      emit(2)
+      emit(3)
+
+      assertNull(job, "Job must be null")
+      job = launch {
+        delay((count++).milliseconds * 0.99)
+        job = null
+      }
+    }
+      .repeat(count = 100) { it.milliseconds }
+      .test(
+        listOf(1, 2, 3)
+          .cycled()
+          .take(300)
           .map { Event.Value(it) }
           .toList() +
           Event.Complete
