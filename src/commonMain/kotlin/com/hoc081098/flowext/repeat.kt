@@ -37,6 +37,8 @@ import kotlinx.coroutines.flow.flow
 
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely.
+ *
+ * Note: If the source [Flow] is synchronously empty (e.g. [emptyFlow]), this will cause an infinite loop.
  */
 public fun <T> Flow<T>.repeat(): Flow<T> =
   repeatInternal(
@@ -49,6 +51,9 @@ public fun <T> Flow<T>.repeat(): Flow<T> =
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
  * with a delay computed by [delay] function between each repetition.
+ *
+ * Note: If the source [Flow] is synchronously empty (e.g. [emptyFlow]) and [delay] returns [Duration.ZERO] or a negative value,
+ * this will cause an infinite loop.
  */
 public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> =
   repeatInternal(
@@ -61,13 +66,16 @@ public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> 
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
  * with a fixed [delay] between each repetition.
+ *
+ * Note: If the source [Flow] is synchronously empty (e.g. [emptyFlow]) and [delay] is [Duration.ZERO],
+ * this will cause an infinite loop.
  */
 public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
   repeatInternal(
     flow = this,
     count = 0,
     infinite = true,
-    delay = fixedDelay(delay, true)
+    delay = fixedDelay(delay)
   )
 
 // --------------------------------------------------- REPEAT COUNT ---------------------------------------------------
@@ -110,7 +118,7 @@ public fun <T> Flow<T>.repeat(
     flow = this,
     count = count,
     infinite = false,
-    delay = fixedDelay(delay, false)
+    delay = fixedDelay(delay)
   )
 
 // ---------------------------------------------------- INTERNAL ----------------------------------------------------
@@ -118,22 +126,21 @@ public fun <T> Flow<T>.repeat(
 private typealias DelayDurationSelector = suspend (count: Int) -> Duration
 
 private inline fun noDelay(): DelayDurationSelector? = null
-private inline fun fixedDelay(delay: Duration, infinite: Boolean): DelayDurationSelector =
-  if (infinite) {
-    FixedDelayDurationSelector(delay)
-  } else {
-    { delay }
-  }
+private inline fun fixedDelay(delay: Duration): DelayDurationSelector? =
+  if (delay.isZeroOrNegative()) noDelay()
+  else FixedDelayDurationSelector(delay)
 
 private inline fun delaySelector(noinline delay: DelayDurationSelector): DelayDurationSelector =
   delay
 
+private inline fun Duration.isZeroOrNegative() = this == Duration.ZERO || isNegative()
+
 /**
- * Used when repeat count is infinite and delay is fixed.
+ * Used when the delay duration is fixed.
  * This is an optimization to avoid integer overflow.
  */
-private class FixedDelayDurationSelector(val delay: Duration) : DelayDurationSelector {
-  override suspend fun invoke(count: Int): Duration = delay
+private class FixedDelayDurationSelector(val duration: Duration) : DelayDurationSelector {
+  override suspend fun invoke(count: Int): Duration = duration
 }
 
 private fun <T> repeatInternal(
@@ -154,9 +161,9 @@ private fun <T> repeatInternal(
   )
 }
 
-private inline fun <T> repeatIndefinitely(
+private fun <T> repeatIndefinitely(
   flow: Flow<T>,
-  noinline delay: DelayDurationSelector?
+  delay: DelayDurationSelector?
 ): Flow<T> = when (delay) {
   null -> flow {
     while (true) {
@@ -166,7 +173,7 @@ private inline fun <T> repeatIndefinitely(
   is FixedDelayDurationSelector -> flow {
     while (true) {
       emitAll(flow)
-      coroutinesDelay(delay.delay)
+      coroutinesDelay(delay.duration)
     }
   }
   else -> flow {
@@ -179,14 +186,20 @@ private inline fun <T> repeatIndefinitely(
   }
 }
 
-private inline fun <T> repeatAtMostCount(
+private fun <T> repeatAtMostCount(
   flow: Flow<T>,
   count: Int,
-  noinline delay: DelayDurationSelector?
+  delay: DelayDurationSelector?
 ): Flow<T> = when (delay) {
   null -> flow {
     repeat(count) {
       emitAll(flow)
+    }
+  }
+  is FixedDelayDurationSelector -> flow {
+    repeat(count) {
+      emitAll(flow)
+      coroutinesDelay(delay.duration)
     }
   }
   else -> flow {

@@ -31,15 +31,23 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runCurrent
 
 fun <T> Iterable<T>.cycled(): Sequence<T> = sequence {
   while (true) {
@@ -50,6 +58,32 @@ fun <T> Iterable<T>.cycled(): Sequence<T> = sequence {
 @FlowExtPreview
 @ExperimentalCoroutinesApi
 class RepeatForeverTest : BaseTest() {
+  @Test
+  fun testNeverFlow() = runTest(timeout = 3.seconds) {
+    val flow = flow<Int> { delay(1) }.repeat()
+
+    val buffer = mutableListOf<Int>()
+    val job = launch(start = CoroutineStart.UNDISPATCHED) {
+      flow.toList(buffer)
+    }
+    val intervalJob = interval(Duration.ZERO, 100.milliseconds)
+      .take(1_000)
+      .launchIn(this)
+
+    runCurrent()
+
+    repeat(1_000) {
+      advanceTimeBy(100)
+      runCurrent()
+      assertTrue(buffer.isEmpty())
+    }
+
+    intervalJob.cancelAndJoin()
+    job.cancelAndJoin()
+
+    assertTrue(buffer.isEmpty())
+  }
+
   @Test
   fun repeat() = runTest {
     flowOf(1, 2, 3)
