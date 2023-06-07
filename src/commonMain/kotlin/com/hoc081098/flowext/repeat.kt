@@ -38,7 +38,8 @@ import kotlinx.coroutines.flow.flow
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely.
  *
- * Note: If the source [Flow] is synchronously empty (e.g. [emptyFlow]), this will cause an infinite loop.
+ * Note: If the source [Flow] is completed synchronously immediately (e.g. [emptyFlow]),
+ * this will cause an infinite loop.
  */
 public fun <T> Flow<T>.repeat(): Flow<T> =
   repeatInternal(
@@ -52,7 +53,8 @@ public fun <T> Flow<T>.repeat(): Flow<T> =
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
  * with a delay computed by [delay] function between each repetition.
  *
- * Note: If the source [Flow] is synchronously empty (e.g. [emptyFlow]) and [delay] returns [Duration.ZERO] or a negative value,
+ * Note: If the source [Flow] is completed synchronously immediately (e.g. [emptyFlow]),
+ * and [delay] returns [Duration.ZERO] or a negative value,
  * this will cause an infinite loop.
  */
 public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> =
@@ -67,8 +69,8 @@ public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> 
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
  * with a fixed [delay] between each repetition.
  *
- * Note: If the source [Flow] is synchronously empty (e.g. [emptyFlow]) and [delay] is [Duration.ZERO],
- * this will cause an infinite loop.
+ * Note: If the source [Flow] is completed synchronously immediately (e.g. [emptyFlow]),
+ * and [delay] is [Duration.ZERO], this will cause an infinite loop.
  */
 public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
   repeatInternal(
@@ -82,6 +84,7 @@ public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
 
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] at most [count] times.
+ * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
 public fun <T> Flow<T>.repeat(count: Int): Flow<T> =
   repeatInternal(
@@ -94,6 +97,8 @@ public fun <T> Flow<T>.repeat(count: Int): Flow<T> =
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] at most [count] times,
  * with a delay computed by [delay] function between each repetition.
+ *
+ * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
 public fun <T> Flow<T>.repeat(
   count: Int,
@@ -109,6 +114,8 @@ public fun <T> Flow<T>.repeat(
 /**
  * Returns a [Flow] that repeats all values emitted by the original [Flow] indefinitely,
  * with a fixed [delay] between each repetition.
+ *
+ * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
 public fun <T> Flow<T>.repeat(
   count: Int,
