@@ -9,16 +9,16 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
-  kotlin("multiplatform") version "1.8.21"
-  id("com.diffplug.spotless") version "6.18.0"
+  kotlin("multiplatform") version "1.8.22"
+  id("com.diffplug.spotless") version "6.19.0"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.25.2"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.1"
-  id("org.jetbrains.dokka") version "1.8.10"
-  id("org.jetbrains.kotlinx.kover") version "0.7.0"
+  id("com.vanniktech.maven.publish") version "0.25.3"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.2"
+  id("org.jetbrains.dokka") version "1.8.20"
+  id("org.jetbrains.kotlinx.kover") version "0.7.2"
 }
 
-val coroutinesVersion = "1.7.1"
+val coroutinesVersion = "1.7.2"
 val ktlintVersion = "0.46.1"
 
 repositories {
