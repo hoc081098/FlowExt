@@ -24,16 +24,14 @@
 
 package com.hoc081098.flowext
 
-import kotlinx.coroutines.flow.Flow
-
 /**
- * Marks [Flow]-related API as a feature preview.
+ * Marks `FlowExt`-related API as a feature preview.
  *
- * Flow preview has **no** backward compatibility guarantees, including both binary and source compatibility.
+ * FlowExt preview has **no** backward compatibility guarantees, including both binary and source compatibility.
  * Its API and semantics can and will be changed in next releases.
  *
  * Feature preview can be used to evaluate its real-world strengths and weaknesses, gather and provide feedback.
- * According to the feedback, [Flow] will be refined on its road to stabilization and promotion to a stable API.
+ * According to the feedback, `FlowExt` will be refined on its road to stabilization and promotion to a stable API.
  *
  * The best way to speed up preview feature promotion is providing the feedback on the feature.
  */
