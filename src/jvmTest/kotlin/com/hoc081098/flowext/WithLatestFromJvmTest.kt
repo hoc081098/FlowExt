@@ -57,8 +57,8 @@ class WithLatestFromJvmTest {
         "b" to 4,
         "c" to 4,
         "d" to 4,
-        "e" to 4
-      )
+        "e" to 4,
+      ),
     )
   }
 
@@ -73,8 +73,8 @@ class WithLatestFromJvmTest {
         "b" to null,
         "c" to null,
         "d" to null,
-        "e" to null
-      )
+        "e" to null,
+      ),
     )
   }
 
@@ -87,8 +87,8 @@ class WithLatestFromJvmTest {
       listOf(
         "c" to 1,
         "d" to 1,
-        "e" to 1
-      )
+        "e" to 1,
+      ),
     )
   }
 
@@ -125,13 +125,13 @@ class WithLatestFromJvmTest {
         flow {
           emit(2)
           throw CancellationException("")
-        }
+        },
       )
       .test(
         listOf(
           Event.Value(1 to 2),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

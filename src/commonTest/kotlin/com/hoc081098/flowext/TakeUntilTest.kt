@@ -67,8 +67,8 @@ class TakeUntilTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -79,7 +79,7 @@ class TakeUntilTest : BaseTest() {
       .takeUntil(timer(Unit, 10.seconds))
       .test(
         (0 until 10).map { Event.Value(it) } +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -111,8 +111,8 @@ class TakeUntilTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

@@ -36,7 +36,7 @@ private typealias SubStateT = Any?
 
 private fun <State, Result> Flow<State>.selectInternal(
   selectors: Array<Selector<State, SubStateT>>,
-  projector: suspend (Array<SubStateT>) -> Result
+  projector: suspend (Array<SubStateT>) -> Result,
 ): Flow<Result> {
   require(selectors.isNotEmpty()) { "selectors must not be empty" }
 
@@ -57,7 +57,7 @@ private fun <State, Result> Flow<State>.selectInternal(
         val currentState = projector(
           currentSubStates
             .copyOf()
-            .also { latestSubStates = it }
+            .also { latestSubStates = it },
         )
 
         if (latestState === NULL_VALUE || (latestState as Result) != currentState) {
@@ -110,10 +110,10 @@ public fun <State, Result> Flow<State>.select(selector: Selector<State, Result>)
 public fun <State, SubState1, SubState2, Result> Flow<State>.select(
   selector1: Selector<State, SubState1>,
   selector2: Selector<State, SubState2>,
-  projector: suspend (subState1: SubState1, subState2: SubState2) -> Result
+  projector: suspend (subState1: SubState1, subState2: SubState2) -> Result,
 ): Flow<Result> = selectInternal(
   selectors = arrayOf(selector1, selector2),
-  projector = { projector(it[0] as SubState1, it[1] as SubState2) }
+  projector = { projector(it[0] as SubState1, it[1] as SubState2) },
 )
 
 /**
@@ -133,20 +133,20 @@ public fun <State, SubState1, SubState2, SubState3, Result> Flow<State>.select(
   selector1: Selector<State, SubState1>,
   selector2: Selector<State, SubState2>,
   selector3: Selector<State, SubState3>,
-  projector: suspend (subState1: SubState1, subState2: SubState2, subState3: SubState3) -> Result
+  projector: suspend (subState1: SubState1, subState2: SubState2, subState3: SubState3) -> Result,
 ): Flow<Result> = selectInternal(
   selectors = arrayOf(
     selector1,
     selector2,
-    selector3
+    selector3,
   ),
   projector = {
     projector(
       it[0] as SubState1,
       it[1] as SubState2,
-      it[2] as SubState3
+      it[2] as SubState3,
     )
-  }
+  },
 )
 
 /**
@@ -168,22 +168,22 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, Result> Flow<Stat
   selector2: Selector<State, SubState2>,
   selector3: Selector<State, SubState3>,
   selector4: Selector<State, SubState4>,
-  projector: suspend (subState1: SubState1, subState2: SubState2, subState3: SubState3, subState4: SubState4) -> Result
+  projector: suspend (subState1: SubState1, subState2: SubState2, subState3: SubState3, subState4: SubState4) -> Result,
 ): Flow<Result> = selectInternal(
   selectors = arrayOf(
     selector1,
     selector2,
     selector3,
-    selector4
+    selector4,
   ),
   projector = {
     projector(
       it[0] as SubState1,
       it[1] as SubState2,
       it[2] as SubState3,
-      it[3] as SubState4
+      it[3] as SubState4,
     )
-  }
+  },
 )
 
 /**
@@ -212,15 +212,15 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result
     subState2: SubState2,
     subState3: SubState3,
     subState4: SubState4,
-    subState5: SubState5
-  ) -> Result
+    subState5: SubState5,
+  ) -> Result,
 ): Flow<Result> = selectInternal(
   selectors = arrayOf(
     selector1,
     selector2,
     selector3,
     selector4,
-    selector5
+    selector5,
   ),
   projector = {
     projector(
@@ -228,7 +228,7 @@ public fun <State, SubState1, SubState2, SubState3, SubState4, SubState5, Result
       it[1] as SubState2,
       it[2] as SubState3,
       it[3] as SubState4,
-      it[4] as SubState5
+      it[4] as SubState5,
     )
-  }
+  },
 )

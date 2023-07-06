@@ -77,15 +77,15 @@ class RaceTest : BaseTest() {
   fun raceSingle() = runTest {
     race(
       listOf(
-        flowOf(1, 2, 3)
-      )
+        flowOf(1, 2, 3),
+      ),
     ).test(
       listOf(
         Event.Value(1),
         Event.Value(2),
         Event.Value(3),
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
   }
 
@@ -93,13 +93,13 @@ class RaceTest : BaseTest() {
   fun race2WithoutDelay() = runTest {
     race(
       flowOf(1, 2).log(1),
-      flowOf(3, 4).log(2)
+      flowOf(3, 4).log(2),
     ).test(
       listOf(
         Event.Value(1),
         Event.Value(2),
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
   }
 
@@ -108,13 +108,13 @@ class RaceTest : BaseTest() {
     race(
       flowOf(1, 2).onEach { delay(200) }.log(1),
       flowOf(3, 4).onEach { delay(100) }.log(2),
-      flowOf(5, 6).onEach { delay(50) }.log(3)
+      flowOf(5, 6).onEach { delay(50) }.log(3),
     ).test(
       listOf(
         Event.Value(5),
         Event.Value(6),
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
   }
 
@@ -132,14 +132,14 @@ class RaceTest : BaseTest() {
         emit(2)
         emit(3)
         emit(4)
-      }
+      },
     ).test(
       listOf(
         Event.Value(1),
         Event.Value(2),
         Event.Value(3),
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
   }
 
@@ -152,7 +152,7 @@ class RaceTest : BaseTest() {
       flow {
         delay(200)
         emit(1)
-      }
+      },
     ).test(listOf(Event.Complete))
 
     race(
@@ -162,7 +162,7 @@ class RaceTest : BaseTest() {
       },
       flow {
         delay(100)
-      }
+      },
     ).test(listOf(Event.Complete))
 
     race(
@@ -170,7 +170,7 @@ class RaceTest : BaseTest() {
         delay(200)
         emit(1)
       },
-      emptyFlow()
+      emptyFlow(),
     ).test(listOf(Event.Complete))
   }
 
@@ -188,7 +188,7 @@ class RaceTest : BaseTest() {
         emit(2)
         emit(500)
         emit(4)
-      }
+      },
     ).test(null) { events ->
       assertEquals(2, events.size)
       val (a, b) = events
@@ -206,7 +206,7 @@ class RaceTest : BaseTest() {
       flow {
         delay(500)
         throw TestException()
-      }
+      },
     ).test(null) { events ->
       assertIs<TestException>(events.single().errorOrThrow())
     }
@@ -219,8 +219,8 @@ class RaceTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     race(
@@ -232,14 +232,14 @@ class RaceTest : BaseTest() {
       flow {
         delay(200)
         emit(2)
-      }.log(2)
+      }.log(2),
     )
       .take(1)
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -255,11 +255,11 @@ class RaceTest : BaseTest() {
       flow {
         delay(100)
         emit(1)
-      }
+      },
     ).test(null) { events ->
       assertEquals(
         message,
-        assertIs<CancellationException>(events.single().errorOrThrow()).message
+        assertIs<CancellationException>(events.single().errorOrThrow()).message,
       )
     }
   }

@@ -44,15 +44,15 @@ class EventTest {
   fun valueEventEqualsAndHashCode() {
     assertEquals(
       Event.Value(listOf(1, 2, 3)),
-      Event.Value(listOf(1, 2, 3))
+      Event.Value(listOf(1, 2, 3)),
     )
     assertEquals(
       Event.Value(listOf(1, 2, 3)).hashCode(),
-      Event.Value(listOf(1, 2, 3)).hashCode()
+      Event.Value(listOf(1, 2, 3)).hashCode(),
     )
     assertEquals(
       listOf(1, 2, 3).hashCode(),
-      Event.Value(listOf(1, 2, 3)).hashCode()
+      Event.Value(listOf(1, 2, 3)).hashCode(),
     )
   }
 
@@ -61,7 +61,7 @@ class EventTest {
     val error = TestException()
     assertEquals(
       "Event.Error($error)",
-      Event.Error(error).toString()
+      Event.Error(error).toString(),
     )
   }
 
@@ -70,15 +70,15 @@ class EventTest {
     val e = TestException()
     assertEquals(
       Event.Error(e),
-      Event.Error(e)
+      Event.Error(e),
     )
     assertEquals(
       Event.Error(e).hashCode(),
-      Event.Error(e).hashCode()
+      Event.Error(e).hashCode(),
     )
     assertEquals(
       e.hashCode(),
-      Event.Error(e).hashCode()
+      Event.Error(e).hashCode(),
     )
   }
 
@@ -91,25 +91,25 @@ class EventTest {
   fun eventMap() {
     assertEquals(
       Event.Value(2),
-      Event.Value(1).map { it + 1 }
+      Event.Value(1).map { it + 1 },
     )
     assertEquals(
       "throws",
       assertFailsWith<TestException> {
         Event.Value(1).map { throw TestException("throws") }
-      }.message
+      }.message,
     )
 
     val errorEvent: Event<Int> = Event.Error(TestException("1"))
     assertSame(
       errorEvent,
-      errorEvent.map { it + 1 }
+      errorEvent.map { it + 1 },
     )
 
     val completeEvent: Event<Int> = Event.Complete
     assertSame(
       completeEvent,
-      completeEvent.map { it + 1 }
+      completeEvent.map { it + 1 },
     )
   }
 
@@ -117,34 +117,34 @@ class EventTest {
   fun eventFlatmap() {
     assertEquals(
       Event.Value(2),
-      Event.Value(1).flatMap { Event.Value(it + 1) }
+      Event.Value(1).flatMap { Event.Value(it + 1) },
     )
     assertSame(
       Event.Complete,
-      Event.Value(1).flatMap { Event.Complete }
+      Event.Value(1).flatMap { Event.Complete },
     )
     val error = TestException()
     assertEquals(
       Event.Error(error),
-      Event.Value(1).flatMap { Event.Error(error) }
+      Event.Value(1).flatMap { Event.Error(error) },
     )
     assertEquals(
       "throws",
       assertFailsWith<TestException> {
         Event.Value(1).flatMap<Int, String> { throw TestException("throws") }
-      }.message
+      }.message,
     )
 
     val errorEvent: Event<Int> = Event.Error(TestException("1"))
     assertSame(
       errorEvent,
-      errorEvent.flatMap { Event.Value(it + 1) }
+      errorEvent.flatMap { Event.Value(it + 1) },
     )
 
     val completeEvent: Event<Int> = Event.Complete
     assertSame(
       completeEvent,
-      completeEvent.flatMap { Event.Value(it + 1) }
+      completeEvent.flatMap { Event.Value(it + 1) },
     )
   }
 
@@ -153,7 +153,7 @@ class EventTest {
     listOf(
       Event.Value(1) to 1,
       Event.Error(TestException()) to null,
-      Event.Complete to null
+      Event.Complete to null,
     ).forEach { (e, v) ->
       assertEquals(v, e.valueOrNull())
     }
@@ -166,7 +166,7 @@ class EventTest {
     listOf(
       Event.Value(1) to 1,
       Event.Error(TestException()) to defaultValue,
-      Event.Complete to defaultValue
+      Event.Complete to defaultValue,
     ).forEach { (e, v) ->
       assertEquals(v, e.valueOrDefault(defaultValue))
     }
@@ -181,14 +181,14 @@ class EventTest {
       Event.Error(TestException("1")).valueOrElse {
         assertIs<TestException>(assertNotNull(it))
         2
-      }
+      },
     )
     assertEquals(
       2,
       Event.Complete.valueOrElse {
         assertNull(it)
         2
-      }
+      },
     )
   }
 
@@ -197,11 +197,11 @@ class EventTest {
     assertEquals(1, Event.Value(1).valueOrThrow())
     assertEquals(
       "1",
-      assertFailsWith<TestException> { Event.Error(TestException("1")).valueOrThrow() }.message
+      assertFailsWith<TestException> { Event.Error(TestException("1")).valueOrThrow() }.message,
     )
     assertEquals(
       "Event.Complete has no value!",
-      assertFailsWith<NoSuchElementException> { Event.Complete.valueOrThrow() }.message
+      assertFailsWith<NoSuchElementException> { Event.Complete.valueOrThrow() }.message,
     )
   }
 
@@ -211,7 +211,7 @@ class EventTest {
     listOf(
       Event.Value(1) to null,
       Event.Error(exception) to exception,
-      Event.Complete to null
+      Event.Complete to null,
     ).forEach { (e, v) ->
       assertEquals(v, e.errorOrNull())
     }
@@ -221,14 +221,14 @@ class EventTest {
   fun errorOrThrow() {
     assertEquals(
       "Event.Value(1) has no error!",
-      assertFailsWith<NoSuchElementException> { Event.Value(1).errorOrThrow() }.message
+      assertFailsWith<NoSuchElementException> { Event.Value(1).errorOrThrow() }.message,
     )
 
     val e = TestException()
     assertSame(e, Event.Error(e).errorOrThrow())
     assertEquals(
       "Event.Complete has no error!",
-      assertFailsWith<NoSuchElementException> { Event.Complete.errorOrThrow() }.message
+      assertFailsWith<NoSuchElementException> { Event.Complete.errorOrThrow() }.message,
     )
   }
 }

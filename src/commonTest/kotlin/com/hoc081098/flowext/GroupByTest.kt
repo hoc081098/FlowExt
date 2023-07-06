@@ -64,8 +64,8 @@ class GroupByTest : BaseTest() {
         listOf(
           Event.Value(listOf(1, 3, 5, 7, 9)),
           Event.Value(listOf(2, 4, 6, 8, 10)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -87,8 +87,8 @@ class GroupByTest : BaseTest() {
           Event.Value(listOf(6)),
           Event.Value(listOf(8)),
           Event.Value(listOf(10)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     assertEquals(actual = listOf(null, 2, 4, 6, 8, 10), expected = keys.toList())
@@ -103,8 +103,8 @@ class GroupByTest : BaseTest() {
         listOf(
           Event.Value(listOf(2, 4, 6, 8, 10)),
           Event.Value(listOf(3, 5, 7, 9, 11)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -150,13 +150,13 @@ class GroupByTest : BaseTest() {
   fun failureUpstream() = runTest {
     assertFailsWith<TestException>(
       flow<Int> { throw TestException("Broken!") }
-        .groupBy { it }
+        .groupBy { it },
     )
 
     assertFailsWith<TestException>(
       flow<Int> { throw TestException("Broken!") }
         .groupBy { it }
-        .flatMapMerge { it }
+        .flatMapMerge { it },
     )
   }
 
@@ -165,7 +165,7 @@ class GroupByTest : BaseTest() {
     assertFailsWith<TestException>(
       flowOf(1)
         .groupBy { throw TestException("Broken!") }
-        .groupBy { it }
+        .groupBy { it },
     )
   }
 
@@ -174,7 +174,7 @@ class GroupByTest : BaseTest() {
     assertFailsWith<TestException>(
       flowOf(1)
         .groupBy(keySelector = { it }, valueSelector = { throw TestException("Broken!") })
-        .groupBy { it }
+        .groupBy { it },
     )
   }
 
@@ -184,7 +184,7 @@ class GroupByTest : BaseTest() {
       .groupBy { it % 2 }
       .flatMapMerge { it.take(1) }
       .test(
-        (1..10).map { Event.Value(it) } + Event.Complete
+        (1..10).map { Event.Value(it) } + Event.Complete,
       )
   }
 
@@ -198,8 +198,8 @@ class GroupByTest : BaseTest() {
         listOf(
           Event.Value(listOf(1, 4, 7, 10)),
           Event.Value(listOf(2, 5, 8)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -213,8 +213,8 @@ class GroupByTest : BaseTest() {
         listOf(
           Event.Value(1),
           Event.Value(2),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -229,8 +229,8 @@ class GroupByTest : BaseTest() {
         listOf(
           Event.Value(1),
           Event.Value(2),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -241,7 +241,7 @@ class GroupByTest : BaseTest() {
         .asFlow()
         .map { if (it < 5) throw IllegalStateException("oops") else it }
         .groupBy { it % 2 == 0 }
-        .flatMapMerge { it }
+        .flatMapMerge { it },
     )
   }
 
@@ -252,7 +252,7 @@ class GroupByTest : BaseTest() {
         .asFlow()
         .map { if (it > 5) throw IllegalStateException("oops") else it }
         .groupBy { it % 2 == 0 }
-        .flatMapMerge { it }
+        .flatMapMerge { it },
     )
   }
 
@@ -268,7 +268,7 @@ class GroupByTest : BaseTest() {
           .concatWith(timer(99, 100))
           .concatWith(
             neverFlow()
-              .takeUntil(timer(Unit, 1000))
+              .takeUntil(timer(Unit, 1000)),
           )
           .scan(emptyList<Int>()) { acc, e -> acc + e }
       }
@@ -277,8 +277,8 @@ class GroupByTest : BaseTest() {
           Event.Value(emptyList()),
           Event.Value(listOf(1)),
           Event.Value(listOf(1, 99)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -322,8 +322,8 @@ class GroupByTest : BaseTest() {
           Event.Value("3:a"),
           Event.Value("3:b"),
           Event.Value("1:a1"),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

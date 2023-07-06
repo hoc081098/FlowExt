@@ -53,8 +53,8 @@ class BufferCountTest : BaseTest() {
           Event.Value(listOf(3, 4, 5)),
           Event.Value(listOf(6, 7, 8)),
           Event.Value(listOf(9)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -72,8 +72,8 @@ class BufferCountTest : BaseTest() {
           Event.Value(listOf(5, 6, 7)),
           Event.Value(listOf(6, 7)),
           Event.Value(listOf(7)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     range(0, 10)
@@ -83,8 +83,8 @@ class BufferCountTest : BaseTest() {
           Event.Value(listOf(0, 1)),
           Event.Value(listOf(4, 5)),
           Event.Value(listOf(8, 9)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -112,8 +112,8 @@ class BufferCountTest : BaseTest() {
         listOf(
           Event.Value(listOf(0, 1, 2, 3)),
           Event.Value(listOf(4, 5, 6, 7)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -126,8 +126,8 @@ class BufferCountTest : BaseTest() {
         listOf(
           Event.Value(listOf(0, 1, 2, 3)),
           Event.Value(listOf(2, 3, 4, 5)),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -157,8 +157,8 @@ class BufferCountTest : BaseTest() {
       results,
       listOf(
         listOf(1, 2, 3),
-        listOf(2, 3, 4)
-      )
+        listOf(2, 3, 4),
+      ),
     )
   }
 }

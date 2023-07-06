@@ -56,8 +56,8 @@ class FlatMapFirstTest : BaseTest() {
       .test(
         listOf(
           Event.Value("one"),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -75,8 +75,8 @@ class FlatMapFirstTest : BaseTest() {
           300, 301, 302, 303, 304,
           500, 501, 502, 503, 504,
           700, 701, 702, 703, 704,
-          900, 901, 902, 903, 904
-        ).map { Event.Value(it) } + Event.Complete
+          900, 901, 902, 903, 904,
+        ).map { Event.Value(it) } + Event.Complete,
       )
   }
 
@@ -99,8 +99,8 @@ class FlatMapFirstTest : BaseTest() {
           103,
           104,
           300,
-          301
-        ).map { Event.Value(it) } + Event.Complete
+          301,
+        ).map { Event.Value(it) } + Event.Complete,
       )
     assertEquals(3, input)
   }
@@ -152,7 +152,7 @@ class FlatMapFirstTest : BaseTest() {
           flow {
             if (it == 2) throw CancellationException("")
             emit(1)
-          }
+          },
         )
       }
     }
@@ -163,8 +163,8 @@ class FlatMapFirstTest : BaseTest() {
           Event.Value(1),
           Event.Value(1),
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

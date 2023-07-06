@@ -50,8 +50,8 @@ class MapIndexedTest : BaseTest() {
           Event.Value(1 to 2),
           Event.Value(2 to 3),
           Event.Value(3 to 4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -68,8 +68,11 @@ class MapIndexedTest : BaseTest() {
   fun cancellation() = runTest {
     flow {
       repeat(5) {
-        if (it == 2) throw CancellationException("")
-        else emit(it)
+        if (it == 2) {
+          throw CancellationException("")
+        } else {
+          emit(it)
+        }
       }
     }
       .mapIndexed { index, value -> index to value }
@@ -77,9 +80,9 @@ class MapIndexedTest : BaseTest() {
         assertEquals(
           listOf(
             Event.Value(0 to 0),
-            Event.Value(1 to 1)
+            Event.Value(1 to 1),
           ),
-          it.take(2)
+          it.take(2),
         )
         assertIs<CancellationException>(it.drop(2).single().errorOrThrow())
       }
@@ -91,8 +94,8 @@ class MapIndexedTest : BaseTest() {
         listOf(
           Event.Value(0 to 0),
           Event.Value(1 to 1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

@@ -43,7 +43,7 @@ class CombineTest : BaseTest() {
       flow3(),
       flow4(),
       flow1(),
-      flow2()
+      flow2(),
     ) { f1, f2, f3, f4, f5, f6 ->
       listOf(f1, f2, f3, f4, f5, f6).joinToString(separator = "-")
     }.toList()
@@ -52,9 +52,9 @@ class CombineTest : BaseTest() {
       listOf(
         "1-a-true-a-1-a",
         "2-b-false-b-2-b",
-        "3-c-true-c-3-c"
+        "3-c-true-c-3-c",
       ),
-      list
+      list,
     )
   }
 
@@ -67,7 +67,7 @@ class CombineTest : BaseTest() {
       flow4(),
       flow1(),
       flow2(),
-      flow3()
+      flow3(),
     ) { f1, f2, f3, f4, f5, f6, f7 ->
       listOf(f1, f2, f3, f4, f5, f6, f7).joinToString(separator = "-")
     }.toList()
@@ -76,9 +76,9 @@ class CombineTest : BaseTest() {
       listOf(
         "1-a-true-a-1-a-true",
         "2-b-false-b-2-b-false",
-        "3-c-true-c-3-c-true"
+        "3-c-true-c-3-c-true",
       ),
-      list
+      list,
     )
   }
 
@@ -92,7 +92,7 @@ class CombineTest : BaseTest() {
       flow1(),
       flow2(),
       flow3(),
-      flow4()
+      flow4(),
     ) { f1, f2, f3, f4, f5, f6, f7, f8 ->
       listOf(f1, f2, f3, f4, f5, f6, f7, f8).joinToString(separator = "-")
     }.toList()
@@ -101,9 +101,9 @@ class CombineTest : BaseTest() {
       listOf(
         "1-a-true-a-1-a-true-a",
         "2-b-false-b-2-b-false-b",
-        "3-c-true-c-3-c-true-c"
+        "3-c-true-c-3-c-true-c",
       ),
-      list
+      list,
     )
   }
 
@@ -118,7 +118,7 @@ class CombineTest : BaseTest() {
       flow2(),
       flow3(),
       flow4(),
-      flow1()
+      flow1(),
     ) { f1, f2, f3, f4, f5, f6, f7, f8, f9 ->
       listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9).joinToString(separator = "-")
     }.toList()
@@ -127,9 +127,9 @@ class CombineTest : BaseTest() {
       listOf(
         "1-a-true-a-1-a-true-a-1",
         "2-b-false-b-2-b-false-b-2",
-        "3-c-true-c-3-c-true-c-3"
+        "3-c-true-c-3-c-true-c-3",
       ),
-      list
+      list,
     )
   }
 
@@ -145,7 +145,7 @@ class CombineTest : BaseTest() {
       flow3(),
       flow4(),
       flow1(),
-      flow2()
+      flow2(),
     ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10 ->
       listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10).joinToString(separator = "-")
     }.toList()
@@ -154,9 +154,9 @@ class CombineTest : BaseTest() {
       listOf(
         "1-a-true-a-1-a-true-a-1-a",
         "2-b-false-b-2-b-false-b-2-b",
-        "3-c-true-c-3-c-true-c-3-c"
+        "3-c-true-c-3-c-true-c-3-c",
       ),
-      list
+      list,
     )
   }
 
@@ -173,7 +173,7 @@ class CombineTest : BaseTest() {
       flow4(),
       flow1(),
       flow2(),
-      flow3()
+      flow3(),
     ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11 ->
       listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11).joinToString(separator = "-")
     }.toList()
@@ -182,9 +182,9 @@ class CombineTest : BaseTest() {
       listOf(
         "1-a-true-a-1-a-true-a-1-a-true",
         "2-b-false-b-2-b-false-b-2-b-false",
-        "3-c-true-c-3-c-true-c-3-c-true"
+        "3-c-true-c-3-c-true-c-3-c-true",
       ),
-      list
+      list,
     )
   }
 
@@ -202,7 +202,7 @@ class CombineTest : BaseTest() {
       flow1(),
       flow2(),
       flow3(),
-      flow4()
+      flow4(),
     ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12 ->
       listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12).joinToString(separator = "-")
     }.toList()
@@ -211,9 +211,9 @@ class CombineTest : BaseTest() {
       listOf(
         "1-a-true-a-1-a-true-a-1-a-true-a",
         "2-b-false-b-2-b-false-b-2-b-false-b",
-        "3-c-true-c-3-c-true-c-3-c-true-c"
+        "3-c-true-c-3-c-true-c-3-c-true-c",
       ),
-      list
+      list,
     )
   }
 }
