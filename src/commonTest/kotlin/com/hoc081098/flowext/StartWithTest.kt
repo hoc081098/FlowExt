@@ -69,8 +69,8 @@ class StartWithTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -84,8 +84,8 @@ class StartWithTest : BaseTest() {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -100,8 +100,8 @@ class StartWithTest : BaseTest() {
           Event.Value(3),
           Event.Value(4),
           Event.Value(5),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -117,8 +117,8 @@ class StartWithTest : BaseTest() {
           Event.Value(4),
           Event.Value(5),
           Event.Value(6),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -135,8 +135,8 @@ class StartWithTest : BaseTest() {
           Event.Value(5),
           Event.Value(6),
           Event.Value(7),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     flowOf(8)
@@ -151,8 +151,8 @@ class StartWithTest : BaseTest() {
           Event.Value(6),
           Event.Value(7),
           Event.Value(8),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -166,8 +166,8 @@ class StartWithTest : BaseTest() {
           3,
           4,
           5,
-          6
-        )
+          6,
+        ),
       )
       .test(
         listOf(
@@ -178,8 +178,8 @@ class StartWithTest : BaseTest() {
           Event.Value(5),
           Event.Value(6),
           Event.Value(7),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     flowOf(8)
@@ -194,8 +194,8 @@ class StartWithTest : BaseTest() {
           Event.Value(6),
           Event.Value(7),
           Event.Value(8),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -209,8 +209,8 @@ class StartWithTest : BaseTest() {
           3,
           4,
           5,
-          6
-        )
+          6,
+        ),
       )
       .test(
         listOf(
@@ -221,8 +221,8 @@ class StartWithTest : BaseTest() {
           Event.Value(5),
           Event.Value(6),
           Event.Value(7),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     flowOf(8)
@@ -237,8 +237,8 @@ class StartWithTest : BaseTest() {
           Event.Value(6),
           Event.Value(7),
           Event.Value(8),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -250,7 +250,7 @@ class StartWithTest : BaseTest() {
           repeat(6) {
             emit(it + 1)
           }
-        }
+        },
       )
       .test(
         listOf(
@@ -261,8 +261,8 @@ class StartWithTest : BaseTest() {
           Event.Value(5),
           Event.Value(6),
           Event.Value(7),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     flowOf(8)
@@ -277,8 +277,8 @@ class StartWithTest : BaseTest() {
           Event.Value(6),
           Event.Value(7),
           Event.Value(8),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

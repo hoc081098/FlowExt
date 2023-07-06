@@ -2,11 +2,22 @@
   "extends": [
     "config:base"
   ],
+  "commitBodyTable": true,
   "semanticCommits": "enabled",
-  "labels": [
-    "dependencies"
-  ],
-  "assignees": [
-    "hoc081098"
+  "labels": ["dependencies"],
+  "assignees": ["hoc081098"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "groupName": "all dependencies",
+      "groupSlug": "all-deps"
+    }
   ]
 }

@@ -62,8 +62,8 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(4),
           Event.Value(7),
           Event.Value(10),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -93,8 +93,8 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(1),
           Event.Value(3),
           Event.Value(7),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -136,8 +136,8 @@ class ThrottleFirstTest : BaseTest() {
           Event.Value(4),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -148,8 +148,8 @@ class ThrottleFirstTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -253,7 +253,7 @@ class ThrottleFirstTest : BaseTest() {
         assertEquals(3, b.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(c.errorOrThrow()).message
+          assertIs<TestException>(c.errorOrThrow()).message,
         )
       }
 
@@ -281,7 +281,7 @@ class ThrottleFirstTest : BaseTest() {
         assertEquals(3, b.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(c.errorOrThrow()).message
+          assertIs<TestException>(c.errorOrThrow()).message,
         )
       }
   }
@@ -347,8 +347,8 @@ class ThrottleLastTest : BaseTest() {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -373,8 +373,8 @@ class ThrottleLastTest : BaseTest() {
         listOf(
           Event.Value(2),
           Event.Value(4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -400,8 +400,8 @@ class ThrottleLastTest : BaseTest() {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -443,8 +443,8 @@ class ThrottleLastTest : BaseTest() {
           Event.Value(6),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -455,8 +455,8 @@ class ThrottleLastTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -555,7 +555,7 @@ class ThrottleLastTest : BaseTest() {
         assertEquals(2, a.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(b.errorOrThrow()).message
+          assertIs<TestException>(b.errorOrThrow()).message,
         )
       }
 
@@ -585,7 +585,7 @@ class ThrottleLastTest : BaseTest() {
         assertEquals(2, a.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(b.errorOrThrow()).message
+          assertIs<TestException>(b.errorOrThrow()).message,
         )
       }
   }

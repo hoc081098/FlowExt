@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.flow
  */
 public fun interval(
   initialDelay: Duration,
-  period: Duration
+  period: Duration,
 ): Flow<Long> {
   require(initialDelay >= Duration.ZERO) { "Expected non-negative delay, but has $initialDelay ms" }
   require(period >= Duration.ZERO) { "Expected non-negative period, but has $period ms" }
@@ -63,7 +63,7 @@ public fun interval(
  */
 public fun interval(
   initialDelayMillis: Long,
-  periodMillis: Long
+  periodMillis: Long,
 ): Flow<Long> {
   require(initialDelayMillis >= 0) { "Expected non-negative delay, but has $initialDelayMillis ms" }
   require(periodMillis >= 0) { "Expected non-negative periodMillis, but has $periodMillis ms" }

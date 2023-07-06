@@ -52,7 +52,7 @@ private data class State(
   val error: Throwable?,
   val isRefreshing: Boolean,
   val subtitle: String,
-  val unreadCount: Int
+  val unreadCount: Int,
 ) {
   companion object {
     val INITIAL = State(
@@ -63,14 +63,14 @@ private data class State(
       error = null,
       isRefreshing = false,
       subtitle = "Loading...",
-      unreadCount = 0
+      unreadCount = 0,
     )
   }
 }
 
 private fun <T, R> Flow<T>.scanSkipFirst(
   initial: R,
-  operation: suspend (acc: R, value: T) -> R
+  operation: suspend (acc: R, value: T) -> R,
 ): Flow<R> = scan(initial, operation).drop(1)
 
 @SharedImmutable
@@ -151,15 +151,15 @@ class Select2Test : BaseTest() {
         projector = { searchTerm, items ->
           ++projectorCount
           items.filter { it.contains(searchTerm ?: "") }
-        }
+        },
       )
 
     flow.test(
       listOf(
         Event.Value(zeroToTen), // 0 - items
         Event.Value(listOf("4")), // 3 - searchTerm
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
     assertEquals(6, searchTermCount) // 0..5
     assertEquals(6, itemsCount) // 0..5
@@ -198,7 +198,7 @@ class Select3Test : BaseTest() {
           items
             .filter { it.contains(searchTerm ?: "") }
             .map { "$it # $title" }
-        }
+        },
       )
 
     flow.test(
@@ -206,8 +206,8 @@ class Select3Test : BaseTest() {
         Event.Value(zeroToTen.map { "$it # Loading..." }), // 0 - items
         Event.Value(listOf("4 # Loading...")), // 3 - searchTerm
         Event.Value(listOf("4 # Title")), // 6 - title
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
     assertEquals(8, searchTermCount) // 0..7
     assertEquals(8, itemsCount) // 0..7
@@ -252,7 +252,7 @@ class Select4Test : BaseTest() {
           items
             .filter { it.contains(searchTerm ?: "") }
             .map { "$it # $title ~ $subtitle" }
-        }
+        },
       )
 
     flow.test(
@@ -261,8 +261,8 @@ class Select4Test : BaseTest() {
         Event.Value(listOf("4 # Loading... ~ Loading...")), // 3 - searchTerm
         Event.Value(listOf("4 # Title ~ Loading...")), // 6 - title
         Event.Value(listOf("4 # Title ~ Subtitle")), // 9 - subtitle
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
     assertEquals(11, searchTermCount) // 0..10
     assertEquals(11, itemsCount) // 0..10
@@ -313,7 +313,7 @@ class Select5Test : BaseTest() {
           items
             .filter { it.contains(searchTerm ?: "") }
             .map { "$it # $title ~ $subtitle $ $unreadCount" }
-        }
+        },
       )
 
     flow.test(
@@ -325,8 +325,8 @@ class Select5Test : BaseTest() {
         Event.Value(listOf("4 # Title ~ Subtitle $ 1")), // 11 - unreadCount
         Event.Value(listOf("4 # Title ~ Subtitle 2 $ 1")), // 13 - subtitle
         Event.Value(listOf("4 # Title ~ Subtitle 2 $ 2")), // 15 - unreadCount
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
     assertEquals(16, searchTermCount) // 0..15
     assertEquals(16, itemsCount) // 0..15

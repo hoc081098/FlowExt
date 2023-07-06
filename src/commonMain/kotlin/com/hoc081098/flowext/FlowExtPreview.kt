@@ -43,12 +43,12 @@ import kotlinx.coroutines.flow.Flow
   level = RequiresOptIn.Level.WARNING,
   message = "This declaration is in a preview state and can be changed in a backwards-incompatible manner with a best-effort migration. " +
     "Its usage should be marked with '@com.hoc081098.flowext.FlowExtPreview' or '@OptIn(com.hoc081098.flowext.FlowExtPreview::class)' " +
-    "if you accept the drawback of relying on preview API"
+    "if you accept the drawback of relying on preview API",
 )
 @Target(
   AnnotationTarget.CLASS,
   AnnotationTarget.FUNCTION,
   AnnotationTarget.TYPEALIAS,
-  AnnotationTarget.PROPERTY
+  AnnotationTarget.PROPERTY,
 )
 public annotation class FlowExtPreview

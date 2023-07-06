@@ -48,23 +48,24 @@ class PairwiseTest : BaseStepTest() {
           Event.Value(0 to 1),
           Event.Value(1 to 2),
           Event.Value(2 to 3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     range(0, 4)
       .bufferCount(bufferSize = 2, startBufferEvery = 1)
       .mapNotNull {
-        if (it.size < 2) null
-        else it[0] to it[1]
+        if (it.size < 2) {
+          null
+        } else it[0] to it[1]
       }
       .test(
         listOf(
           Event.Value(0 to 1),
           Event.Value(1 to 2),
           Event.Value(2 to 3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -80,8 +81,8 @@ class PairwiseTest : BaseStepTest() {
           Event.Value(0 to null),
           Event.Value(null to 2),
           Event.Value(2 to null),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -91,8 +92,8 @@ class PairwiseTest : BaseStepTest() {
       .pairwise()
       .test(
         listOf(
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -102,8 +103,8 @@ class PairwiseTest : BaseStepTest() {
       .pairwise()
       .test(
         listOf(
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -111,7 +112,7 @@ class PairwiseTest : BaseStepTest() {
   fun testPairwiseFailureUpstream() = runTest {
     assertFailsWith<TestException>(
       flow<Int> { throw TestException() }
-        .pairwise()
+        .pairwise(),
     )
   }
 
@@ -124,8 +125,8 @@ class PairwiseTest : BaseStepTest() {
         listOf(
           Event.Value(1 to 2),
           Event.Value(2 to 3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

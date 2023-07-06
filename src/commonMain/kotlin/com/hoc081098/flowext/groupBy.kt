@@ -79,12 +79,12 @@ public interface GroupedFlow<K, T> : Flow<T> {
 public fun <T, K, V> Flow<T>.groupBy(
   bufferSize: Int = Channel.BUFFERED,
   keySelector: suspend (T) -> K,
-  valueSelector: suspend (T) -> V
+  valueSelector: suspend (T) -> V,
 ): Flow<GroupedFlow<K, V>> = groupByInternal(
   source = this,
   keySelector = keySelector,
   valueSelector = valueSelector,
-  bufferSize = bufferSize
+  bufferSize = bufferSize,
 )
 
 /**
@@ -110,19 +110,19 @@ public fun <T, K, V> Flow<T>.groupBy(
 @ExperimentalCoroutinesApi
 public fun <T, K> Flow<T>.groupBy(
   bufferSize: Int = Channel.BUFFERED,
-  keySelector: suspend (T) -> K
+  keySelector: suspend (T) -> K,
 ): Flow<GroupedFlow<K, T>> = groupByInternal(
   source = this,
   keySelector = keySelector,
   valueSelector = identitySuspendFunction as (suspend (T) -> T),
-  bufferSize = bufferSize
+  bufferSize = bufferSize,
 )
 
 @ExperimentalCoroutinesApi
 private class GroupedFlowImpl<K, V>(
   override val key: K,
   private val channel: Channel<V>,
-  private val onCancelHandler: (self: GroupedFlowImpl<K, V>) -> Unit
+  private val onCancelHandler: (self: GroupedFlowImpl<K, V>) -> Unit,
 ) : GroupedFlow<K, V>, Flow<V> {
   private val consumed = AtomicBoolean()
 
@@ -174,7 +174,7 @@ private inline fun ReceiveChannel<*>.cancelConsumed(cause: Throwable?) {
     cause?.let {
       it as? CancellationException
         ?: CancellationException("Channel was consumed, consumer had failed", it)
-    }
+    },
   )
 }
 
@@ -183,7 +183,7 @@ private inline fun ReceiveChannel<*>.cancelConsumed(cause: Throwable?) {
 private suspend inline fun <K, T, V> emitToGroup(
   crossinline valueSelector: suspend (T) -> V,
   value: T,
-  group: GroupedFlowImpl<K, V>
+  group: GroupedFlowImpl<K, V>,
 ) = group.send(valueSelector(value))
 
 @FlowExtPreview
@@ -192,7 +192,7 @@ private fun <T, K, V> groupByInternal(
   source: Flow<T>,
   keySelector: suspend (T) -> K,
   valueSelector: suspend (T) -> V,
-  bufferSize: Int
+  bufferSize: Int,
 ): Flow<GroupedFlow<K, V>> = flow {
   val collector = this
 
@@ -282,7 +282,7 @@ private fun <T, K, V> groupByInternal(
                 //
                 // use trySend is safe because the channel is unbounded,
                 // and the send is only failed if the channel is closed.
-                onCancelHandler = cancelledGroupChannel::trySend
+                onCancelHandler = cancelledGroupChannel::trySend,
               )
               groups[key] = group
 
