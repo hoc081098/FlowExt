@@ -41,12 +41,13 @@ import kotlinx.coroutines.flow.flow
  * Note: If the source [Flow] is completed synchronously immediately (e.g. [emptyFlow]),
  * this will cause an infinite loop.
  */
+@FlowExtPreview
 public fun <T> Flow<T>.repeat(): Flow<T> =
   repeatInternal(
     flow = this,
     count = 0,
     infinite = true,
-    delay = noDelay()
+    delay = noDelay(),
   )
 
 /**
@@ -57,12 +58,13 @@ public fun <T> Flow<T>.repeat(): Flow<T> =
  * and [delay] returns [Duration.ZERO] or a negative value,
  * this will cause an infinite loop.
  */
+@FlowExtPreview
 public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> =
   repeatInternal(
     flow = this,
     count = 0,
     infinite = true,
-    delay = delaySelector(delay)
+    delay = delaySelector(delay),
   )
 
 /**
@@ -72,12 +74,13 @@ public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> 
  * Note: If the source [Flow] is completed synchronously immediately (e.g. [emptyFlow]),
  * and [delay] is [Duration.ZERO], this will cause an infinite loop.
  */
+@FlowExtPreview
 public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
   repeatInternal(
     flow = this,
     count = 0,
     infinite = true,
-    delay = fixedDelay(delay)
+    delay = fixedDelay(delay),
   )
 
 // --------------------------------------------------- REPEAT COUNT ---------------------------------------------------
@@ -86,12 +89,13 @@ public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
  * Returns a [Flow] that repeats all values emitted by the original [Flow] at most [count] times.
  * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
+@FlowExtPreview
 public fun <T> Flow<T>.repeat(count: Int): Flow<T> =
   repeatInternal(
     flow = this,
     count = count,
     infinite = false,
-    delay = noDelay()
+    delay = noDelay(),
   )
 
 /**
@@ -100,15 +104,16 @@ public fun <T> Flow<T>.repeat(count: Int): Flow<T> =
  *
  * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
+@FlowExtPreview
 public fun <T> Flow<T>.repeat(
   count: Int,
-  delay: suspend (count: Int) -> Duration
+  delay: suspend (count: Int) -> Duration,
 ): Flow<T> =
   repeatInternal(
     flow = this,
     count = count,
     infinite = false,
-    delay = delaySelector(delay)
+    delay = delaySelector(delay),
   )
 
 /**
@@ -117,15 +122,16 @@ public fun <T> Flow<T>.repeat(
  *
  * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
+@FlowExtPreview
 public fun <T> Flow<T>.repeat(
   count: Int,
-  delay: Duration
+  delay: Duration,
 ): Flow<T> =
   repeatInternal(
     flow = this,
     count = count,
     infinite = false,
-    delay = fixedDelay(delay)
+    delay = fixedDelay(delay),
   )
 
 // ---------------------------------------------------- INTERNAL ----------------------------------------------------
@@ -134,8 +140,11 @@ private typealias DelayDurationSelector = suspend (count: Int) -> Duration
 
 private inline fun noDelay(): DelayDurationSelector? = null
 private inline fun fixedDelay(delay: Duration): DelayDurationSelector? =
-  if (delay.isZeroOrNegative()) noDelay()
-  else FixedDelayDurationSelector(delay)
+  if (delay.isZeroOrNegative()) {
+    noDelay()
+  } else {
+    FixedDelayDurationSelector(delay)
+  }
 
 private inline fun delaySelector(noinline delay: DelayDurationSelector): DelayDurationSelector =
   delay
@@ -150,27 +159,29 @@ private class FixedDelayDurationSelector(val duration: Duration) : DelayDuration
   override suspend fun invoke(count: Int): Duration = duration
 }
 
+@FlowExtPreview
 private fun <T> repeatInternal(
   flow: Flow<T>,
   count: Int,
   infinite: Boolean,
-  delay: DelayDurationSelector?
+  delay: DelayDurationSelector?,
 ): Flow<T> = when {
   infinite -> repeatIndefinitely(
     flow = flow,
-    delay = delay
+    delay = delay,
   )
   count <= 0 -> emptyFlow()
   else -> repeatAtMostCount(
     flow = flow,
     count = count,
-    delay = delay
+    delay = delay,
   )
 }
 
+@FlowExtPreview
 private fun <T> repeatIndefinitely(
   flow: Flow<T>,
-  delay: DelayDurationSelector?
+  delay: DelayDurationSelector?,
 ): Flow<T> = when (delay) {
   null -> flow {
     while (true) {
@@ -193,10 +204,11 @@ private fun <T> repeatIndefinitely(
   }
 }
 
+@FlowExtPreview
 private fun <T> repeatAtMostCount(
   flow: Flow<T>,
   count: Int,
-  delay: DelayDurationSelector?
+  delay: DelayDurationSelector?,
 ): Flow<T> = when (delay) {
   null -> flow {
     repeat(count) {

@@ -95,7 +95,7 @@ class RepeatForeverTest : BaseTest() {
           .take(100)
           .map { Event.Value(it) }
           .toList() +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -125,7 +125,7 @@ class RepeatForeverTest : BaseTest() {
           .take(100)
           .map { Event.Value(it) }
           .toList() +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -155,7 +155,7 @@ class RepeatForeverTest : BaseTest() {
           .take(100)
           .map { Event.Value(it) }
           .toList() +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -171,10 +171,10 @@ class RepeatForeverTest : BaseTest() {
       .test(null) { (a, b) ->
         assertEquals(
           expected = Event.Value(1),
-          actual = a
+          actual = a,
         )
         assertIs<RuntimeException>(
-          assertIs<Event.Error>(b).error
+          assertIs<Event.Error>(b).error,
         )
       }
   }
@@ -211,7 +211,7 @@ class RepeatAtMostTest : BaseTest() {
           .take(300)
           .map { Event.Value(it) }
           .toList() +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -240,7 +240,7 @@ class RepeatAtMostTest : BaseTest() {
           .take(300)
           .map { Event.Value(it) }
           .toList() +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -269,7 +269,7 @@ class RepeatAtMostTest : BaseTest() {
           .take(300)
           .map { Event.Value(it) }
           .toList() +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -285,10 +285,10 @@ class RepeatAtMostTest : BaseTest() {
       .test(null) { (a, b) ->
         assertEquals(
           expected = Event.Value(1),
-          actual = a
+          actual = a,
         )
         assertIs<RuntimeException>(
-          assertIs<Event.Error>(b).error
+          assertIs<Event.Error>(b).error,
         )
       }
   }
