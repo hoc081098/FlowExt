@@ -69,8 +69,8 @@ class TakeUntilJvmTest {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -81,7 +81,7 @@ class TakeUntilJvmTest {
       .takeUntil(timer(Unit, 10.seconds))
       .test(
         (0 until 10).map { Event.Value(it) } +
-          Event.Complete
+          Event.Complete,
       )
   }
 
@@ -113,8 +113,8 @@ class TakeUntilJvmTest {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 }

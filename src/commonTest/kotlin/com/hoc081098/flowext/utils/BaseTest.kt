@@ -48,13 +48,13 @@ abstract class BaseTest {
   protected fun runTest(
     testDispatcher: TestDispatcher? = null,
     timeout: Duration = DEFAULT_TIMEOUT,
-    testBody: suspend TestScope.() -> Unit
+    testBody: suspend TestScope.() -> Unit,
   ): TestResult {
     return kotlinx.coroutines.test.runTest(
       context = testDispatcher
         ?: UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatcher"),
       timeout = timeout,
-      testBody = testBody
+      testBody = testBody,
     )
   }
 }

@@ -58,8 +58,8 @@ class SkipUntilJvmTest : BaseStepTest() {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -80,8 +80,8 @@ class SkipUntilJvmTest : BaseStepTest() {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -116,7 +116,7 @@ class SkipUntilJvmTest : BaseStepTest() {
         .onEach {
           assertEquals(2, it)
           expect(6)
-        }
+        },
     )
     finish(8)
   }
@@ -137,8 +137,8 @@ class SkipUntilJvmTest : BaseStepTest() {
         listOf(
           Event.Value(1),
           Event.Value(2),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -153,7 +153,7 @@ class SkipUntilJvmTest : BaseStepTest() {
     }.skipUntil(
       timer(Unit, 100).onEach {
         throw TestException()
-      }
+      },
     )
       .let {
         it.test(null) { events ->

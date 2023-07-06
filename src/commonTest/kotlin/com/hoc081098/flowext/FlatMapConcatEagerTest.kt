@@ -151,8 +151,11 @@ class FlatMapConcatEagerTest : BaseStepTest() {
         emit(it)
       }
     }.flatMapConcatEager { value ->
-      if (value == 99) flowOf(42)
-      else flowOf()
+      if (value == 99) {
+        flowOf(42)
+      } else {
+        flowOf()
+      }
     }
 
     val value = flow.single()
@@ -290,11 +293,15 @@ class FlatMapConcatEagerTest : BaseStepTest() {
       emit(2)
       expect(4)
     }.flatMapConcatEager {
-      if (it == 1) flow {
-        hang { expect(6) }
-      } else flow<Int> {
-        expect(5)
-        throw TestException()
+      if (it == 1) {
+        flow {
+          hang { expect(6) }
+        }
+      } else {
+        flow<Int> {
+          expect(5)
+          throw TestException()
+        }
       }
     }
 
@@ -312,12 +319,14 @@ class FlatMapConcatEagerTest : BaseStepTest() {
       expect(3)
       emit(2)
     }.flatMapConcatEager {
-      if (it == 1) flow<Int> {
-        expect(5)
-        latch.send(Unit)
-        hang {
-          expect(7)
-          throw TestException()
+      if (it == 1) {
+        flow<Int> {
+          expect(5)
+          latch.send(Unit)
+          hang {
+            expect(7)
+            throw TestException()
+          }
         }
       } else {
         expect(4)
@@ -342,10 +351,12 @@ class FlatMapConcatEagerTest : BaseStepTest() {
       emit(2)
       expectUnreached()
     }.flatMapConcatEager {
-      if (it == 1) flow {
-        expect(5)
-        latch.send(Unit)
-        hang { expect(7) }
+      if (it == 1) {
+        flow {
+          expect(5)
+          latch.send(Unit)
+          hang { expect(7) }
+        }
       } else {
         expect(4)
         latch.receive()

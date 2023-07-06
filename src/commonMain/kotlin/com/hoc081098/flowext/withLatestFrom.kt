@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
  */
 public fun <A, B, R> Flow<A>.withLatestFrom(
   other: Flow<B>,
-  transform: suspend (A, B) -> R
+  transform: suspend (A, B) -> R,
 ): Flow<R> {
   return flow {
     val otherRef = AtomicRef<Any?>(null)
@@ -56,8 +56,8 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
           emit(
             transform(
               value,
-              NULL_VALUE.unbox(otherRef.value ?: return@collect)
-            )
+              NULL_VALUE.unbox(otherRef.value ?: return@collect),
+            ),
           )
         }
       }

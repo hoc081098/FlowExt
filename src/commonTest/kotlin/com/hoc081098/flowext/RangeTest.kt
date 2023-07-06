@@ -48,8 +48,8 @@ class RangeTest : BaseTest() {
         Event.Value(2),
         Event.Value(3),
         Event.Value(4),
-        Event.Complete
-      )
+        Event.Complete,
+      ),
     )
   }
 }

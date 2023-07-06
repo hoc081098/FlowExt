@@ -87,7 +87,7 @@ public fun interface DelayStrategy {
   public class ExponentialBackoffDelayStrategy(
     private val initialDelay: Duration,
     private val factor: Double,
-    private val maxDelay: Duration
+    private val maxDelay: Duration,
   ) : DelayStrategy {
     override fun nextDelay(cause: Throwable, attempt: Long): Duration =
       (if (attempt <= 0L) initialDelay else initialDelay * factor.pow(attempt.toDouble()))
@@ -108,7 +108,7 @@ public fun interface DelayStrategy {
  */
 public fun <T> Flow<T>.retryWhenWithDelayStrategy(
   strategy: DelayStrategy,
-  predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean
+  predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean,
 ): Flow<T> = retryWhen { cause, attempt ->
   predicate(cause, attempt).also {
     if (it) {
@@ -128,14 +128,14 @@ public fun <T> Flow<T>.retryWhenWithExponentialBackoff(
   initialDelay: Duration,
   factor: Double,
   maxDelay: Duration = Duration.INFINITE,
-  predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean
+  predicate: suspend FlowCollector<T>.(cause: Throwable, attempt: Long) -> Boolean,
 ): Flow<T> = retryWhenWithDelayStrategy(
   strategy = DelayStrategy.ExponentialBackoffDelayStrategy(
     initialDelay = initialDelay,
     factor = factor,
-    maxDelay = maxDelay
+    maxDelay = maxDelay,
   ),
-  predicate = predicate
+  predicate = predicate,
 )
 
 /**
@@ -150,13 +150,13 @@ public fun <T> Flow<T>.retryWithExponentialBackoff(
   factor: Double,
   maxAttempt: Long = Long.MAX_VALUE,
   maxDelay: Duration = Duration.INFINITE,
-  predicate: suspend (cause: Throwable) -> Boolean = { true }
+  predicate: suspend (cause: Throwable) -> Boolean = { true },
 ): Flow<T> {
   require(maxAttempt > 0) { "Expected positive amount of maxAttempt, but had $maxAttempt" }
 
   return retryWhenWithExponentialBackoff(
     initialDelay = initialDelay,
     factor = factor,
-    maxDelay = maxDelay
+    maxDelay = maxDelay,
   ) { cause, attempt -> attempt < maxAttempt && predicate(cause) }
 }

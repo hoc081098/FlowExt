@@ -123,7 +123,7 @@ private inline val ThrottleConfiguration.isTrailing: Boolean
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   duration: Duration,
-  throttleConfiguration: ThrottleConfiguration = LEADING
+  throttleConfiguration: ThrottleConfiguration = LEADING,
 ): Flow<T> = throttleTime(throttleConfiguration) { duration }
 
 /**
@@ -178,7 +178,7 @@ public fun <T> Flow<T>.throttleTime(
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   timeMillis: Long,
-  throttleConfiguration: ThrottleConfiguration = LEADING
+  throttleConfiguration: ThrottleConfiguration = LEADING,
 ): Flow<T> = throttleTime(throttleConfiguration) { timeMillis.milliseconds }
 
 /**
@@ -233,7 +233,7 @@ public fun <T> Flow<T>.throttleTime(
 @ExperimentalCoroutinesApi
 public fun <T> Flow<T>.throttleTime(
   throttleConfiguration: ThrottleConfiguration = LEADING,
-  durationSelector: (value: T) -> Duration
+  durationSelector: (value: T) -> Duration,
 ): Flow<T> = flow {
   val leading = throttleConfiguration.isLeading
   val trailing = throttleConfiguration.isTrailing

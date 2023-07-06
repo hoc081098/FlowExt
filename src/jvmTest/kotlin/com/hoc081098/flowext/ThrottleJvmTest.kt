@@ -65,8 +65,8 @@ class ThrottleFirstJvmTest {
           Event.Value(4),
           Event.Value(7),
           Event.Value(10),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -96,8 +96,8 @@ class ThrottleFirstJvmTest {
           Event.Value(1),
           Event.Value(3),
           Event.Value(7),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -139,8 +139,8 @@ class ThrottleFirstJvmTest {
           Event.Value(4),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -151,8 +151,8 @@ class ThrottleFirstJvmTest {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -257,7 +257,7 @@ class ThrottleFirstJvmTest {
         assertEquals(3, b.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(c.errorOrThrow()).message
+          assertIs<TestException>(c.errorOrThrow()).message,
         )
       }
 
@@ -285,7 +285,7 @@ class ThrottleFirstJvmTest {
         assertEquals(3, b.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(c.errorOrThrow()).message
+          assertIs<TestException>(c.errorOrThrow()).message,
         )
       }
   }
@@ -352,8 +352,8 @@ class ThrottleLastJvmTest {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -378,8 +378,8 @@ class ThrottleLastJvmTest {
         listOf(
           Event.Value(2),
           Event.Value(4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -405,8 +405,8 @@ class ThrottleLastJvmTest {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -448,8 +448,8 @@ class ThrottleLastJvmTest {
           Event.Value(6),
           Event.Value(null),
           Event.Value(10),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -460,8 +460,8 @@ class ThrottleLastJvmTest {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -561,7 +561,7 @@ class ThrottleLastJvmTest {
         assertEquals(2, a.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(b.errorOrThrow()).message
+          assertIs<TestException>(b.errorOrThrow()).message,
         )
       }
 
@@ -591,7 +591,7 @@ class ThrottleLastJvmTest {
         assertEquals(2, a.valueOrThrow())
         assertEquals(
           "1",
-          assertIs<TestException>(b.errorOrThrow()).message
+          assertIs<TestException>(b.errorOrThrow()).message,
         )
       }
   }

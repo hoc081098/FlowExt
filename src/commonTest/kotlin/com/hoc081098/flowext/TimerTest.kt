@@ -44,16 +44,16 @@ class TimerTest : BaseTest() {
       .test(
         listOf(
           Event.Value(1),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     timer(2, 1_000)
       .test(
         listOf(
           Event.Value(2),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 

@@ -55,8 +55,8 @@ class SkipUntilTest : BaseStepTest() {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
 
     flowOf(1, 2, 3)
@@ -66,8 +66,8 @@ class SkipUntilTest : BaseStepTest() {
         listOf(
           Event.Value(2),
           Event.Value(3),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -88,8 +88,8 @@ class SkipUntilTest : BaseStepTest() {
           Event.Value(2),
           Event.Value(3),
           Event.Value(4),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -124,7 +124,7 @@ class SkipUntilTest : BaseStepTest() {
         .onEach {
           assertEquals(2, it)
           expect(6)
-        }
+        },
     )
     finish(8)
   }
@@ -145,8 +145,8 @@ class SkipUntilTest : BaseStepTest() {
         listOf(
           Event.Value(1),
           Event.Value(2),
-          Event.Complete
-        )
+          Event.Complete,
+        ),
       )
   }
 
@@ -161,7 +161,7 @@ class SkipUntilTest : BaseStepTest() {
     }.skipUntil(
       timer(Unit, 100).onEach {
         throw TestException()
-      }
+      },
     )
       .let {
         it.test(null) { events ->

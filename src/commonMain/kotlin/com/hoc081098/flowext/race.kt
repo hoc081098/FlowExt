@@ -53,7 +53,7 @@ public fun <T> race(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow
       add(flow1)
       add(flow2)
       addAll(flows)
-    }
+    },
   )
 
 /**
@@ -68,7 +68,7 @@ public fun <T> Flow<T>.raceWith(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> =
     add(this@raceWith)
     add(flow)
     addAll(flows)
-  }
+  },
 )
 
 /**
@@ -140,7 +140,7 @@ public fun <T> amb(flow1: Flow<T>, flow2: Flow<T>, vararg flows: Flow<T>): Flow<
     add(flow1)
     add(flow2)
     addAll(flows)
-  }
+  },
 )
 
 /**
@@ -154,7 +154,7 @@ public fun <T> Flow<T>.ambWith(flow: Flow<T>, vararg flows: Flow<T>): Flow<T> = 
     add(this@ambWith)
     add(flow)
     addAll(flows)
-  }
+  },
 )
 
 /**

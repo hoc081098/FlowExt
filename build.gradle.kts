@@ -1,25 +1,25 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import com.vanniktech.maven.publish.MavenPublishBasePlugin
 import com.vanniktech.maven.publish.SonatypeHost
-import java.net.URL
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.8.21"
-  id("com.diffplug.spotless") version "6.18.0"
+  kotlin("multiplatform") version "1.8.22"
+  id("com.diffplug.spotless") version "6.19.0"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.25.2"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.1"
-  id("org.jetbrains.dokka") version "1.8.10"
-  id("org.jetbrains.kotlinx.kover") version "0.7.0"
+  id("com.vanniktech.maven.publish") version "0.25.3"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.2"
+  id("org.jetbrains.dokka") version "1.8.20"
+  id("org.jetbrains.kotlinx.kover") version "0.7.2"
 }
 
-val coroutinesVersion = "1.7.1"
-val ktlintVersion = "0.46.1"
+val coroutinesVersion = "1.7.2"
+val ktlintVersion = "0.49.1"
 
 repositories {
   mavenCentral()
@@ -164,19 +164,19 @@ kotlin {
       "watchosSimulatorArm64",
       "watchosX64",
       "watchosSimulatorArm64",
-      "watchosDeviceArm64"
+      "watchosDeviceArm64",
     )
 
     val linuxTargets = listOf(
       "linuxX64",
-      "linuxArm64"
+      "linuxArm64",
     )
 
     val androidNativeTargets = listOf(
       "androidNativeArm32",
       "androidNativeArm64",
       "androidNativeX86",
-      "androidNativeX64"
+      "androidNativeX64",
     )
 
     appleTargets.forEach {
@@ -232,32 +232,12 @@ kotlin {
 }
 
 spotless {
-  val EDITOR_CONFIG_KEYS: Set<String> = hashSetOf(
-    "ij_kotlin_imports_layout",
-    "indent_size",
-    "end_of_line",
-    "charset",
-    "continuation_indent_size",
-    "disabled_rules"
-  )
-
   kotlin {
     target("**/*.kt")
 
-    // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
-    val data = mapOf(
-      "indent_size" to "2",
-      "continuation_indent_size" to "4",
-      "ij_kotlin_imports_layout" to "*",
-      "end_of_line" to "lf",
-      "charset" to "utf-8",
-      "disabled_rules" to arrayOf("filename").joinToString(separator = ",")
-    )
-
     ktlint(ktlintVersion)
       .setUseExperimental(true)
-      .userData(data.filterKeys { it !in EDITOR_CONFIG_KEYS })
-      .editorConfigOverride(data.filterKeys { it in EDITOR_CONFIG_KEYS })
+      .setEditorConfigPath("$rootDir/.editorconfig")
 
     trimTrailingWhitespace()
     indentWithSpaces()
@@ -269,17 +249,9 @@ spotless {
   kotlinGradle {
     target("**/*.kts")
 
-    val data = mapOf(
-      "indent_size" to "2",
-      "continuation_indent_size" to "4",
-      "ij_kotlin_imports_layout" to "*",
-      "end_of_line" to "lf",
-      "charset" to "utf-8"
-    )
     ktlint(ktlintVersion)
       .setUseExperimental(true)
-      .userData(data.filterKeys { it !in EDITOR_CONFIG_KEYS })
-      .editorConfigOverride(data.filterKeys { it in EDITOR_CONFIG_KEYS })
+      .setEditorConfigPath("$rootDir/.editorconfig")
 
     trimTrailingWhitespace()
     indentWithSpaces()
@@ -307,7 +279,7 @@ tasks.withType<AbstractTestTask> {
       TestLogEvent.FAILED,
       TestLogEvent.SKIPPED,
       TestLogEvent.STANDARD_OUT,
-      TestLogEvent.STANDARD_ERROR
+      TestLogEvent.STANDARD_ERROR,
     )
     exceptionFormat = TestExceptionFormat.FULL
   }
