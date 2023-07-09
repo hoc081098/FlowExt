@@ -5,7 +5,7 @@
 ### Changed
 
 - Update dependencies
-  - `Kotlin` to `1.8.22`.
+  - `Kotlin` to `1.9.0`.
   - `KotlinX Coroutines` to `1.7.2`.
   - `Gradle` to `8.2`.
 
