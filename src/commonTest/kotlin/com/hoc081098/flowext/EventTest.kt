@@ -88,6 +88,22 @@ class EventTest {
   }
 
   @Test
+  fun completeEventEqualsAndHashCode() {
+    assertEquals(
+      Event.Complete,
+      Event.Complete,
+    )
+    assertSame(
+      Event.Complete,
+      Event.Complete,
+    )
+    assertEquals(
+      Event.Complete.hashCode(),
+      Event.Complete.hashCode(),
+    )
+  }
+
+  @Test
   fun eventMap() {
     assertEquals(
       Event.Value(2),
