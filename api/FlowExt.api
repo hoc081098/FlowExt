@@ -229,6 +229,7 @@ public final class com/hoc081098/flowext/ThrottleConfiguration : java/lang/Enum 
 	public static final field LEADING Lcom/hoc081098/flowext/ThrottleConfiguration;
 	public static final field LEADING_AND_TRAILING Lcom/hoc081098/flowext/ThrottleConfiguration;
 	public static final field TRAILING Lcom/hoc081098/flowext/ThrottleConfiguration;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/hoc081098/flowext/ThrottleConfiguration;
 	public static fun values ()[Lcom/hoc081098/flowext/ThrottleConfiguration;
 }
