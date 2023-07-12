@@ -24,7 +24,7 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlin.native.concurrent.AtomicReference
+import kotlin.concurrent.AtomicReference
 
 internal actual class AtomicRef<T> actual constructor(initialValue: T) {
   private val atomic = AtomicReference(initialValue)
