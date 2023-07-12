@@ -39,7 +39,7 @@ internal actual class AtomicBoolean actual constructor(value: Boolean) {
     }
 
   actual fun getAndSet(value: Boolean): Boolean =
-    atomic.getAndSet(value).asBoolean
+    atomic.getAndSet(value.asInt).asBoolean
 }
 
 private inline val Boolean.asInt: Int get() = if (this) 1 else 0
