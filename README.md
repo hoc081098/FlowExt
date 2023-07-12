@@ -149,6 +149,7 @@ dependencies {
   - [`raceWith`](#racewith--ambwith)
   - [`ambWith`](#racewith--ambwith)
   - [`pairwise`](#pairwise)
+  - [`repeat`](#repeat)
   - [`retryWhenWithDelayStrategy`](#retrywhenwithdelaystrategy)
   - [`retryWhenWithExponentialBackoff`](#retrywhenwithexponentialbackoff)
   - [`retryWithExponentialBackoff`](#retrywithexponentialbackoff)
@@ -845,6 +846,51 @@ Output:
 pairwise: (0, 1)
 pairwise: (1, 2)
 pairwise: (2, 3)
+```
+
+----
+
+#### repeat
+
+- Similar to [RxJS repeat](https://rxjs.dev/api/index/function/repeat)
+
+Returns a `Flow` that will recollect to the source stream when the source stream completes.
+
+```kotlin
+flowFromSuspend {
+  println("Start collecting...")
+
+  Random
+    .nextInt(0..3)
+    .also { println("Emit: $it") }
+}
+  .repeat(
+    delay = 1.seconds,
+    count = 10
+  )
+  .filter { it == 2 }
+  .take(1)
+  .collect { println("repeat: $it") }
+```
+
+Output:
+
+```none
+Start collecting...
+Emit: 1
+Start collecting...
+Emit: 3
+Start collecting...
+Emit: 1
+Start collecting...
+Emit: 0
+Start collecting...
+Emit: 1
+Start collecting...
+Emit: 3
+Start collecting...
+Emit: 2
+repeat: 2
 ```
 
 ----
