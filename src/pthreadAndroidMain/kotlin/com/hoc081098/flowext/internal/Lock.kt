@@ -24,7 +24,7 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlin.native.internal.createCleaner
+import kotlin.native.ref.createCleaner
 import kotlinx.cinterop.Arena
 import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.alloc
@@ -40,6 +40,10 @@ import platform.posix.pthread_mutexattr_init
 import platform.posix.pthread_mutexattr_settype
 import platform.posix.pthread_mutexattr_tVar
 
+@OptIn(
+  kotlinx.cinterop.ExperimentalForeignApi::class,
+  kotlin.experimental.ExperimentalNativeApi::class,
+)
 internal actual class Lock actual constructor() {
   private val resources = Resources()
 

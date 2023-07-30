@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.8.22"
+  kotlin("multiplatform") version "1.9.0"
   id("com.diffplug.spotless") version "6.19.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.25.3"
@@ -49,12 +49,16 @@ kotlin {
     }
     browser {
       testTask {
-        useMocha()
+        useMocha {
+          timeout = "10s"
+        }
       }
     }
     nodejs {
       testTask {
-        useMocha()
+        useMocha {
+          timeout = "10s"
+        }
       }
     }
   }

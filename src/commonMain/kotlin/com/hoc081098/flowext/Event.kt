@@ -51,7 +51,7 @@ public sealed interface Event<out T> {
   /**
    * Complete event.
    */
-  public object Complete : Event<Nothing> {
+  public data object Complete : Event<Nothing> {
     override fun toString(): String = "Event.Complete"
   }
 }

@@ -81,6 +81,8 @@ public abstract interface class com/hoc081098/flowext/Event {
 
 public final class com/hoc081098/flowext/Event$Complete : com/hoc081098/flowext/Event {
 	public static final field INSTANCE Lcom/hoc081098/flowext/Event$Complete;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -191,6 +193,15 @@ public final class com/hoc081098/flowext/RangeKt {
 	public static final fun range (II)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/RepeatKt {
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;ILkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat-HG0u8IE (Lkotlinx/coroutines/flow/Flow;J)Lkotlinx/coroutines/flow/Flow;
+	public static final fun repeat-SxA4cEA (Lkotlinx/coroutines/flow/Flow;IJ)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/RetryWhenWithDelayStrategyKt {
 	public static final fun retryWhenWithDelayStrategy (Lkotlinx/coroutines/flow/Flow;Lcom/hoc081098/flowext/DelayStrategy;Lkotlin/jvm/functions/Function4;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun retryWhenWithExponentialBackoff-7Q0yyfQ (Lkotlinx/coroutines/flow/Flow;JDJLkotlin/jvm/functions/Function4;)Lkotlinx/coroutines/flow/Flow;
@@ -220,6 +231,7 @@ public final class com/hoc081098/flowext/ThrottleConfiguration : java/lang/Enum 
 	public static final field LEADING Lcom/hoc081098/flowext/ThrottleConfiguration;
 	public static final field LEADING_AND_TRAILING Lcom/hoc081098/flowext/ThrottleConfiguration;
 	public static final field TRAILING Lcom/hoc081098/flowext/ThrottleConfiguration;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/hoc081098/flowext/ThrottleConfiguration;
 	public static fun values ()[Lcom/hoc081098/flowext/ThrottleConfiguration;
 }
