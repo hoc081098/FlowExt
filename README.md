@@ -5,8 +5,8 @@
 [![Build](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml)
 [![Validate Gradle Wrapper](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Kotlin version](https://img.shields.io/badge/Kotlin-1.8.21-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
-[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.7.1-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.7.1)
+[![Kotlin version](https://img.shields.io/badge/Kotlin-1.9.0-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
+[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.7.3-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.7.1)
 ![badge][badge-jvm]
 ![badge][badge-android]
 ![badge][badge-ios]
@@ -69,13 +69,7 @@ allprojects {
 ### Multiplatform
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt:0.6.1")
-```
-
-### JVM / Android only
-
-```groovy
-implementation("io.github.hoc081098:FlowExt-jvm:0.6.1")
+implementation("io.github.hoc081098:FlowExt:0.7.0")
 ```
 
 ### Snapshot
@@ -93,7 +87,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.7.0-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.7.1-SNAPSHOT")
 }
 ```
 
@@ -108,7 +102,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.7.0-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.7.1-SNAPSHOT")
 }
 ```
 

@@ -166,7 +166,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.6.1...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.0...HEAD
+[0.7.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.0
 [0.6.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.6.1
 [0.6.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.6.0
 [0.5.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.5.0
