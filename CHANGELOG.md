@@ -1,12 +1,12 @@
 # Change Log
 
-## [Unreleased] - TODO
+## [0.7.0] - Jul 31, 2023
 
 ### Changed
 
 - Update dependencies
   - `Kotlin` to `1.9.0`.
-  - `KotlinX Coroutines` to `1.7.2`.
+  - `KotlinX Coroutines` to `1.7.3`.
   - `Gradle` to `8.2`.
 
 ### Added
