@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.7.0] - Jul 31, 2023
+## [0.7.0] ~ [0.7.1] - Jul 31, 2023
 
 ### Changed
 
@@ -166,7 +166,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.1...HEAD
+[0.7.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.1
 [0.7.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.0
 [0.6.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.6.1
 [0.6.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.6.0
