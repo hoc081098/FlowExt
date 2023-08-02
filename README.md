@@ -135,6 +135,7 @@ dependencies {
   - `flattenEager`
   - [`exhaustAll`](#flattenfirst--exhaustall)
   - [`groupBy`](#groupby)
+  - [`ignoreElements`](#ignoreelements)
   - [`mapIndexed`](#mapindexed)
   - [`mapTo`](#mapto)
   - [`mapToUnit`](#maptounit)
@@ -620,6 +621,27 @@ groupBy: (1, 7)
 groupBy: (0, 8)
 groupBy: (1, 9)
 groupBy: (0, 10)
+```
+
+----
+
+#### ignoreElements
+
+- Similar to [RxJS ignoreElements](https://rxjs.dev/api/index/function/ignoreElements)
+
+Ignores all elements emitted by the source `Flow`, only passes calls of `complete` or `error`.
+
+```kotlin
+flowOf("you", "talking", "to", "me")
+  .ignoreElements()
+  .materialize()
+  .collect { println("ignoreElements: $it") }
+```
+
+Output:
+
+```none
+ignoreElements: Event.Complete
 ```
 
 ----

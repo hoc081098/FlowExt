@@ -144,6 +144,10 @@ public abstract interface class com/hoc081098/flowext/GroupedFlow : kotlinx/coro
 	public abstract fun getKey ()Ljava/lang/Object;
 }
 
+public final class com/hoc081098/flowext/IgnoreElementsKt {
+	public static final fun ignoreElements (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/IntervalKt {
 	public static final fun interval (JJ)Lkotlinx/coroutines/flow/Flow;
 	public static final fun interval-QTBD994 (JJ)Lkotlinx/coroutines/flow/Flow;
