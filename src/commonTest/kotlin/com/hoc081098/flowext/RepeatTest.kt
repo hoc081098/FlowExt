@@ -49,247 +49,267 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 
-fun <T> Iterable<T>.cycled(): Sequence<T> = sequence {
-  while (true) {
-    yieldAll(this@cycled)
+fun <T> Iterable<T>.cycled(): Sequence<T> =
+  sequence {
+    while (true) {
+      yieldAll(this@cycled)
+    }
   }
-}
 
 @FlowExtPreview
 @ExperimentalCoroutinesApi
 class RepeatForeverTest : BaseTest() {
   @Test
-  fun testNeverFlow() = runTest(timeout = 3.seconds) {
-    val flow = flow<Int> { delay(1) }.repeat()
+  fun testNeverFlow() =
+    runTest(timeout = 3.seconds) {
+      val flow = flow<Int> { delay(1) }.repeat()
 
-    val buffer = mutableListOf<Int>()
-    val job = launch(start = CoroutineStart.UNDISPATCHED) {
-      flow.toList(buffer)
-    }
-    val intervalJob = interval(Duration.ZERO, 100.milliseconds)
-      .take(1_000)
-      .launchIn(this)
+      val buffer = mutableListOf<Int>()
+      val job =
+        launch(start = CoroutineStart.UNDISPATCHED) {
+          flow.toList(buffer)
+        }
+      val intervalJob =
+        interval(Duration.ZERO, 100.milliseconds)
+          .take(1_000)
+          .launchIn(this)
 
-    runCurrent()
-
-    repeat(1_000) {
-      advanceTimeBy(100)
       runCurrent()
+
+      repeat(1_000) {
+        advanceTimeBy(100)
+        runCurrent()
+        assertTrue(buffer.isEmpty())
+      }
+
+      intervalJob.cancelAndJoin()
+      job.cancelAndJoin()
+
       assertTrue(buffer.isEmpty())
     }
 
-    intervalJob.cancelAndJoin()
-    job.cancelAndJoin()
-
-    assertTrue(buffer.isEmpty())
-  }
-
   @Test
-  fun repeat() = runTest {
-    flowOf(1, 2, 3)
-      .repeat()
-      .take(100)
-      .test(
-        listOf(1, 2, 3)
-          .cycled()
-          .take(100)
-          .map { Event.Value(it) }
-          .toList() +
-          Event.Complete,
-      )
-  }
-
-  @Test
-  fun repeatWithFixedDelay() = runTest {
-    var job: Job? = null
-    val delay = 500.milliseconds
-
-    flow {
-      assertNull(job, "Job must be null")
-
-      emit(1)
-      emit(2)
-      emit(3)
-
-      assertNull(job, "Job must be null")
-      job = launch {
-        delay(delay * 0.99)
-        job = null
-      }
-    }
-      .repeat(delay)
-      .take(100)
-      .test(
-        listOf(1, 2, 3)
-          .cycled()
-          .take(100)
-          .map { Event.Value(it) }
-          .toList() +
-          Event.Complete,
-      )
-  }
-
-  @Test
-  fun repeatWithDelay() = runTest {
-    var job: Job? = null
-    var count = 1
-
-    flow {
-      assertNull(job, "Job must be null")
-
-      emit(1)
-      emit(2)
-      emit(3)
-
-      assertNull(job, "Job must be null")
-      job = launch {
-        delay((count++).milliseconds * 0.99)
-        job = null
-      }
-    }
-      .repeat { it.milliseconds }
-      .take(100)
-      .test(
-        listOf(1, 2, 3)
-          .cycled()
-          .take(100)
-          .map { Event.Value(it) }
-          .toList() +
-          Event.Complete,
-      )
-  }
-
-  @Test
-  fun repeatFailureFlow() = runTest {
-    val flow = flow {
-      emit(1)
-      throw RuntimeException("Error")
-    }
-
-    flow
-      .repeat()
-      .test(null) { (a, b) ->
-        assertEquals(
-          expected = Event.Value(1),
-          actual = a,
+  fun repeat() =
+    runTest {
+      flowOf(1, 2, 3)
+        .repeat()
+        .take(100)
+        .test(
+          listOf(1, 2, 3)
+            .cycled()
+            .take(100)
+            .map { Event.Value(it) }
+            .toList() +
+            Event.Complete,
         )
-        assertIs<RuntimeException>(
-          assertIs<Event.Error>(b).error,
-        )
+    }
+
+  @Test
+  fun repeatWithFixedDelay() =
+    runTest {
+      var job: Job? = null
+      val delay = 500.milliseconds
+
+      flow {
+        assertNull(job, "Job must be null")
+
+        emit(1)
+        emit(2)
+        emit(3)
+
+        assertNull(job, "Job must be null")
+        job =
+          launch {
+            delay(delay * 0.99)
+            job = null
+          }
       }
-  }
+        .repeat(delay)
+        .take(100)
+        .test(
+          listOf(1, 2, 3)
+            .cycled()
+            .take(100)
+            .map { Event.Value(it) }
+            .toList() +
+            Event.Complete,
+        )
+    }
+
+  @Test
+  fun repeatWithDelay() =
+    runTest {
+      var job: Job? = null
+      var count = 1
+
+      flow {
+        assertNull(job, "Job must be null")
+
+        emit(1)
+        emit(2)
+        emit(3)
+
+        assertNull(job, "Job must be null")
+        job =
+          launch {
+            delay((count++).milliseconds * 0.99)
+            job = null
+          }
+      }
+        .repeat { it.milliseconds }
+        .take(100)
+        .test(
+          listOf(1, 2, 3)
+            .cycled()
+            .take(100)
+            .map { Event.Value(it) }
+            .toList() +
+            Event.Complete,
+        )
+    }
+
+  @Test
+  fun repeatFailureFlow() =
+    runTest {
+      val flow =
+        flow {
+          emit(1)
+          throw RuntimeException("Error")
+        }
+
+      flow
+        .repeat()
+        .test(null) { (a, b) ->
+          assertEquals(
+            expected = Event.Value(1),
+            actual = a,
+          )
+          assertIs<RuntimeException>(
+            assertIs<Event.Error>(b).error,
+          )
+        }
+    }
 }
 
 @FlowExtPreview
 @ExperimentalCoroutinesApi
 class RepeatAtMostTest : BaseTest() {
   @Test
-  fun repeatWithZeroCount() = runTest {
-    assertTrue {
+  fun repeatWithZeroCount() =
+    runTest {
+      assertTrue {
+        flowOf(1, 2, 3)
+          .repeat(count = 0)
+          .count() == 0
+      }
+    }
+
+  @Test
+  fun repeatWithNegativeCount() =
+    runTest {
+      assertTrue {
+        flowOf(1, 2, 3)
+          .repeat(count = -1)
+          .count() == 0
+      }
+    }
+
+  @Test
+  fun repeat() =
+    runTest {
       flowOf(1, 2, 3)
-        .repeat(count = 0)
-        .count() == 0
-    }
-  }
-
-  @Test
-  fun repeatWithNegativeCount() = runTest {
-    assertTrue {
-      flowOf(1, 2, 3)
-        .repeat(count = -1)
-        .count() == 0
-    }
-  }
-
-  @Test
-  fun repeat() = runTest {
-    flowOf(1, 2, 3)
-      .repeat(count = 100)
-      .test(
-        listOf(1, 2, 3)
-          .cycled()
-          .take(300)
-          .map { Event.Value(it) }
-          .toList() +
-          Event.Complete,
-      )
-  }
-
-  @Test
-  fun repeatWithFixedDelay() = runTest {
-    var job: Job? = null
-    val delay = 500.milliseconds
-
-    flow {
-      assertNull(job, "Job must be null")
-
-      emit(1)
-      emit(2)
-      emit(3)
-
-      assertNull(job, "Job must be null")
-      job = launch {
-        delay(delay * 0.99)
-        job = null
-      }
-    }
-      .repeat(count = 100, delay = delay)
-      .test(
-        listOf(1, 2, 3)
-          .cycled()
-          .take(300)
-          .map { Event.Value(it) }
-          .toList() +
-          Event.Complete,
-      )
-  }
-
-  @Test
-  fun repeatWithDelay() = runTest {
-    var job: Job? = null
-    var count = 1
-
-    flow {
-      assertNull(job, "Job must be null")
-
-      emit(1)
-      emit(2)
-      emit(3)
-
-      assertNull(job, "Job must be null")
-      job = launch {
-        delay((count++).milliseconds * 0.99)
-        job = null
-      }
-    }
-      .repeat(count = 100) { it.milliseconds }
-      .test(
-        listOf(1, 2, 3)
-          .cycled()
-          .take(300)
-          .map { Event.Value(it) }
-          .toList() +
-          Event.Complete,
-      )
-  }
-
-  @Test
-  fun repeatFailureFlow() = runTest {
-    val flow = flow {
-      emit(1)
-      throw RuntimeException("Error")
-    }
-
-    flow
-      .repeat(count = 100)
-      .test(null) { (a, b) ->
-        assertEquals(
-          expected = Event.Value(1),
-          actual = a,
+        .repeat(count = 100)
+        .test(
+          listOf(1, 2, 3)
+            .cycled()
+            .take(300)
+            .map { Event.Value(it) }
+            .toList() +
+            Event.Complete,
         )
-        assertIs<RuntimeException>(
-          assertIs<Event.Error>(b).error,
-        )
+    }
+
+  @Test
+  fun repeatWithFixedDelay() =
+    runTest {
+      var job: Job? = null
+      val delay = 500.milliseconds
+
+      flow {
+        assertNull(job, "Job must be null")
+
+        emit(1)
+        emit(2)
+        emit(3)
+
+        assertNull(job, "Job must be null")
+        job =
+          launch {
+            delay(delay * 0.99)
+            job = null
+          }
       }
-  }
+        .repeat(count = 100, delay = delay)
+        .test(
+          listOf(1, 2, 3)
+            .cycled()
+            .take(300)
+            .map { Event.Value(it) }
+            .toList() +
+            Event.Complete,
+        )
+    }
+
+  @Test
+  fun repeatWithDelay() =
+    runTest {
+      var job: Job? = null
+      var count = 1
+
+      flow {
+        assertNull(job, "Job must be null")
+
+        emit(1)
+        emit(2)
+        emit(3)
+
+        assertNull(job, "Job must be null")
+        job =
+          launch {
+            delay((count++).milliseconds * 0.99)
+            job = null
+          }
+      }
+        .repeat(count = 100) { it.milliseconds }
+        .test(
+          listOf(1, 2, 3)
+            .cycled()
+            .take(300)
+            .map { Event.Value(it) }
+            .toList() +
+            Event.Complete,
+        )
+    }
+
+  @Test
+  fun repeatFailureFlow() =
+    runTest {
+      val flow =
+        flow {
+          emit(1)
+          throw RuntimeException("Error")
+        }
+
+      flow
+        .repeat(count = 100)
+        .test(null) { (a, b) ->
+          assertEquals(
+            expected = Event.Value(1),
+            actual = a,
+          )
+          assertIs<RuntimeException>(
+            assertIs<Event.Error>(b).error,
+          )
+        }
+    }
 }

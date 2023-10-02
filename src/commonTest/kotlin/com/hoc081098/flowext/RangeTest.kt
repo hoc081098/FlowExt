@@ -34,22 +34,24 @@ import kotlinx.coroutines.InternalCoroutinesApi
 @InternalCoroutinesApi
 class RangeTest : BaseTest() {
   @Test
-  fun empty() = runTest {
-    range(0, 0).test(listOf(Event.Complete))
-    range(0, -2).test(listOf(Event.Complete))
-  }
+  fun empty() =
+    runTest {
+      range(0, 0).test(listOf(Event.Complete))
+      range(0, -2).test(listOf(Event.Complete))
+    }
 
   @Test
-  fun emitsRangeOfIntegers() = runTest {
-    range(0, 5).test(
-      listOf(
-        Event.Value(0),
-        Event.Value(1),
-        Event.Value(2),
-        Event.Value(3),
-        Event.Value(4),
-        Event.Complete,
-      ),
-    )
-  }
+  fun emitsRangeOfIntegers() =
+    runTest {
+      range(0, 5).test(
+        listOf(
+          Event.Value(0),
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Value(4),
+          Event.Complete,
+        ),
+      )
+    }
 }

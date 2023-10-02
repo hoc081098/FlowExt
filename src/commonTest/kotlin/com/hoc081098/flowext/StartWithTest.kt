@@ -36,249 +36,260 @@ import kotlinx.coroutines.flow.flowOf
 @ExperimentalCoroutinesApi
 class StartWithTest : BaseTest() {
   @Test
-  fun startWithSingleValue() = runTest {
-    flowOf(2)
-      .startWith(1)
-      .test(listOf(Event.Value(1), Event.Value(2), Event.Complete))
-  }
-
-  @Test
-  fun startWithValueFactory() = runTest {
-    var i = 1
-    var called = false
-    val flow = flowOf(2).startWith {
-      called = true
-      i++
+  fun startWithSingleValue() =
+    runTest {
+      flowOf(2)
+        .startWith(1)
+        .test(listOf(Event.Value(1), Event.Value(2), Event.Complete))
     }
 
-    assertFalse(called)
+  @Test
+  fun startWithValueFactory() =
+    runTest {
+      var i = 1
+      var called = false
+      val flow =
+        flowOf(2).startWith {
+          called = true
+          i++
+        }
 
-    flow.test(listOf(Event.Value(1), Event.Value(2), Event.Complete))
-    flow.test(listOf(Event.Value(2), Event.Value(2), Event.Complete))
-    flow.test(listOf(Event.Value(3), Event.Value(2), Event.Complete))
+      assertFalse(called)
 
-    assertTrue(called)
-  }
+      flow.test(listOf(Event.Value(1), Event.Value(2), Event.Complete))
+      flow.test(listOf(Event.Value(2), Event.Value(2), Event.Complete))
+      flow.test(listOf(Event.Value(3), Event.Value(2), Event.Complete))
+
+      assertTrue(called)
+    }
 
   @Test
-  fun startWithTwoValues() = runTest {
-    flowOf(3)
-      .startWith(1, 2)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
-      )
-  }
+  fun startWithTwoValues() =
+    runTest {
+      flowOf(3)
+        .startWith(1, 2)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun startWithThreeValues() = runTest {
-    flowOf(4)
-      .startWith(1, 2, 3)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Complete,
-        ),
-      )
-  }
+  fun startWithThreeValues() =
+    runTest {
+      flowOf(4)
+        .startWith(1, 2, 3)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun startWithFourValues() = runTest {
-    flowOf(5)
-      .startWith(1, 2, 3, 4)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Complete,
-        ),
-      )
-  }
+  fun startWithFourValues() =
+    runTest {
+      flowOf(5)
+        .startWith(1, 2, 3, 4)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun startWithFiveValues() = runTest {
-    flowOf(6)
-      .startWith(1, 2, 3, 4, 5)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Complete,
-        ),
-      )
-  }
+  fun startWithFiveValues() =
+    runTest {
+      flowOf(6)
+        .startWith(1, 2, 3, 4, 5)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun startWithMoreFiveValues() = runTest {
-    flowOf(7)
-      .startWith(1, 2, 3, 4, 5, 6)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Complete,
-        ),
-      )
+  fun startWithMoreFiveValues() =
+    runTest {
+      flowOf(7)
+        .startWith(1, 2, 3, 4, 5, 6)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Complete,
+          ),
+        )
 
-    flowOf(8)
-      .startWith(1, 2, 3, 4, 5, 6, 7)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Value(8),
-          Event.Complete,
-        ),
-      )
-  }
-
-  @Test
-  fun startWithIterable() = runTest {
-    flowOf(7)
-      .startWith(
-        listOf(
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-        ),
-      )
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Complete,
-        ),
-      )
-
-    flowOf(8)
-      .startWith(1, 2, 3, 4, 5, 6, 7)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Value(8),
-          Event.Complete,
-        ),
-      )
-  }
+      flowOf(8)
+        .startWith(1, 2, 3, 4, 5, 6, 7)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Value(8),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun startWithSequence() = runTest {
-    flowOf(7)
-      .startWith(
-        sequenceOf(
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-        ),
-      )
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Complete,
-        ),
-      )
+  fun startWithIterable() =
+    runTest {
+      flowOf(7)
+        .startWith(
+          listOf(
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+          ),
+        )
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Complete,
+          ),
+        )
 
-    flowOf(8)
-      .startWith(1, 2, 3, 4, 5, 6, 7)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Value(8),
-          Event.Complete,
-        ),
-      )
-  }
+      flowOf(8)
+        .startWith(1, 2, 3, 4, 5, 6, 7)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Value(8),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun startWithFlow() = runTest {
-    flowOf(7)
-      .startWith(
-        flow {
-          repeat(6) {
-            emit(it + 1)
-          }
-        },
-      )
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Complete,
-        ),
-      )
+  fun startWithSequence() =
+    runTest {
+      flowOf(7)
+        .startWith(
+          sequenceOf(
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+          ),
+        )
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Complete,
+          ),
+        )
 
-    flowOf(8)
-      .startWith(1, 2, 3, 4, 5, 6, 7)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Value(5),
-          Event.Value(6),
-          Event.Value(7),
-          Event.Value(8),
-          Event.Complete,
-        ),
-      )
-  }
+      flowOf(8)
+        .startWith(1, 2, 3, 4, 5, 6, 7)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Value(8),
+            Event.Complete,
+          ),
+        )
+    }
+
+  @Test
+  fun startWithFlow() =
+    runTest {
+      flowOf(7)
+        .startWith(
+          flow {
+            repeat(6) {
+              emit(it + 1)
+            }
+          },
+        )
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Complete,
+          ),
+        )
+
+      flowOf(8)
+        .startWith(1, 2, 3, 4, 5, 6, 7)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Value(5),
+            Event.Value(6),
+            Event.Value(7),
+            Event.Value(8),
+            Event.Complete,
+          ),
+        )
+    }
 }

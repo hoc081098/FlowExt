@@ -52,25 +52,27 @@ class NeverFlowTest : BaseStepTest() {
   }
 
   @Test
-  fun testNeverFlow() = runTest(timeout = 2.seconds) {
-    val list = mutableListOf<Any?>()
-    val job = launch(start = UNDISPATCHED) { neverFlow().toList(list) }
-    val intervalJob = interval(ZERO, 100.milliseconds)
-      .take(1_000)
-      .launchIn(this)
+  fun testNeverFlow() =
+    runTest(timeout = 2.seconds) {
+      val list = mutableListOf<Any?>()
+      val job = launch(start = UNDISPATCHED) { neverFlow().toList(list) }
+      val intervalJob =
+        interval(ZERO, 100.milliseconds)
+          .take(1_000)
+          .launchIn(this)
 
-    runCurrent()
-
-    repeat(1_000) {
-      advanceTimeBy(100)
       runCurrent()
+
+      repeat(1_000) {
+        advanceTimeBy(100)
+        runCurrent()
+        assertTrue(list.isEmpty())
+      }
+
+      advanceUntilIdle()
+      intervalJob.cancelAndJoin()
+      job.cancelAndJoin()
+
       assertTrue(list.isEmpty())
     }
-
-    advanceUntilIdle()
-    intervalJob.cancelAndJoin()
-    job.cancelAndJoin()
-
-    assertTrue(list.isEmpty())
-  }
 }

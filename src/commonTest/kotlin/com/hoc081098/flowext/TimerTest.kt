@@ -39,63 +39,66 @@ import kotlinx.coroutines.test.runCurrent
 @ExperimentalCoroutinesApi
 class TimerTest : BaseTest() {
   @Test
-  fun timer() = runTest {
-    timer(1, 1.seconds)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Complete,
-        ),
-      )
+  fun timer() =
+    runTest {
+      timer(1, 1.seconds)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Complete,
+          ),
+        )
 
-    timer(2, 1_000)
-      .test(
-        listOf(
-          Event.Value(2),
-          Event.Complete,
-        ),
-      )
-  }
-
-  @Test
-  fun timerLong() = runTest {
-    val emitted = AtomicBoolean()
-
-    launch {
-      timer(1, 2_000).collect {
-        assertEquals(1, it)
-        emitted.compareAndSet(expect = false, update = true)
-      }
+      timer(2, 1_000)
+        .test(
+          listOf(
+            Event.Value(2),
+            Event.Complete,
+          ),
+        )
     }
 
-    runCurrent()
-    assertEquals(false, emitted.value)
-
-    advanceTimeBy(1_000)
-    assertEquals(false, emitted.value)
-
-    advanceTimeBy(1_001)
-    assertEquals(true, emitted.value)
-  }
-
   @Test
-  fun timerDuration() = runTest {
-    val emitted = AtomicBoolean()
+  fun timerLong() =
+    runTest {
+      val emitted = AtomicBoolean()
 
-    launch {
-      timer(2, 2.seconds).collect {
-        assertEquals(2, it)
-        emitted.compareAndSet(expect = false, update = true)
+      launch {
+        timer(1, 2_000).collect {
+          assertEquals(1, it)
+          emitted.compareAndSet(expect = false, update = true)
+        }
       }
+
+      runCurrent()
+      assertEquals(false, emitted.value)
+
+      advanceTimeBy(1_000)
+      assertEquals(false, emitted.value)
+
+      advanceTimeBy(1_001)
+      assertEquals(true, emitted.value)
     }
 
-    runCurrent()
-    assertEquals(false, emitted.value)
+  @Test
+  fun timerDuration() =
+    runTest {
+      val emitted = AtomicBoolean()
 
-    advanceTimeBy(1_000)
-    assertEquals(false, emitted.value)
+      launch {
+        timer(2, 2.seconds).collect {
+          assertEquals(2, it)
+          emitted.compareAndSet(expect = false, update = true)
+        }
+      }
 
-    advanceTimeBy(1_001)
-    assertEquals(true, emitted.value)
-  }
+      runCurrent()
+      assertEquals(false, emitted.value)
+
+      advanceTimeBy(1_000)
+      assertEquals(false, emitted.value)
+
+      advanceTimeBy(1_001)
+      assertEquals(true, emitted.value)
+    }
 }

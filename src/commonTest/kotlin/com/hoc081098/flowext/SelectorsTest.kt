@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+@file:Suppress("ktlint:standard:discouraged-comment-location")
+
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
@@ -55,16 +57,17 @@ private data class State(
   val unreadCount: Int,
 ) {
   companion object {
-    val INITIAL = State(
-      isLoading = true,
-      items = emptyList(),
-      searchTerm = null,
-      title = "Loading...",
-      error = null,
-      isRefreshing = false,
-      subtitle = "Loading...",
-      unreadCount = 0,
-    )
+    val INITIAL =
+      State(
+        isLoading = true,
+        items = emptyList(),
+        searchTerm = null,
+        title = "Loading...",
+        error = null,
+        isRefreshing = false,
+        subtitle = "Loading...",
+        unreadCount = 0,
+      )
   }
 }
 
@@ -118,221 +121,231 @@ private val reducer: (acc: State, value: Int) -> State = { state, action ->
 @ExperimentalCoroutinesApi
 class Select1Test : BaseTest() {
   @Test
-  fun testSelect1() = runTest {
-    val flow = (0..1_000 step 10)
-      .asFlow()
-      .select { it.toString().length }
+  fun testSelect1() =
+    runTest {
+      val flow =
+        (0..1_000 step 10)
+          .asFlow()
+          .select { it.toString().length }
 
-    flow.test((1..4).map { Event.Value(it) } + Event.Complete)
-  }
+      flow.test((1..4).map { Event.Value(it) } + Event.Complete)
+    }
 }
 
 @ExperimentalCoroutinesApi
 class Select2Test : BaseTest() {
   @Test
-  fun testSelect2() = runTest {
-    var searchTermCount = 0
-    var itemsCount = 0
-    var projectorCount = 0
+  fun testSelect2() =
+    runTest {
+      var searchTermCount = 0
+      var itemsCount = 0
+      var projectorCount = 0
 
-    val flow = (0..5).asFlow()
-      .flowOnStandardTestDispatcher(this)
-      .onEach { delay(100) }
-      .scanSkipFirst(State.INITIAL, reducer)
-      .select(
-        selector1 = {
-          ++searchTermCount
-          it.searchTerm
-        },
-        selector2 = {
-          ++itemsCount
-          it.items
-        },
-        projector = { searchTerm, items ->
-          ++projectorCount
-          items.filter { it.contains(searchTerm ?: "") }
-        },
+      val flow =
+        (0..5).asFlow()
+          .flowOnStandardTestDispatcher(this)
+          .onEach { delay(100) }
+          .scanSkipFirst(State.INITIAL, reducer)
+          .select(
+            selector1 = {
+              ++searchTermCount
+              it.searchTerm
+            },
+            selector2 = {
+              ++itemsCount
+              it.items
+            },
+            projector = { searchTerm, items ->
+              ++projectorCount
+              items.filter { it.contains(searchTerm ?: "") }
+            },
+          )
+
+      flow.test(
+        listOf(
+          Event.Value(zeroToTen), // 0 - items
+          Event.Value(listOf("4")), // 3 - searchTerm
+          Event.Complete,
+        ),
       )
-
-    flow.test(
-      listOf(
-        Event.Value(zeroToTen), // 0 - items
-        Event.Value(listOf("4")), // 3 - searchTerm
-        Event.Complete,
-      ),
-    )
-    assertEquals(6, searchTermCount) // 0..5
-    assertEquals(6, itemsCount) // 0..5
-    assertEquals(3, projectorCount) // [0 3 5]
-  }
+      assertEquals(6, searchTermCount) // 0..5
+      assertEquals(6, itemsCount) // 0..5
+      assertEquals(3, projectorCount) // [0 3 5]
+    }
 }
 
 @ExperimentalCoroutinesApi
 class Select3Test : BaseTest() {
   @Test
-  fun testSelect3() = runTest {
-    var searchTermCount = 0
-    var itemsCount = 0
-    var titleCount = 0
-    var projectorCount = 0
+  fun testSelect3() =
+    runTest {
+      var searchTermCount = 0
+      var itemsCount = 0
+      var titleCount = 0
+      var projectorCount = 0
 
-    val flow = (0..7).asFlow()
-      .flowOnStandardTestDispatcher(this)
-      .onEach { delay(100) }
-      .scanSkipFirst(State.INITIAL, reducer)
-      .select(
-        selector1 = {
-          ++searchTermCount
-          it.searchTerm
-        },
-        selector2 = {
-          ++itemsCount
-          it.items
-        },
-        selector3 = {
-          ++titleCount
-          it.title
-        },
-        projector = { searchTerm, items, title ->
-          ++projectorCount
-          items
-            .filter { it.contains(searchTerm ?: "") }
-            .map { "$it # $title" }
-        },
+      val flow =
+        (0..7).asFlow()
+          .flowOnStandardTestDispatcher(this)
+          .onEach { delay(100) }
+          .scanSkipFirst(State.INITIAL, reducer)
+          .select(
+            selector1 = {
+              ++searchTermCount
+              it.searchTerm
+            },
+            selector2 = {
+              ++itemsCount
+              it.items
+            },
+            selector3 = {
+              ++titleCount
+              it.title
+            },
+            projector = { searchTerm, items, title ->
+              ++projectorCount
+              items
+                .filter { it.contains(searchTerm ?: "") }
+                .map { "$it # $title" }
+            },
+          )
+
+      flow.test(
+        listOf(
+          Event.Value(zeroToTen.map { "$it # Loading..." }), // 0 - items
+          Event.Value(listOf("4 # Loading...")), // 3 - searchTerm
+          Event.Value(listOf("4 # Title")), // 6 - title
+          Event.Complete,
+        ),
       )
-
-    flow.test(
-      listOf(
-        Event.Value(zeroToTen.map { "$it # Loading..." }), // 0 - items
-        Event.Value(listOf("4 # Loading...")), // 3 - searchTerm
-        Event.Value(listOf("4 # Title")), // 6 - title
-        Event.Complete,
-      ),
-    )
-    assertEquals(8, searchTermCount) // 0..7
-    assertEquals(8, itemsCount) // 0..7
-    assertEquals(8, titleCount) // 0..7
-    assertEquals(4, projectorCount) // [0 3 5 6]
-  }
+      assertEquals(8, searchTermCount) // 0..7
+      assertEquals(8, itemsCount) // 0..7
+      assertEquals(8, titleCount) // 0..7
+      assertEquals(4, projectorCount) // [0 3 5 6]
+    }
 }
 
 @ExperimentalCoroutinesApi
 class Select4Test : BaseTest() {
   @Test
-  fun testSelect4() = runTest {
-    var searchTermCount = 0
-    var itemsCount = 0
-    var titleCount = 0
-    var subtitleCount = 0
-    var projectorCount = 0
+  fun testSelect4() =
+    runTest {
+      var searchTermCount = 0
+      var itemsCount = 0
+      var titleCount = 0
+      var subtitleCount = 0
+      var projectorCount = 0
 
-    val flow = (0..10).asFlow()
-      .flowOnStandardTestDispatcher(this)
-      .onEach { delay(100) }
-      .scanSkipFirst(State.INITIAL, reducer)
-      .select(
-        selector1 = {
-          ++searchTermCount
-          it.searchTerm
-        },
-        selector2 = {
-          ++itemsCount
-          it.items
-        },
-        selector3 = {
-          ++titleCount
-          it.title
-        },
-        selector4 = {
-          ++subtitleCount
-          it.subtitle
-        },
-        projector = { searchTerm, items, title, subtitle ->
-          ++projectorCount
-          items
-            .filter { it.contains(searchTerm ?: "") }
-            .map { "$it # $title ~ $subtitle" }
-        },
+      val flow =
+        (0..10).asFlow()
+          .flowOnStandardTestDispatcher(this)
+          .onEach { delay(100) }
+          .scanSkipFirst(State.INITIAL, reducer)
+          .select(
+            selector1 = {
+              ++searchTermCount
+              it.searchTerm
+            },
+            selector2 = {
+              ++itemsCount
+              it.items
+            },
+            selector3 = {
+              ++titleCount
+              it.title
+            },
+            selector4 = {
+              ++subtitleCount
+              it.subtitle
+            },
+            projector = { searchTerm, items, title, subtitle ->
+              ++projectorCount
+              items
+                .filter { it.contains(searchTerm ?: "") }
+                .map { "$it # $title ~ $subtitle" }
+            },
+          )
+
+      flow.test(
+        listOf(
+          Event.Value(zeroToTen.map { "$it # Loading... ~ Loading..." }), // 0 - items
+          Event.Value(listOf("4 # Loading... ~ Loading...")), // 3 - searchTerm
+          Event.Value(listOf("4 # Title ~ Loading...")), // 6 - title
+          Event.Value(listOf("4 # Title ~ Subtitle")), // 9 - subtitle
+          Event.Complete,
+        ),
       )
-
-    flow.test(
-      listOf(
-        Event.Value(zeroToTen.map { "$it # Loading... ~ Loading..." }), // 0 - items
-        Event.Value(listOf("4 # Loading... ~ Loading...")), // 3 - searchTerm
-        Event.Value(listOf("4 # Title ~ Loading...")), // 6 - title
-        Event.Value(listOf("4 # Title ~ Subtitle")), // 9 - subtitle
-        Event.Complete,
-      ),
-    )
-    assertEquals(11, searchTermCount) // 0..10
-    assertEquals(11, itemsCount) // 0..10
-    assertEquals(11, titleCount) // 0..10
-    assertEquals(11, subtitleCount) // 0..10
-    assertEquals(5, projectorCount) // [0 3 5 6 9]
-  }
+      assertEquals(11, searchTermCount) // 0..10
+      assertEquals(11, itemsCount) // 0..10
+      assertEquals(11, titleCount) // 0..10
+      assertEquals(11, subtitleCount) // 0..10
+      assertEquals(5, projectorCount) // [0 3 5 6 9]
+    }
 }
 
 @ExperimentalCoroutinesApi
 class Select5Test : BaseTest() {
   @Test
-  fun testSelect5() = runTest {
-    var searchTermCount = 0
-    var itemsCount = 0
-    var titleCount = 0
-    var subtitleCount = 0
-    var unreadCountCount = 0
-    var projectorCount = 0
+  fun testSelect5() =
+    runTest {
+      var searchTermCount = 0
+      var itemsCount = 0
+      var titleCount = 0
+      var subtitleCount = 0
+      var unreadCountCount = 0
+      var projectorCount = 0
 
-    val flow = (0..15).asFlow()
-      .flowOnStandardTestDispatcher(this)
-      .onEach { delay(100) }
-      .scanSkipFirst(State.INITIAL, reducer)
-      .select(
-        selector1 = {
-          ++searchTermCount
-          it.searchTerm
-        },
-        selector2 = {
-          ++itemsCount
-          it.items
-        },
-        selector3 = {
-          ++titleCount
-          it.title
-        },
-        selector4 = {
-          ++subtitleCount
-          it.subtitle
-        },
-        selector5 = {
-          ++unreadCountCount
-          it.unreadCount
-        },
-        projector = { searchTerm, items, title, subtitle, unreadCount ->
-          ++projectorCount
-          items
-            .filter { it.contains(searchTerm ?: "") }
-            .map { "$it # $title ~ $subtitle $ $unreadCount" }
-        },
+      val flow =
+        (0..15).asFlow()
+          .flowOnStandardTestDispatcher(this)
+          .onEach { delay(100) }
+          .scanSkipFirst(State.INITIAL, reducer)
+          .select(
+            selector1 = {
+              ++searchTermCount
+              it.searchTerm
+            },
+            selector2 = {
+              ++itemsCount
+              it.items
+            },
+            selector3 = {
+              ++titleCount
+              it.title
+            },
+            selector4 = {
+              ++subtitleCount
+              it.subtitle
+            },
+            selector5 = {
+              ++unreadCountCount
+              it.unreadCount
+            },
+            projector = { searchTerm, items, title, subtitle, unreadCount ->
+              ++projectorCount
+              items
+                .filter { it.contains(searchTerm ?: "") }
+                .map { "$it # $title ~ $subtitle $ $unreadCount" }
+            },
+          )
+
+      flow.test(
+        listOf(
+          Event.Value(zeroToTen.map { "$it # Loading... ~ Loading... $ 0" }), // 0 - items
+          Event.Value(listOf("4 # Loading... ~ Loading... $ 0")), // 3 - searchTerm
+          Event.Value(listOf("4 # Title ~ Loading... $ 0")), // 6 - title
+          Event.Value(listOf("4 # Title ~ Subtitle $ 0")), // 9 - subtitle
+          Event.Value(listOf("4 # Title ~ Subtitle $ 1")), // 11 - unreadCount
+          Event.Value(listOf("4 # Title ~ Subtitle 2 $ 1")), // 13 - subtitle
+          Event.Value(listOf("4 # Title ~ Subtitle 2 $ 2")), // 15 - unreadCount
+          Event.Complete,
+        ),
       )
-
-    flow.test(
-      listOf(
-        Event.Value(zeroToTen.map { "$it # Loading... ~ Loading... $ 0" }), // 0 - items
-        Event.Value(listOf("4 # Loading... ~ Loading... $ 0")), // 3 - searchTerm
-        Event.Value(listOf("4 # Title ~ Loading... $ 0")), // 6 - title
-        Event.Value(listOf("4 # Title ~ Subtitle $ 0")), // 9 - subtitle
-        Event.Value(listOf("4 # Title ~ Subtitle $ 1")), // 11 - unreadCount
-        Event.Value(listOf("4 # Title ~ Subtitle 2 $ 1")), // 13 - subtitle
-        Event.Value(listOf("4 # Title ~ Subtitle 2 $ 2")), // 15 - unreadCount
-        Event.Complete,
-      ),
-    )
-    assertEquals(16, searchTermCount) // 0..15
-    assertEquals(16, itemsCount) // 0..15
-    assertEquals(16, titleCount) // 0..15
-    assertEquals(16, subtitleCount) // 0..15
-    assertEquals(16, unreadCountCount) // 0..15
-    assertEquals(8, projectorCount) // [0 3 5 6 9 11 13 15]
-  }
+      assertEquals(16, searchTermCount) // 0..15
+      assertEquals(16, itemsCount) // 0..15
+      assertEquals(16, titleCount) // 0..15
+      assertEquals(16, subtitleCount) // 0..15
+      assertEquals(16, unreadCountCount) // 0..15
+      assertEquals(8, projectorCount) // [0 3 5 6 9 11 13 15]
+    }
 }

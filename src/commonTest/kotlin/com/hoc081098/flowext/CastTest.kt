@@ -37,56 +37,60 @@ import kotlinx.coroutines.flow.flowOf
 @ExperimentalCoroutinesApi
 class CastTest : BaseTest() {
   @Test
-  fun testCastSuccess() = runTest {
-    assertIs<Flow<String>>(flowOf(1, 2, 3).cast<String>())
+  fun testCastSuccess() =
+    runTest {
+      assertIs<Flow<String>>(flowOf(1, 2, 3).cast<String>())
 
-    assertIs<Flow<Int>>(
-      flowOf<Any?>(1, 2, 3)
-        .cast<Int>(),
-    )
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
+      assertIs<Flow<Int>>(
+        flowOf<Any?>(1, 2, 3)
+          .cast<Int>(),
       )
-  }
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun testCastFailure() = runTest {
-    assertFailsWith<ClassCastException>(
-      flowOf(1, 2, 3).cast<String>(),
-    )
-  }
-
-  @Test
-  fun testCastNotNullSuccess() = runTest {
-    assertIs<Flow<Int>>(
-      flowOf(1, 2, 3, null).castNotNull(),
-    )
-
-    assertIs<Flow<Int>>(
-      flowOf<Int?>(1, 2, 3)
-        .castNotNull(),
-    )
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
+  fun testCastFailure() =
+    runTest {
+      assertFailsWith<ClassCastException>(
+        flowOf(1, 2, 3).cast<String>(),
       )
-  }
+    }
 
   @Test
-  fun testCastNotNullFailure() = runTest {
-    assertFailsWith<NullPointerException>(
-      flowOf(1, 2, 3, null).castNotNull(),
-    )
-  }
+  fun testCastNotNullSuccess() =
+    runTest {
+      assertIs<Flow<Int>>(
+        flowOf(1, 2, 3, null).castNotNull(),
+      )
+
+      assertIs<Flow<Int>>(
+        flowOf<Int?>(1, 2, 3)
+          .castNotNull(),
+      )
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
+    }
+
+  @Test
+  fun testCastNotNullFailure() =
+    runTest {
+      assertFailsWith<NullPointerException>(
+        flowOf(1, 2, 3, null).castNotNull(),
+      )
+    }
 
   @Test
   fun testCastNullable() {

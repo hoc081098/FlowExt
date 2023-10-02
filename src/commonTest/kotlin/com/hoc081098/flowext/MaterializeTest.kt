@@ -42,105 +42,113 @@ import kotlinx.coroutines.flow.toList
 @InternalCoroutinesApi
 class MaterializeTest : BaseTest() {
   @Test
-  fun testMaterialize_shouldMaterializeAHappyFlow() = runTest {
-    val events = flowOf(1, 2, 3).materialize().toList()
-    assertContentEquals(
-      listOf(
-        Event.Value(1),
-        Event.Value(2),
-        Event.Value(3),
-        Event.Complete,
-      ),
-      events,
-    )
+  fun testMaterialize_shouldMaterializeAHappyFlow() =
+    runTest {
+      val events = flowOf(1, 2, 3).materialize().toList()
+      assertContentEquals(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete,
+        ),
+        events,
+      )
 
-    assertEquals(Event.Complete, emptyFlow<Int>().materialize().single())
-  }
-
-  @Test
-  fun testMaterialize_shouldMaterializeASadFlow() = runTest {
-    val ex = TestException()
-
-    val events1 = flowOf(1, 2, 3)
-      .concatWith(flow { throw ex })
-      .materialize()
-      .toList()
-    assertContentEquals(
-      listOf(
-        Event.Value(1),
-        Event.Value(2),
-        Event.Value(3),
-        Event.Error(ex),
-      ),
-      events1,
-    )
-
-    val events2 = flowOf(1, 2, 3)
-      .startWith(flow { throw ex })
-      .materialize()
-      .toList()
-    assertContentEquals(
-      listOf(Event.Error(ex)),
-      events2,
-    )
-
-    val events3 = concat(
-      flowOf(1, 2, 3),
-      flow { throw ex },
-      flowOf(4, 5, 6),
-    )
-      .materialize()
-      .toList()
-    assertContentEquals(
-      listOf(
-        Event.Value(1),
-        Event.Value(2),
-        Event.Value(3),
-        Event.Error(ex),
-      ),
-      events3,
-    )
-  }
+      assertEquals(Event.Complete, emptyFlow<Int>().materialize().single())
+    }
 
   @Test
-  fun testMaterialize_testCancellation() = runTest {
-    val events1 = flowOf(1, 2, 3).take(1).materialize().toList()
-    assertContentEquals(
-      listOf(
-        Event.Value(1),
-        Event.Complete,
-      ),
-      events1,
-    )
+  fun testMaterialize_shouldMaterializeASadFlow() =
+    runTest {
+      val ex = TestException()
 
-    val ex = TestException()
-    val events2 = flowOf(1, 2, 3)
-      .concatWith(flow { throw ex })
-      .take(3)
-      .materialize()
-      .toList()
-    assertContentEquals(
-      listOf(
-        Event.Value(1),
-        Event.Value(2),
-        Event.Value(3),
-        Event.Complete,
-      ),
-      events2,
-    )
+      val events1 =
+        flowOf(1, 2, 3)
+          .concatWith(flow { throw ex })
+          .materialize()
+          .toList()
+      assertContentEquals(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Error(ex),
+        ),
+        events1,
+      )
 
-    val events3 = flowOf(1, 2, 3)
-      .concatWith(flow { throw ex })
-      .take(2)
-      .materialize()
-      .toList()
-    assertContentEquals(
-      listOf(
-        Event.Value(1),
-        Event.Value(2),
-        Event.Complete,
-      ),
-      events3,
-    )
-  }
+      val events2 =
+        flowOf(1, 2, 3)
+          .startWith(flow { throw ex })
+          .materialize()
+          .toList()
+      assertContentEquals(
+        listOf(Event.Error(ex)),
+        events2,
+      )
+
+      val events3 =
+        concat(
+          flowOf(1, 2, 3),
+          flow { throw ex },
+          flowOf(4, 5, 6),
+        )
+          .materialize()
+          .toList()
+      assertContentEquals(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Error(ex),
+        ),
+        events3,
+      )
+    }
+
+  @Test
+  fun testMaterialize_testCancellation() =
+    runTest {
+      val events1 = flowOf(1, 2, 3).take(1).materialize().toList()
+      assertContentEquals(
+        listOf(
+          Event.Value(1),
+          Event.Complete,
+        ),
+        events1,
+      )
+
+      val ex = TestException()
+      val events2 =
+        flowOf(1, 2, 3)
+          .concatWith(flow { throw ex })
+          .take(3)
+          .materialize()
+          .toList()
+      assertContentEquals(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete,
+        ),
+        events2,
+      )
+
+      val events3 =
+        flowOf(1, 2, 3)
+          .concatWith(flow { throw ex })
+          .take(2)
+          .materialize()
+          .toList()
+      assertContentEquals(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Complete,
+        ),
+        events3,
+      )
+    }
 }

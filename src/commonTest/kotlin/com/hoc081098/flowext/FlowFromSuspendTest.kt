@@ -34,26 +34,29 @@ import kotlinx.coroutines.delay
 @ExperimentalCoroutinesApi
 class FlowFromSuspendTest : BaseTest() {
   @Test
-  fun flowFromSuspendEmitsValues() = runTest {
-    var count = 0L
-    val flow = flowFromSuspend {
-      delay(count)
-      count
+  fun flowFromSuspendEmitsValues() =
+    runTest {
+      var count = 0L
+      val flow =
+        flowFromSuspend {
+          delay(count)
+          count
+        }
+
+      flow.test(listOf(Event.Value(0L), Event.Complete))
+
+      ++count
+      flow.test(listOf(Event.Value(1L), Event.Complete))
+
+      ++count
+      flow.test(listOf(Event.Value(2L), Event.Complete))
     }
 
-    flow.test(listOf(Event.Value(0L), Event.Complete))
-
-    ++count
-    flow.test(listOf(Event.Value(1L), Event.Complete))
-
-    ++count
-    flow.test(listOf(Event.Value(2L), Event.Complete))
-  }
-
   @Test
-  fun deferFactoryThrows() = runTest {
-    val testException = TestException()
+  fun deferFactoryThrows() =
+    runTest {
+      val testException = TestException()
 
-    flowFromSuspend<Int> { throw testException }.test(listOf(Event.Error(testException)))
-  }
+      flowFromSuspend<Int> { throw testException }.test(listOf(Event.Error(testException)))
+    }
 }

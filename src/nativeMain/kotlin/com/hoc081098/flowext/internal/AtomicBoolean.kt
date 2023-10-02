@@ -29,8 +29,10 @@ import kotlin.concurrent.AtomicInt
 internal actual class AtomicBoolean actual constructor(value: Boolean) {
   private val atomic = AtomicInt(value.asInt)
 
-  actual fun compareAndSet(expect: Boolean, update: Boolean): Boolean =
-    atomic.compareAndSet(expect.asInt, update.asInt)
+  actual fun compareAndSet(
+    expect: Boolean,
+    update: Boolean,
+  ): Boolean = atomic.compareAndSet(expect.asInt, update.asInt)
 
   actual var value: Boolean
     get() = atomic.value.asBoolean
@@ -38,8 +40,7 @@ internal actual class AtomicBoolean actual constructor(value: Boolean) {
       atomic.value = value.asInt
     }
 
-  actual fun getAndSet(value: Boolean): Boolean =
-    atomic.getAndSet(value.asInt).asBoolean
+  actual fun getAndSet(value: Boolean): Boolean = atomic.getAndSet(value.asInt).asBoolean
 }
 
 private inline val Boolean.asInt: Int get() = if (this) 1 else 0

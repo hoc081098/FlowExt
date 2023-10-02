@@ -41,31 +41,32 @@ import kotlinx.coroutines.flow.fold
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class RetryWhenWithDelayStrategyTest : BaseTest() {
-
   @Test
-  fun test() = runTest {
-    var count = 0
-    val retries = 3
-    val flow = flow {
-      emit(1)
-      throw TestException((count++).toString())
-    }
+  fun test() =
+    runTest {
+      var count = 0
+      val retries = 3
+      val flow =
+        flow {
+          emit(1)
+          throw TestException((count++).toString())
+        }
 
-    val sum =
-      flow.retryWhenWithDelayStrategy(DelayStrategy.FixedTimeDelayStrategy(100.milliseconds)) { cause, attempt ->
-        assertEquals(
-          attempt.toString(),
-          assertIs<TestException>(cause).message,
-        )
-        attempt < retries
-      }.catch { cause ->
-        assertEquals(
-          retries.toString(),
-          assertIs<TestException>(cause).message,
-        )
-      }.fold(0, Int::plus)
-    assertEquals(4, sum)
-  }
+      val sum =
+        flow.retryWhenWithDelayStrategy(DelayStrategy.FixedTimeDelayStrategy(100.milliseconds)) { cause, attempt ->
+          assertEquals(
+            attempt.toString(),
+            assertIs<TestException>(cause).message,
+          )
+          attempt < retries
+        }.catch { cause ->
+          assertEquals(
+            retries.toString(),
+            assertIs<TestException>(cause).message,
+          )
+        }.fold(0, Int::plus)
+      assertEquals(4, sum)
+    }
 }
 
 class DelayStrategyTest {
@@ -96,12 +97,17 @@ class DelayStrategyTest {
 
   @Test
   fun testExponential() {
-    fun every(initialDelay: Duration, factor: Double, maxDelay: Duration) {
-      val strategy = DelayStrategy.ExponentialBackoffDelayStrategy(
-        initialDelay = initialDelay,
-        factor = factor,
-        maxDelay = maxDelay,
-      )
+    fun every(
+      initialDelay: Duration,
+      factor: Double,
+      maxDelay: Duration,
+    ) {
+      val strategy =
+        DelayStrategy.ExponentialBackoffDelayStrategy(
+          initialDelay = initialDelay,
+          factor = factor,
+          maxDelay = maxDelay,
+        )
 
       fun Duration.coerce(): Duration = coerceAtMost(maxDelay)
 

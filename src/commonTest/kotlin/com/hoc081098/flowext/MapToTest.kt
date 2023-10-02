@@ -40,33 +40,37 @@ import kotlinx.coroutines.flow.toList
 @InternalCoroutinesApi
 class MapToTest : BaseTest() {
   @Test
-  fun basic() = runTest {
-    val values = flowOf(1, 2, 3).mapTo(4).toList()
-    assertEquals(values, listOf(4, 4, 4))
-  }
+  fun basic() =
+    runTest {
+      val values = flowOf(1, 2, 3).mapTo(4).toList()
+      assertEquals(values, listOf(4, 4, 4))
+    }
 
   @Test
-  fun mapToUnitBasic() = runTest {
-    (0 until 10).asFlow()
-      .mapToUnit()
-      .test(List(10) { Event.Value(Unit) } + Event.Complete)
-  }
+  fun mapToUnitBasic() =
+    runTest {
+      (0 until 10).asFlow()
+        .mapToUnit()
+        .test(List(10) { Event.Value(Unit) } + Event.Complete)
+    }
 
   @Test
-  fun upstreamError() = runTest {
-    val throwable = TestException()
+  fun upstreamError() =
+    runTest {
+      val throwable = TestException()
 
-    flow<Nothing> { throw throwable }
-      .mapTo(2)
-      .test(listOf(Event.Error(throwable)))
-  }
+      flow<Nothing> { throw throwable }
+        .mapTo(2)
+        .test(listOf(Event.Error(throwable)))
+    }
 
   @Test
-  fun mapToWithFailureUpstream() = runTest {
-    val throwable = TestException()
+  fun mapToWithFailureUpstream() =
+    runTest {
+      val throwable = TestException()
 
-    flow<Nothing> { throw throwable }
-      .mapToUnit()
-      .test(listOf(Event.Error(throwable)))
-  }
+      flow<Nothing> { throw throwable }
+        .mapToUnit()
+        .test(listOf(Event.Error(throwable)))
+    }
 }

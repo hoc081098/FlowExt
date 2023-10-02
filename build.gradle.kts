@@ -4,22 +4,23 @@ import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
   kotlin("multiplatform") version "1.9.0"
-  id("com.diffplug.spotless") version "6.19.0"
+  id("com.diffplug.spotless") version "6.22.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.25.3"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.2"
-  id("org.jetbrains.dokka") version "1.8.20"
-  id("org.jetbrains.kotlinx.kover") version "0.7.2"
+  id("org.jetbrains.dokka") version "1.9.0"
+  id("org.jetbrains.kotlinx.kover") version "0.7.3"
 }
 
 val coroutinesVersion = "1.7.3"
-val ktlintVersion = "0.49.1"
+val ktlintVersion = "1.0.0"
 
 repositories {
   mavenCentral()
@@ -29,14 +30,17 @@ repositories {
 
 kotlin {
   explicitApi()
+
   jvmToolchain {
-    languageVersion.set(JavaLanguageVersion.of(8))
+    languageVersion.set(JavaLanguageVersion.of(17))
     vendor.set(JvmVendorSpec.AZUL)
   }
 
   jvm {
     compilations.all {
-      kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+      compilerOptions.configure {
+        jvmTarget = JvmTarget.JVM_1_8
+      }
     }
   }
   js(IR) {
@@ -48,18 +52,22 @@ kotlin {
       }
     }
     browser {
-      testTask {
-        useMocha {
-          timeout = "10s"
-        }
-      }
+      testTask(
+        Action {
+          useMocha {
+            timeout = "10s"
+          }
+        },
+      )
     }
     nodejs {
-      testTask {
-        useMocha {
-          timeout = "10s"
-        }
-      }
+      testTask(
+        Action {
+          useMocha {
+            timeout = "10s"
+          }
+        },
+      )
     }
   }
 
@@ -152,36 +160,39 @@ kotlin {
       dependsOn(nativeTest)
     }
 
-    val appleTargets = listOf(
-      "iosX64",
-      "iosSimulatorArm64",
-      "iosArm64",
-      "iosArm32",
-      "macosX64",
-      "macosArm64",
-      "tvosArm64",
-      "tvosX64",
-      "tvosSimulatorArm64",
-      "watchosArm32",
-      "watchosArm64",
-      "watchosX86",
-      "watchosSimulatorArm64",
-      "watchosX64",
-      "watchosSimulatorArm64",
-      "watchosDeviceArm64",
-    )
+    val appleTargets =
+      listOf(
+        "iosX64",
+        "iosSimulatorArm64",
+        "iosArm64",
+        "iosArm32",
+        "macosX64",
+        "macosArm64",
+        "tvosArm64",
+        "tvosX64",
+        "tvosSimulatorArm64",
+        "watchosArm32",
+        "watchosArm64",
+        "watchosX86",
+        "watchosSimulatorArm64",
+        "watchosX64",
+        "watchosSimulatorArm64",
+        "watchosDeviceArm64",
+      )
 
-    val linuxTargets = listOf(
-      "linuxX64",
-      "linuxArm64",
-    )
+    val linuxTargets =
+      listOf(
+        "linuxX64",
+        "linuxArm64",
+      )
 
-    val androidNativeTargets = listOf(
-      "androidNativeArm32",
-      "androidNativeArm64",
-      "androidNativeX86",
-      "androidNativeX64",
-    )
+    val androidNativeTargets =
+      listOf(
+        "androidNativeArm32",
+        "androidNativeArm64",
+        "androidNativeX86",
+        "androidNativeX64",
+      )
 
     appleTargets.forEach {
       getByName("${it}Main") {
@@ -240,7 +251,6 @@ spotless {
     target("**/*.kt")
 
     ktlint(ktlintVersion)
-      .setUseExperimental(true)
       .setEditorConfigPath("$rootDir/.editorconfig")
 
     trimTrailingWhitespace()
@@ -254,7 +264,6 @@ spotless {
     target("**/*.kts")
 
     ktlint(ktlintVersion)
-      .setUseExperimental(true)
       .setEditorConfigPath("$rootDir/.editorconfig")
 
     trimTrailingWhitespace()
@@ -278,13 +287,14 @@ tasks.withType<AbstractTestTask> {
     showCauses = true
     showStackTraces = true
     showStandardStreams = true
-    events = setOf(
-      TestLogEvent.PASSED,
-      TestLogEvent.FAILED,
-      TestLogEvent.SKIPPED,
-      TestLogEvent.STANDARD_OUT,
-      TestLogEvent.STANDARD_ERROR,
-    )
+    events =
+      setOf(
+        TestLogEvent.PASSED,
+        TestLogEvent.FAILED,
+        TestLogEvent.SKIPPED,
+        TestLogEvent.STANDARD_OUT,
+        TestLogEvent.STANDARD_ERROR,
+      )
     exceptionFormat = TestExceptionFormat.FULL
   }
 }

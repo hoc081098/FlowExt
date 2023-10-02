@@ -48,118 +48,126 @@ import kotlinx.coroutines.runBlocking
 @ExperimentalCoroutinesApi
 class SkipUntilJvmTest : BaseStepTest() {
   @Test
-  fun testSkipUntil() = runBlocking {
-    // ----------1----------2----------3
-    // ---------------|
-    flowOf(1, 2, 3)
-      .onEach { delay(100) }
-      .skipUntil(timer(Unit, 150))
-      .test(
-        listOf(
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
-      )
-  }
-
-  @Test
-  fun testSkipUntilNever() = runBlocking {
-    flowOf(1, 2, 3, 4)
-      .skipUntil(neverFlow())
-      .test(listOf(Event.Complete))
-  }
-
-  @Test
-  fun testSkipUntilEmpty() = runBlocking {
-    flowOf(1, 2, 3, 4)
-      .skipUntil(emptyFlow())
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Value(4),
-          Event.Complete,
-        ),
-      )
-  }
-
-  @Test
-  fun testSkipUntilFailureUpstream() = runBlocking {
-    // 01--------------------2X
-    // ----------100
-
-    val source = flow {
-      expect(2)
-      emit(0)
-      expect(3)
-      emit(1)
-
-      delay(20)
-      expect(5)
-
-      emit(2)
-      expect(7)
-      throw TestException()
+  fun testSkipUntil() =
+    runBlocking {
+      // ----------1----------2----------3
+      // ---------------|
+      flowOf(1, 2, 3)
+        .onEach { delay(100) }
+        .skipUntil(timer(Unit, 150))
+        .test(
+          listOf(
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
     }
 
-    val notifier = flowOf(100).onEach {
-      delay(10)
-      expect(4)
+  @Test
+  fun testSkipUntilNever() =
+    runBlocking {
+      flowOf(1, 2, 3, 4)
+        .skipUntil(neverFlow())
+        .test(listOf(Event.Complete))
     }
 
-    expect(1)
-    assertFailsWith<TestException>(
-      source
-        .skipUntil(notifier)
-        .onEach {
-          assertEquals(2, it)
-          expect(6)
-        },
-    )
-    finish(8)
-  }
+  @Test
+  fun testSkipUntilEmpty() =
+    runBlocking {
+      flowOf(1, 2, 3, 4)
+        .skipUntil(emptyFlow())
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Value(4),
+            Event.Complete,
+          ),
+        )
+    }
 
   @Test
-  fun testSkipUntilCancellation() = runBlocking {
-    flow {
-      emit(0)
-      delay(200)
-      emit(1)
-      emit(2)
-      emit(3)
-      expectUnreached() // Cancelled by take
-      emit(5)
-    }.skipUntil(timer(Unit, 100))
-      .take(2)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Complete,
-        ),
-      )
-  }
+  fun testSkipUntilFailureUpstream() =
+    runBlocking {
+      // 01--------------------2X
+      // ----------100
 
-  @Test
-  fun testSkipUntilNotifierFailure() = runBlocking {
-    flow {
-      emit(0)
-      delay(200)
-      emit(1)
-      emit(2)
-      emit(3)
-    }.skipUntil(
-      timer(Unit, 100).onEach {
-        throw TestException()
-      },
-    )
-      .let {
-        it.test(null) { events ->
-          assertEquals(1, events.size)
+      val source =
+        flow {
+          expect(2)
+          emit(0)
+          expect(3)
+          emit(1)
+
+          delay(20)
+          expect(5)
+
+          emit(2)
+          expect(7)
+          throw TestException()
         }
-        assertFailsWith<TestException>(it)
-      }
-  }
+
+      val notifier =
+        flowOf(100).onEach {
+          delay(10)
+          expect(4)
+        }
+
+      expect(1)
+      assertFailsWith<TestException>(
+        source
+          .skipUntil(notifier)
+          .onEach {
+            assertEquals(2, it)
+            expect(6)
+          },
+      )
+      finish(8)
+    }
+
+  @Test
+  fun testSkipUntilCancellation() =
+    runBlocking {
+      flow {
+        emit(0)
+        delay(200)
+        emit(1)
+        emit(2)
+        emit(3)
+        expectUnreached() // Cancelled by take
+        emit(5)
+      }.skipUntil(timer(Unit, 100))
+        .take(2)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Complete,
+          ),
+        )
+    }
+
+  @Test
+  fun testSkipUntilNotifierFailure() =
+    runBlocking {
+      flow {
+        emit(0)
+        delay(200)
+        emit(1)
+        emit(2)
+        emit(3)
+      }.skipUntil(
+        timer(Unit, 100).onEach {
+          throw TestException()
+        },
+      )
+        .let {
+          it.test(null) { events ->
+            assertEquals(1, events.size)
+          }
+          assertFailsWith<TestException>(it)
+        }
+    }
 }

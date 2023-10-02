@@ -41,145 +41,148 @@ import kotlinx.coroutines.flow.take
 @InternalCoroutinesApi
 class DematerializeTest : BaseTest() {
   @Test
-  fun testDematerialize_shouldDematerializeAHappyFlow() = runTest {
-    flowOf(1, 2, 3)
-      .materialize()
-      .dematerialize()
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
-      )
+  fun testDematerialize_shouldDematerializeAHappyFlow() =
+    runTest {
+      flowOf(1, 2, 3)
+        .materialize()
+        .dematerialize()
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
 
-    flowOf(
-      Event.Value(1),
-      Event.Value(2),
-      Event.Value(3),
-      Event.Complete,
-    )
-      .dematerialize()
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
+      flowOf(
+        Event.Value(1),
+        Event.Value(2),
+        Event.Value(3),
+        Event.Complete,
       )
+        .dematerialize()
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
 
-    flowOf(
-      Event.Value(1),
-      Event.Value(2),
-      Event.Value(3),
-      Event.Complete,
-      Event.Value(4),
-      Event.Value(5),
-      Event.Value(6),
-    )
-      .dematerialize()
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
+      flowOf(
+        Event.Value(1),
+        Event.Value(2),
+        Event.Value(3),
+        Event.Complete,
+        Event.Value(4),
+        Event.Value(5),
+        Event.Value(6),
       )
+        .dematerialize()
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
 
-    flowOf(Event.Complete).dematerialize().test(listOf(Event.Complete))
-    emptyFlow<Event<Nothing>>().dematerialize().test(listOf(Event.Complete))
-  }
+      flowOf(Event.Complete).dematerialize().test(listOf(Event.Complete))
+      emptyFlow<Event<Nothing>>().dematerialize().test(listOf(Event.Complete))
+    }
 
   @Test
-  fun testDematerialize_shouldDematerializeASadFlow() = runTest {
-    val ex = TestException()
+  fun testDematerialize_shouldDematerializeASadFlow() =
+    runTest {
+      val ex = TestException()
 
-    flowOf(1, 2, 3)
-      .concatWith(flow { throw ex })
-      .materialize()
-      .dematerialize()
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Error(ex),
-        ),
+      flowOf(1, 2, 3)
+        .concatWith(flow { throw ex })
+        .materialize()
+        .dematerialize()
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Error(ex),
+          ),
+        )
+
+      flowOf(1, 2, 3)
+        .startWith(flow { throw ex })
+        .materialize()
+        .dematerialize()
+        .test(listOf(Event.Error(ex)))
+
+      concat(
+        flowOf(1, 2, 3),
+        flow { throw ex },
+        flowOf(4, 5, 6),
       )
+        .materialize()
+        .dematerialize()
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Error(ex),
+          ),
+        )
 
-    flowOf(1, 2, 3)
-      .startWith(flow { throw ex })
-      .materialize()
-      .dematerialize()
-      .test(listOf(Event.Error(ex)))
-
-    concat(
-      flowOf(1, 2, 3),
-      flow { throw ex },
-      flowOf(4, 5, 6),
-    )
-      .materialize()
-      .dematerialize()
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Error(ex),
-        ),
-      )
-
-    assertFailsWith<TestException> { flowOf(Event.Error(ex)).dematerialize().collect() }
-    assertFailsWith<TestException> {
-      flowOf(Event.Error(ex), Event.Value(1)).dematerialize().collect()
+      assertFailsWith<TestException> { flowOf(Event.Error(ex)).dematerialize().collect() }
+      assertFailsWith<TestException> {
+        flowOf(Event.Error(ex), Event.Value(1)).dematerialize().collect()
+      }
+      assertFailsWith<TestException> {
+        flowOf(Event.Error(ex), Event.Complete).dematerialize().collect()
+      }
     }
-    assertFailsWith<TestException> {
-      flowOf(Event.Error(ex), Event.Complete).dematerialize().collect()
-    }
-  }
 
   @Test
-  fun testDematerialize_testCancellation() = runTest {
-    flowOf(1, 2, 3)
-      .materialize()
-      .dematerialize()
-      .take(1)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Complete,
-        ),
-      )
+  fun testDematerialize_testCancellation() =
+    runTest {
+      flowOf(1, 2, 3)
+        .materialize()
+        .dematerialize()
+        .take(1)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Complete,
+          ),
+        )
 
-    val ex = TestException()
-    flowOf(1, 2, 3)
-      .concatWith(flow { throw ex })
-      .materialize()
-      .dematerialize()
-      .take(3)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Value(3),
-          Event.Complete,
-        ),
-      )
+      val ex = TestException()
+      flowOf(1, 2, 3)
+        .concatWith(flow { throw ex })
+        .materialize()
+        .dematerialize()
+        .take(3)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Value(3),
+            Event.Complete,
+          ),
+        )
 
-    flowOf(1, 2, 3)
-      .concatWith(flow { throw ex })
-      .materialize()
-      .dematerialize()
-      .take(2)
-      .test(
-        listOf(
-          Event.Value(1),
-          Event.Value(2),
-          Event.Complete,
-        ),
-      )
-  }
+      flowOf(1, 2, 3)
+        .concatWith(flow { throw ex })
+        .materialize()
+        .dematerialize()
+        .take(2)
+        .test(
+          listOf(
+            Event.Value(1),
+            Event.Value(2),
+            Event.Complete,
+          ),
+        )
+    }
 }
