@@ -51,9 +51,8 @@ abstract class BaseTest {
     testBody: suspend TestScope.() -> Unit,
   ): TestResult {
     return kotlinx.coroutines.test.runTest(
-      context =
-        testDispatcher
-          ?: UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatcher"),
+      context = testDispatcher
+        ?: UnconfinedTestDispatcher(name = "${this::class.simpleName}-dispatcher"),
       timeout = timeout,
       testBody = testBody,
     )

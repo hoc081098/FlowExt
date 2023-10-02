@@ -36,18 +36,16 @@ import kotlinx.coroutines.flow.take
 @InternalCoroutinesApi
 class IntervalTest : BaseTest() {
   @Test
-  fun run() =
-    runTest {
-      interval(100, 200)
-        .take(20)
-        .test((0L until 20).map { Event.Value(it) } + Event.Complete)
-    }
+  fun run() = runTest {
+    interval(100, 200)
+      .take(20)
+      .test((0L until 20).map { Event.Value(it) } + Event.Complete)
+  }
 
   @Test
-  fun intervalDuration() =
-    runTest {
-      interval(100.milliseconds, 200.milliseconds)
-        .take(20)
-        .test((0L until 20).map { Event.Value(it) } + Event.Complete)
-    }
+  fun intervalDuration() = runTest {
+    interval(100.milliseconds, 200.milliseconds)
+      .take(20)
+      .test((0L until 20).map { Event.Value(it) } + Event.Complete)
+  }
 }

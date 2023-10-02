@@ -57,105 +57,94 @@ import kotlinx.coroutines.test.runCurrent
 @ExperimentalCoroutinesApi
 class IgnoreElementsTest : BaseTest() {
   @Test
-  fun notEmitAnyValue() =
-    runTest(timeout = 3.seconds) {
-      val flow =
-        interval(0, 1)
-          .ignoreElements()
+  fun notEmitAnyValue() = runTest(timeout = 3.seconds) {
+    val flow = interval(0, 1)
+      .ignoreElements()
 
-      val buffer = mutableListOf<Int>()
-      val job =
-        launch(start = CoroutineStart.UNDISPATCHED) {
-          flow.toList(buffer)
-        }
-      val intervalJob =
-        interval(Duration.ZERO, 100.milliseconds)
-          .take(1_000)
-          .launchIn(this)
+    val buffer = mutableListOf<Int>()
+    val job = launch(start = CoroutineStart.UNDISPATCHED) {
+      flow.toList(buffer)
+    }
+    val intervalJob = interval(Duration.ZERO, 100.milliseconds)
+      .take(1_000)
+      .launchIn(this)
 
+    runCurrent()
+
+    repeat(1_000) {
+      advanceTimeBy(100)
       runCurrent()
-
-      repeat(1_000) {
-        advanceTimeBy(100)
-        runCurrent()
-        assertTrue(buffer.isEmpty())
-      }
-
-      intervalJob.cancelAndJoin()
-      job.cancelAndJoin()
-
       assertTrue(buffer.isEmpty())
     }
 
-  @Test
-  fun normallyCompleted() =
-    runTest {
-      flowOf(1, 2, 3)
-        .ignoreElements()
-        .test(listOf(Event.Complete))
-    }
+    intervalJob.cancelAndJoin()
+    job.cancelAndJoin()
+
+    assertTrue(buffer.isEmpty())
+  }
 
   @Test
-  fun handleEmptyFlow() =
-    runTest {
-      emptyFlow<Int>()
-        .ignoreElements()
-        .test(listOf(Event.Complete))
-    }
+  fun normallyCompleted() = runTest {
+    flowOf(1, 2, 3)
+      .ignoreElements()
+      .test(listOf(Event.Complete))
+  }
 
   @Test
-  fun handleFailureUpstream() =
-    runTest {
-      assertFailsWith<TestException>(
-        flow<Int> { throw TestException() }
-          .ignoreElements(),
-      )
-
-      assertFailsWith<TestException>(
-        flow {
-          delay(1)
-          emit(1)
-          delay(2)
-          emit(2)
-          throw TestException()
-        }.ignoreElements(),
-      )
-    }
+  fun handleEmptyFlow() = runTest {
+    emptyFlow<Int>()
+      .ignoreElements()
+      .test(listOf(Event.Complete))
+  }
 
   @Test
-  fun cancellation() =
-    runTest {
-      val flow =
-        flowOf(1)
-          .onEach { delay(1) }
-          .repeat()
-          .ignoreElements()
+  fun handleFailureUpstream() = runTest {
+    assertFailsWith<TestException>(
+      flow<Int> { throw TestException() }
+        .ignoreElements(),
+    )
 
-      var throwable: Throwable? = null
-      val job =
-        flow
-          .onCompletion { throwable = it }
-          .launchIn(this)
-
-      delay(100)
-      job.cancelAndJoin()
-
-      assertIs<CancellationException>(
-        assertNotNull(throwable),
-      )
-    }
+    assertFailsWith<TestException>(
+      flow {
+        delay(1)
+        emit(1)
+        delay(2)
+        emit(2)
+        throw TestException()
+      }.ignoreElements(),
+    )
+  }
 
   @Test
-  fun withOtherOperators() =
-    runTest {
-      flowOf("a", "b", "c", "d")
-        .onEach { delay(100) }
-        .flatMapMerge { flowOf(it) }
-        .ignoreElements()
-        .flatMapMerge {
-          @Suppress("UNREACHABLE_CODE") // just for test
-          flowOf(it)
-        }
-        .test(listOf(Event.Complete))
-    }
+  fun cancellation() = runTest {
+    val flow = flowOf(1)
+      .onEach { delay(1) }
+      .repeat()
+      .ignoreElements()
+
+    var throwable: Throwable? = null
+    val job = flow
+      .onCompletion { throwable = it }
+      .launchIn(this)
+
+    delay(100)
+    job.cancelAndJoin()
+
+    assertIs<CancellationException>(
+      assertNotNull(throwable),
+    )
+  }
+
+  @Test
+  fun withOtherOperators() = runTest {
+    flowOf("a", "b", "c", "d")
+      .onEach { delay(100) }
+      .flatMapMerge { flowOf(it) }
+      .ignoreElements()
+      .flatMapMerge {
+        @Suppress("UNREACHABLE_CODE") // just for test
+        flowOf(it)
+      }
+      .test(listOf(Event.Complete))
+  }
 }

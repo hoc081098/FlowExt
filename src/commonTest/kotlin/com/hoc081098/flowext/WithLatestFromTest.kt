@@ -45,94 +45,89 @@ import kotlinx.coroutines.flow.toList
 @ExperimentalCoroutinesApi
 class WithLatestFromTest : BaseTest() {
   @Test
-  fun basic() =
-    runTest {
-      val f1 = flowOf(1, 2, 3, 4)
-      val f2 = flowOf("a", "b", "c", "d", "e")
-      assertEquals(
-        f2.withLatestFrom(f1).toList(),
-        listOf(
-          "a" to 4,
-          "b" to 4,
-          "c" to 4,
-          "d" to 4,
-          "e" to 4,
-        ),
-      )
-    }
+  fun basic() = runTest {
+    val f1 = flowOf(1, 2, 3, 4)
+    val f2 = flowOf("a", "b", "c", "d", "e")
+    assertEquals(
+      f2.withLatestFrom(f1).toList(),
+      listOf(
+        "a" to 4,
+        "b" to 4,
+        "c" to 4,
+        "d" to 4,
+        "e" to 4,
+      ),
+    )
+  }
 
   @Test
-  fun basicWithNull() =
-    runTest {
-      val f1 = flowOf(1, 2, 3, 4, null)
-      val f2 = flowOf("a", "b", "c", "d", "e")
-      assertEquals(
-        f2.withLatestFrom(f1).toList(),
-        listOf(
-          "a" to null,
-          "b" to null,
-          "c" to null,
-          "d" to null,
-          "e" to null,
-        ),
-      )
-    }
+  fun basicWithNull() = runTest {
+    val f1 = flowOf(1, 2, 3, 4, null)
+    val f2 = flowOf("a", "b", "c", "d", "e")
+    assertEquals(
+      f2.withLatestFrom(f1).toList(),
+      listOf(
+        "a" to null,
+        "b" to null,
+        "c" to null,
+        "d" to null,
+        "e" to null,
+      ),
+    )
+  }
 
   @Test
-  fun basic2() =
-    runTest {
-      val f1 = flowOf(1, 2, 3, 4).onEach { delay(300) }
-      val f2 = flowOf("a", "b", "c", "d", "e").onEach { delay(100) }
-      assertEquals(
-        f2.withLatestFrom(f1).toList(),
-        listOf(
-          "c" to 1,
-          "d" to 1,
-          "e" to 1,
-        ),
-      )
-    }
+  fun basic2() = runTest {
+    val f1 = flowOf(1, 2, 3, 4).onEach { delay(300) }
+    val f2 = flowOf("a", "b", "c", "d", "e").onEach { delay(100) }
+    assertEquals(
+      f2.withLatestFrom(f1).toList(),
+      listOf(
+        "c" to 1,
+        "d" to 1,
+        "e" to 1,
+      ),
+    )
+  }
 
   @Test
-  fun testWithLatestFrom_failureUpStream() =
-    runTest {
-      assertFailsWith<TestException> {
-        flow<Int> { throw TestException() }
-          .withLatestFrom(neverFlow())
-          .collect()
+  fun testWithLatestFrom_failureUpStream() = runTest {
+    assertFailsWith<TestException> {
+      flow<Int> { throw TestException() }
+        .withLatestFrom(neverFlow())
+        .collect()
+    }
+
+    assertFailsWith<TestException> {
+      neverFlow()
+        .withLatestFrom(flow<Int> { throw TestException() })
+        .collect()
+    }
+  }
+
+  @Test
+  fun testWithLatestFrom_cancellation() = runTest {
+    assertFailsWith<CancellationException> {
+      flow {
+        emit(1)
+        throw CancellationException("")
       }
-
-      assertFailsWith<TestException> {
-        neverFlow()
-          .withLatestFrom(flow<Int> { throw TestException() })
-          .collect()
-      }
+        .withLatestFrom(emptyFlow<Nothing>())
+        .collect()
     }
 
-  @Test
-  fun testWithLatestFrom_cancellation() =
-    runTest {
-      assertFailsWith<CancellationException> {
+    flowOf(1)
+      .withLatestFrom(
         flow {
-          emit(1)
+          emit(2)
           throw CancellationException("")
-        }
-          .withLatestFrom(emptyFlow<Nothing>())
-          .collect()
-      }
-
-      flowOf(1)
-        .withLatestFrom(
-          flow {
-            emit(2)
-            throw CancellationException("")
-          },
-        )
-        .test(
-          listOf(
-            Event.Value(1 to 2),
-            Event.Complete,
-          ),
-        )
-    }
+        },
+      )
+      .test(
+        listOf(
+          Event.Value(1 to 2),
+          Event.Complete,
+        ),
+      )
+  }
 }

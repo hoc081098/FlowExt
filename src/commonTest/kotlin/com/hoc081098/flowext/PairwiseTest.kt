@@ -40,101 +40,93 @@ import kotlinx.coroutines.flow.take
 @ExperimentalCoroutinesApi
 class PairwiseTest : BaseStepTest() {
   @Test
-  fun testPairwise() =
-    runTest {
-      range(0, 4)
-        .pairwise()
-        .test(
-          listOf(
-            Event.Value(0 to 1),
-            Event.Value(1 to 2),
-            Event.Value(2 to 3),
-            Event.Complete,
-          ),
-        )
-
-      range(0, 4)
-        .bufferCount(bufferSize = 2, startBufferEvery = 1)
-        .mapNotNull {
-          if (it.size < 2) {
-            null
-          } else {
-            it[0] to it[1]
-          }
-        }
-        .test(
-          listOf(
-            Event.Value(0 to 1),
-            Event.Value(1 to 2),
-            Event.Value(2 to 3),
-            Event.Complete,
-          ),
-        )
-    }
-
-  @Test
-  fun testPairwiseNullable() =
-    runTest {
-      // 0 - null - 2 - null
-
-      range(0, 4)
-        .map { it.takeIf { it % 2 == 0 } }
-        .pairwise()
-        .test(
-          listOf(
-            Event.Value(0 to null),
-            Event.Value(null to 2),
-            Event.Value(2 to null),
-            Event.Complete,
-          ),
-        )
-    }
-
-  @Test
-  fun testPairwiseEmpty() =
-    runTest {
-      emptyFlow<Int>()
-        .pairwise()
-        .test(
-          listOf(
-            Event.Complete,
-          ),
-        )
-    }
-
-  @Test
-  fun testPairwiseSingle() =
-    runTest {
-      flowOf(1)
-        .pairwise()
-        .test(
-          listOf(
-            Event.Complete,
-          ),
-        )
-    }
-
-  @Test
-  fun testPairwiseFailureUpstream() =
-    runTest {
-      assertFailsWith<TestException>(
-        flow<Int> { throw TestException() }
-          .pairwise(),
+  fun testPairwise() = runTest {
+    range(0, 4)
+      .pairwise()
+      .test(
+        listOf(
+          Event.Value(0 to 1),
+          Event.Value(1 to 2),
+          Event.Value(2 to 3),
+          Event.Complete,
+        ),
       )
-    }
+
+    range(0, 4)
+      .bufferCount(bufferSize = 2, startBufferEvery = 1)
+      .mapNotNull {
+        if (it.size < 2) {
+          null
+        } else it[0] to it[1]
+      }
+      .test(
+        listOf(
+          Event.Value(0 to 1),
+          Event.Value(1 to 2),
+          Event.Value(2 to 3),
+          Event.Complete,
+        ),
+      )
+  }
 
   @Test
-  fun testPairwiseCancellation() =
-    runTest {
-      range(1, 100)
-        .pairwise()
-        .take(2)
-        .test(
-          listOf(
-            Event.Value(1 to 2),
-            Event.Value(2 to 3),
-            Event.Complete,
-          ),
-        )
-    }
+  fun testPairwiseNullable() = runTest {
+    // 0 - null - 2 - null
+
+    range(0, 4)
+      .map { it.takeIf { it % 2 == 0 } }
+      .pairwise()
+      .test(
+        listOf(
+          Event.Value(0 to null),
+          Event.Value(null to 2),
+          Event.Value(2 to null),
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun testPairwiseEmpty() = runTest {
+    emptyFlow<Int>()
+      .pairwise()
+      .test(
+        listOf(
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun testPairwiseSingle() = runTest {
+    flowOf(1)
+      .pairwise()
+      .test(
+        listOf(
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun testPairwiseFailureUpstream() = runTest {
+    assertFailsWith<TestException>(
+      flow<Int> { throw TestException() }
+        .pairwise(),
+    )
+  }
+
+  @Test
+  fun testPairwiseCancellation() = runTest {
+    range(1, 100)
+      .pairwise()
+      .take(2)
+      .test(
+        listOf(
+          Event.Value(1 to 2),
+          Event.Value(2 to 3),
+          Event.Complete,
+        ),
+      )
+  }
 }

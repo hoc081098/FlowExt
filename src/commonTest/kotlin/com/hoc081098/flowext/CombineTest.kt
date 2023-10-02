@@ -36,206 +36,189 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 @ExperimentalCoroutinesApi
 class CombineTest : BaseTest() {
   @Test
-  fun testCombine6() =
-    runTest(StandardTestDispatcher()) {
-      val list =
-        combine(
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-        ) { f1, f2, f3, f4, f5, f6 ->
-          listOf(f1, f2, f3, f4, f5, f6).joinToString(separator = "-")
-        }.toList()
+  fun testCombine6() = runTest(StandardTestDispatcher()) {
+    val list = combine(
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+    ) { f1, f2, f3, f4, f5, f6 ->
+      listOf(f1, f2, f3, f4, f5, f6).joinToString(separator = "-")
+    }.toList()
 
-      assertEquals(
-        listOf(
-          "1-a-true-a-1-a",
-          "2-b-false-b-2-b",
-          "3-c-true-c-3-c",
-        ),
-        list,
-      )
-    }
+    assertEquals(
+      listOf(
+        "1-a-true-a-1-a",
+        "2-b-false-b-2-b",
+        "3-c-true-c-3-c",
+      ),
+      list,
+    )
+  }
 
   @Test
-  fun testCombine7() =
-    runTest(StandardTestDispatcher()) {
-      val list =
-        combine(
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-        ) { f1, f2, f3, f4, f5, f6, f7 ->
-          listOf(f1, f2, f3, f4, f5, f6, f7).joinToString(separator = "-")
-        }.toList()
+  fun testCombine7() = runTest(StandardTestDispatcher()) {
+    val list = combine(
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+    ) { f1, f2, f3, f4, f5, f6, f7 ->
+      listOf(f1, f2, f3, f4, f5, f6, f7).joinToString(separator = "-")
+    }.toList()
 
-      assertEquals(
-        listOf(
-          "1-a-true-a-1-a-true",
-          "2-b-false-b-2-b-false",
-          "3-c-true-c-3-c-true",
-        ),
-        list,
-      )
-    }
+    assertEquals(
+      listOf(
+        "1-a-true-a-1-a-true",
+        "2-b-false-b-2-b-false",
+        "3-c-true-c-3-c-true",
+      ),
+      list,
+    )
+  }
 
   @Test
-  fun testCombine8() =
-    runTest(StandardTestDispatcher()) {
-      val list =
-        combine(
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-        ) { f1, f2, f3, f4, f5, f6, f7, f8 ->
-          listOf(f1, f2, f3, f4, f5, f6, f7, f8).joinToString(separator = "-")
-        }.toList()
+  fun testCombine8() = runTest(StandardTestDispatcher()) {
+    val list = combine(
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+    ) { f1, f2, f3, f4, f5, f6, f7, f8 ->
+      listOf(f1, f2, f3, f4, f5, f6, f7, f8).joinToString(separator = "-")
+    }.toList()
 
-      assertEquals(
-        listOf(
-          "1-a-true-a-1-a-true-a",
-          "2-b-false-b-2-b-false-b",
-          "3-c-true-c-3-c-true-c",
-        ),
-        list,
-      )
-    }
+    assertEquals(
+      listOf(
+        "1-a-true-a-1-a-true-a",
+        "2-b-false-b-2-b-false-b",
+        "3-c-true-c-3-c-true-c",
+      ),
+      list,
+    )
+  }
 
   @Test
-  fun testCombine9() =
-    runTest(StandardTestDispatcher()) {
-      val list =
-        combine(
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-        ) { f1, f2, f3, f4, f5, f6, f7, f8, f9 ->
-          listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9).joinToString(separator = "-")
-        }.toList()
+  fun testCombine9() = runTest(StandardTestDispatcher()) {
+    val list = combine(
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+    ) { f1, f2, f3, f4, f5, f6, f7, f8, f9 ->
+      listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9).joinToString(separator = "-")
+    }.toList()
 
-      assertEquals(
-        listOf(
-          "1-a-true-a-1-a-true-a-1",
-          "2-b-false-b-2-b-false-b-2",
-          "3-c-true-c-3-c-true-c-3",
-        ),
-        list,
-      )
-    }
+    assertEquals(
+      listOf(
+        "1-a-true-a-1-a-true-a-1",
+        "2-b-false-b-2-b-false-b-2",
+        "3-c-true-c-3-c-true-c-3",
+      ),
+      list,
+    )
+  }
 
   @Test
-  fun testCombine10() =
-    runTest(StandardTestDispatcher()) {
-      val list =
-        combine(
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-        ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10 ->
-          listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10).joinToString(separator = "-")
-        }.toList()
+  fun testCombine10() = runTest(StandardTestDispatcher()) {
+    val list = combine(
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+    ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10 ->
+      listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10).joinToString(separator = "-")
+    }.toList()
 
-      assertEquals(
-        listOf(
-          "1-a-true-a-1-a-true-a-1-a",
-          "2-b-false-b-2-b-false-b-2-b",
-          "3-c-true-c-3-c-true-c-3-c",
-        ),
-        list,
-      )
-    }
+    assertEquals(
+      listOf(
+        "1-a-true-a-1-a-true-a-1-a",
+        "2-b-false-b-2-b-false-b-2-b",
+        "3-c-true-c-3-c-true-c-3-c",
+      ),
+      list,
+    )
+  }
 
   @Test
-  fun testCombine11() =
-    runTest(StandardTestDispatcher()) {
-      val list =
-        combine(
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-        ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11 ->
-          listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11).joinToString(separator = "-")
-        }.toList()
+  fun testCombine11() = runTest(StandardTestDispatcher()) {
+    val list = combine(
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+    ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11 ->
+      listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11).joinToString(separator = "-")
+    }.toList()
 
-      assertEquals(
-        listOf(
-          "1-a-true-a-1-a-true-a-1-a-true",
-          "2-b-false-b-2-b-false-b-2-b-false",
-          "3-c-true-c-3-c-true-c-3-c-true",
-        ),
-        list,
-      )
-    }
+    assertEquals(
+      listOf(
+        "1-a-true-a-1-a-true-a-1-a-true",
+        "2-b-false-b-2-b-false-b-2-b-false",
+        "3-c-true-c-3-c-true-c-3-c-true",
+      ),
+      list,
+    )
+  }
 
   @Test
-  fun testCombine12() =
-    runTest(StandardTestDispatcher()) {
-      val list =
-        combine(
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-          flow1(),
-          flow2(),
-          flow3(),
-          flow4(),
-        ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12 ->
-          listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12).joinToString(separator = "-")
-        }.toList()
+  fun testCombine12() = runTest(StandardTestDispatcher()) {
+    val list = combine(
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+      flow1(),
+      flow2(),
+      flow3(),
+      flow4(),
+    ) { f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12 ->
+      listOf(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12).joinToString(separator = "-")
+    }.toList()
 
-      assertEquals(
-        listOf(
-          "1-a-true-a-1-a-true-a-1-a-true-a",
-          "2-b-false-b-2-b-false-b-2-b-false-b",
-          "3-c-true-c-3-c-true-c-3-c-true-c",
-        ),
-        list,
-      )
-    }
+    assertEquals(
+      listOf(
+        "1-a-true-a-1-a-true-a-1-a-true-a",
+        "2-b-false-b-2-b-false-b-2-b-false-b",
+        "3-c-true-c-3-c-true-c-3-c-true-c",
+      ),
+      list,
+    )
+  }
 }
 
 private fun flow1(): Flow<Int> = flowOf(1, 2, 3)
-
 private fun flow2(): Flow<String> = flowOf("a", "b", "c")
-
 private fun flow3(): Flow<Boolean> = flowOf(true, false, true)
-
 private fun flow4(): Flow<Char> = flowOf('a', 'b', 'c')

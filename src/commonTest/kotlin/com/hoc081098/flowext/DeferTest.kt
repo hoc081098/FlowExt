@@ -36,39 +36,35 @@ import kotlinx.coroutines.flow.flowOf
 @ExperimentalCoroutinesApi
 class DeferTest : BaseTest() {
   @Test
-  fun deferredEmitsValues() =
-    runTest {
-      var count = 0L
-      val flow =
-        defer {
-          delay(count)
-          flowOf(count)
-        }
-
-      flow.test(listOf(Event.Value(0L), Event.Complete))
-
-      ++count
-      flow.test(listOf(Event.Value(1L), Event.Complete))
-
-      ++count
-      flow.test(listOf(Event.Value(2L), Event.Complete))
+  fun deferredEmitsValues() = runTest {
+    var count = 0L
+    val flow = defer {
+      delay(count)
+      flowOf(count)
     }
+
+    flow.test(listOf(Event.Value(0L), Event.Complete))
+
+    ++count
+    flow.test(listOf(Event.Value(1L), Event.Complete))
+
+    ++count
+    flow.test(listOf(Event.Value(2L), Event.Complete))
+  }
 
   @Test
-  fun deferFailureUpStream() =
-    runTest {
-      val testException = TestException()
+  fun deferFailureUpStream() = runTest {
+    val testException = TestException()
 
-      defer<Int> {
-        flow { throw testException }
-      }.test(listOf(Event.Error(testException)))
-    }
+    defer<Int> {
+      flow { throw testException }
+    }.test(listOf(Event.Error(testException)))
+  }
 
   @Test
-  fun deferFactoryThrows() =
-    runTest {
-      val testException = TestException()
+  fun deferFactoryThrows() = runTest {
+    val testException = TestException()
 
-      defer<Int> { throw testException }.test(listOf(Event.Error(testException)))
-    }
+    defer<Int> { throw testException }.test(listOf(Event.Error(testException)))
+  }
 }

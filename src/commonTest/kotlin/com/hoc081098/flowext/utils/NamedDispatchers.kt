@@ -34,6 +34,7 @@ import kotlinx.coroutines.Runnable
  */
 @ThreadLocal
 object NamedDispatchers {
+
   private val stack = ArrayDeque<String>()
 
   fun name(): String = stack.lastOrNull() ?: error("No names on stack")
@@ -42,19 +43,15 @@ object NamedDispatchers {
 
   operator fun invoke(name: String) = named(name)
 
-  private fun named(name: String): CoroutineDispatcher =
-    object : CoroutineDispatcher() {
-      override fun dispatch(
-        context: CoroutineContext,
-        block: Runnable,
-      ) {
-        stack.addLast(name)
-        try {
-          block.run()
-        } finally {
-          val last = stack.removeLastOrNull() ?: error("No names on stack")
-          require(last == name) { "Inconsistent stack: expected $name, but had $last" }
-        }
+  private fun named(name: String): CoroutineDispatcher = object : CoroutineDispatcher() {
+    override fun dispatch(context: CoroutineContext, block: Runnable) {
+      stack.addLast(name)
+      try {
+        block.run()
+      } finally {
+        val last = stack.removeLastOrNull() ?: error("No names on stack")
+        require(last == name) { "Inconsistent stack: expected $name, but had $last" }
       }
     }
+  }
 }
