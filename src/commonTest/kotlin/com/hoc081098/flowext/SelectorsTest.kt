@@ -125,6 +125,21 @@ class Select1Test : BaseTest() {
 
     flow.test((1..4).map { Event.Value(it) } + Event.Complete)
   }
+
+  @Test
+  fun testSelect1Distinct() = runTest {
+    var count = 0
+
+    val flow = List(10) { i -> List(10) { i } }
+      .flatten()
+      .asFlow()
+      .select {
+        count++
+        it.toString().length
+      }
+    flow.test(listOf(Event.Value(1)) + Event.Complete)
+    assertEquals(10, count)
+  }
 }
 
 @ExperimentalCoroutinesApi
