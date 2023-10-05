@@ -57,7 +57,9 @@ class PairwiseTest : BaseStepTest() {
       .mapNotNull {
         if (it.size < 2) {
           null
-        } else it[0] to it[1]
+        } else {
+          it[0] to it[1]
+        }
       }
       .test(
         listOf(

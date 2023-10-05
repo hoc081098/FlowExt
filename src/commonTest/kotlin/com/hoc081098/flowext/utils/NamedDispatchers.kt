@@ -34,7 +34,6 @@ import kotlinx.coroutines.Runnable
  */
 @ThreadLocal
 object NamedDispatchers {
-
   private val stack = ArrayDeque<String>()
 
   fun name(): String = stack.lastOrNull() ?: error("No names on stack")

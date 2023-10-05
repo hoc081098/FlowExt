@@ -219,6 +219,9 @@ class CombineTest : BaseTest() {
 }
 
 private fun flow1(): Flow<Int> = flowOf(1, 2, 3)
+
 private fun flow2(): Flow<String> = flowOf("a", "b", "c")
+
 private fun flow3(): Flow<Boolean> = flowOf(true, false, true)
+
 private fun flow4(): Flow<Char> = flowOf('a', 'b', 'c')

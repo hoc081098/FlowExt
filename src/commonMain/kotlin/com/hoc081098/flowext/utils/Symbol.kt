@@ -29,7 +29,9 @@ import kotlin.jvm.JvmField
 /**
  * A symbol class that is used to define unique constants that are self-explanatory in debugger.
  */
-public class Symbol(@JvmField public val symbol: String) {
+public class Symbol(
+  @JvmField public val symbol: String,
+) {
   override fun toString(): String = "<$symbol>"
 
   @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")

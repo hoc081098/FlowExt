@@ -41,7 +41,6 @@ import kotlinx.coroutines.flow.fold
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class RetryWhenWithDelayStrategyTest : BaseTest() {
-
   @Test
   fun test() = runTest {
     var count = 0

@@ -57,7 +57,6 @@ import kotlinx.coroutines.yield
 @FlowPreview
 @ExperimentalCoroutinesApi
 class FlatMapConcatEagerTest : BaseStepTest() {
-
   @Test
   fun testMapEagerMapsConcurrently() = runTest {
     launch {
