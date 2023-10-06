@@ -22,10 +22,8 @@
  * SOFTWARE.
  */
 
-package com.hoc081098
+package com.hoc081098.flowext
 
-import com.hoc081098.flowext.Event
-import com.hoc081098.flowext.scanWith
 import com.hoc081098.flowext.utils.BaseStepTest
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test

@@ -47,79 +47,74 @@ import kotlinx.coroutines.runBlocking
 @ExperimentalCoroutinesApi
 class TakeUntilJvmTest {
   @Test
-  fun takeUntilSingle() =
-    runBlocking {
-      range(0, 10)
-        .takeUntil(flowOf(1))
-        .test(listOf(Event.Complete))
+  fun takeUntilSingle() = runBlocking {
+    range(0, 10)
+      .takeUntil(flowOf(1))
+      .test(listOf(Event.Complete))
 
-      flowOf(1)
-        .takeUntil(flowOf(1))
-        .test(listOf(Event.Complete))
-    }
-
-  @Test
-  fun sourceCompletesAfterNotifier() =
-    runBlocking {
-      range(0, 10)
-        .onEach { delay(100) }
-        .onCompletion { println(it) }
-        .takeUntil(timer(Unit, 470.milliseconds))
-        .test(
-          listOf(
-            Event.Value(0),
-            Event.Value(1),
-            Event.Value(2),
-            Event.Value(3),
-            Event.Complete,
-          ),
-        )
-    }
+    flowOf(1)
+      .takeUntil(flowOf(1))
+      .test(listOf(Event.Complete))
+  }
 
   @Test
-  fun sourceCompletesBeforeNotifier() =
-    runBlocking {
-      range(0, 10)
-        .onEach { delay(30) }
-        .takeUntil(timer(Unit, 10.seconds))
-        .test(
-          (0 until 10).map { Event.Value(it) } +
-            Event.Complete,
-        )
-    }
+  fun sourceCompletesAfterNotifier() = runBlocking {
+    range(0, 10)
+      .onEach { delay(100) }
+      .onCompletion { println(it) }
+      .takeUntil(timer(Unit, 470.milliseconds))
+      .test(
+        listOf(
+          Event.Value(0),
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete,
+        ),
+      )
+  }
 
   @Test
-  fun upstreamError() =
-    runBlocking {
-      flow<Nothing> { throw TestException() }
-        .takeUntil(timer(Unit, 100))
-        .test(null) {
-          assertIs<TestException>(it.single().errorOrThrow())
-        }
+  fun sourceCompletesBeforeNotifier() = runBlocking {
+    range(0, 10)
+      .onEach { delay(30) }
+      .takeUntil(timer(Unit, 10.seconds))
+      .test(
+        (0 until 10).map { Event.Value(it) } +
+          Event.Complete,
+      )
+  }
 
-      flow {
-        emit(1)
-        throw TestException()
+  @Test
+  fun upstreamError() = runBlocking {
+    flow<Nothing> { throw TestException() }
+      .takeUntil(timer(Unit, 100))
+      .test(null) {
+        assertIs<TestException>(it.single().errorOrThrow())
       }
-        .takeUntil(timer(Unit, 100))
-        .test(null) {
-          assertEquals(2, it.size)
-          assertEquals(1, it[0].valueOrThrow())
-          assertIs<TestException>(it[1].errorOrThrow())
-        }
+
+    flow {
+      emit(1)
+      throw TestException()
     }
+      .takeUntil(timer(Unit, 100))
+      .test(null) {
+        assertEquals(2, it.size)
+        assertEquals(1, it[0].valueOrThrow())
+        assertIs<TestException>(it[1].errorOrThrow())
+      }
+  }
 
   @Test
-  fun take() =
-    runBlocking {
-      flowOf(1, 2, 3)
-        .takeUntil(timer(Unit, 100))
-        .take(1)
-        .test(
-          listOf(
-            Event.Value(1),
-            Event.Complete,
-          ),
-        )
-    }
+  fun take() = runBlocking {
+    flowOf(1, 2, 3)
+      .takeUntil(timer(Unit, 100))
+      .take(1)
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Complete,
+        ),
+      )
+  }
 }
