@@ -148,6 +148,7 @@ dependencies {
   - [`retryWhenWithDelayStrategy`](#retrywhenwithdelaystrategy)
   - [`retryWhenWithExponentialBackoff`](#retrywhenwithexponentialbackoff)
   - [`retryWithExponentialBackoff`](#retrywithexponentialbackoff)
+  - [`scanWith`](#scanWith)
   - [`select`](#select)
   - [`skipUntil`](#skipuntil--dropuntil)
   - [`dropUntil`](#skipuntil--dropuntil)
@@ -1024,6 +1025,20 @@ Call count=0
 Call count=1
 retryWithExponentialBackoff: Result: count=1
 ```
+
+----
+
+#### scanWith
+
+- Similar
+  to [RxJava scanWith](https://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#scanWith-io.reactivex.rxjava3.functions.Supplier-io.reactivex.rxjava3.functions.BiFunction-)
+
+Folds the given flow with [operation], emitting every intermediate result,
+including the initial value supplied by [initialSupplier] at the collection time.
+
+This is a variant of `scan` that the initial value is lazily supplied,
+which is useful when the initial value is expensive to create
+or depends on a logic that should be executed at the collection time (lazy semantics).
 
 ----
 

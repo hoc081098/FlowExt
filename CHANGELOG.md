@@ -2,9 +2,15 @@
 
 ## [Unreleased] - TODO
 
+### Changed
+
+- Update dependencies
+  - `Gradle` to `8.3`.
+
 ### Added
 
 - Add `Flow.ignoreElements` operator.
+- Add `Flow.scanWith` operator.
 
 ## [0.7.0] ~ [0.7.1] - Jul 31, 2023
 
