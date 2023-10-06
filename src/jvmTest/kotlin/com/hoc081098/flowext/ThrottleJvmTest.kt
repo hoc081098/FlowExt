@@ -167,11 +167,12 @@ class ThrottleFirstJvmTest {
   fun throttleNeverFlow() = runBlocking {
     var hasValue = false
 
-    val job = neverFlow()
-      .throttleTime(100)
-      .onEach { hasValue = true }
-      .flowOn(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
-      .launchIn(this)
+    val job =
+      neverFlow()
+        .throttleTime(100)
+        .onEach { hasValue = true }
+        .flowOn(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
+        .launchIn(this)
     delay(1000)
     job.cancel()
 
@@ -476,11 +477,12 @@ class ThrottleLastJvmTest {
   fun throttleNeverFlow() = runBlocking {
     var hasValue = false
 
-    val job = neverFlow()
-      .throttleTime(100, TRAILING)
-      .onEach { hasValue = true }
-      .flowOn(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
-      .launchIn(this)
+    val job =
+      neverFlow()
+        .throttleTime(100, TRAILING)
+        .onEach { hasValue = true }
+        .flowOn(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
+        .launchIn(this)
     delay(1000)
     job.cancel()
 

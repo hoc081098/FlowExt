@@ -35,8 +35,7 @@ internal actual class ConcurrentHashMap<K, V> internal actual constructor() : Mu
 
   override fun containsKey(key: K): Boolean = synchronized(lock) { delegate.containsKey(key) }
 
-  override fun containsValue(value: V): Boolean =
-    synchronized(lock) { delegate.containsValue(value) }
+  override fun containsValue(value: V): Boolean = synchronized(lock) { delegate.containsValue(value) }
 
   override fun get(key: K): V? = synchronized(lock) { delegate[key] }
 
@@ -53,7 +52,10 @@ internal actual class ConcurrentHashMap<K, V> internal actual constructor() : Mu
 
   override fun clear() = synchronized(lock, delegate::clear)
 
-  override fun put(key: K, value: V): V? = synchronized(lock) { delegate.put(key, value) }
+  override fun put(
+    key: K,
+    value: V,
+  ): V? = synchronized(lock) { delegate.put(key, value) }
 
   override fun putAll(from: Map<out K, V>) = synchronized(lock) { delegate.putAll(from) }
 
@@ -61,10 +63,11 @@ internal actual class ConcurrentHashMap<K, V> internal actual constructor() : Mu
 
   override fun hashCode(): Int = synchronized(lock, delegate::hashCode)
 
-  override fun equals(other: Any?): Boolean = synchronized(lock) {
-    if (other !is Map<*, *>) return false
-    return other == delegate
-  }
+  override fun equals(other: Any?): Boolean =
+    synchronized(lock) {
+      if (other !is Map<*, *>) return false
+      return other == delegate
+    }
 
   override fun toString(): String = "ConcurrentHashMap.native by $delegate"
 }

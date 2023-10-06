@@ -145,7 +145,6 @@ private fun <T> flattenConcatEagerInternal(flow: Flow<Flow<T>>, concurrency: Int
 }
 
 private class ProxyCollector<T>(private val channel: Channel<T>) : FlowCollector<T> {
-
   override suspend fun emit(value: T) {
     channel.send(value)
   }

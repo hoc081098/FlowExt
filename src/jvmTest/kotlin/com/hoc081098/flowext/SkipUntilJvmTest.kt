@@ -90,24 +90,26 @@ class SkipUntilJvmTest : BaseStepTest() {
     // 01--------------------2X
     // ----------100
 
-    val source = flow {
-      expect(2)
-      emit(0)
-      expect(3)
-      emit(1)
+    val source =
+      flow {
+        expect(2)
+        emit(0)
+        expect(3)
+        emit(1)
 
-      delay(20)
-      expect(5)
+        delay(20)
+        expect(5)
 
-      emit(2)
-      expect(7)
-      throw TestException()
-    }
+        emit(2)
+        expect(7)
+        throw TestException()
+      }
 
-    val notifier = flowOf(100).onEach {
-      delay(10)
-      expect(4)
-    }
+    val notifier =
+      flowOf(100).onEach {
+        delay(10)
+        expect(4)
+      }
 
     expect(1)
     assertFailsWith<TestException>(

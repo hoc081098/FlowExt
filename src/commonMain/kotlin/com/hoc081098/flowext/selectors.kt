@@ -30,9 +30,23 @@ import com.hoc081098.flowext.utils.NULL_VALUE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 
 private typealias SubStateT = Any?
+
+internal fun <State, Result> Flow<State>.select1Internal(
+  selector: suspend (State) -> Result,
+): Flow<Result> = flow {
+  var latestState: Any? = NULL_VALUE // Result | NULL_VALUE
+
+  distinctUntilChanged().collect { state ->
+    val currentState = selector(state)
+
+    if (latestState === NULL_VALUE || (latestState as Result) != currentState) {
+      latestState = currentState
+      emit(currentState)
+    }
+  }
+}
 
 private fun <State, Result> Flow<State>.selectInternal(
   selectors: Array<Selector<State, SubStateT>>,
@@ -45,7 +59,7 @@ private fun <State, Result> Flow<State>.selectInternal(
     var latestState: Any? = NULL_VALUE // Result | NULL_VALUE
     var reusableSubStates: Array<SubStateT>? = null
 
-    collect { state ->
+    distinctUntilChanged().collect { state ->
       val currentSubStates = reusableSubStates
         ?: arrayOfNulls<Any?>(selectors.size).also { reusableSubStates = it }
 
@@ -93,7 +107,7 @@ public typealias Selector<State, SubState> = suspend (State) -> SubState
  * @param selector A function that takes the [State] and returns a sub-state.
  */
 public fun <State, Result> Flow<State>.select(selector: Selector<State, Result>): Flow<Result> =
-  map(selector).distinctUntilChanged()
+  select1Internal(selector = selector)
 
 /**
  * Select two sub-states from the source [Flow] and combine them into a [Result].

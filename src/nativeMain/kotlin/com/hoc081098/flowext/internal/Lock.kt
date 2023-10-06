@@ -35,7 +35,10 @@ internal expect class Lock() {
 
 @Suppress("Unused")
 @OptIn(ExperimentalContracts::class)
-internal inline fun <T> synchronized(lock: Lock, block: () -> T): T {
+internal inline fun <T> synchronized(
+  lock: Lock,
+  block: () -> T,
+): T {
   contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
   return lock.synchronizedImpl(block)
 }

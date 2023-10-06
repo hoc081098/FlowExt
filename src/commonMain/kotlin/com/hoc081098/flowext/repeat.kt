@@ -139,6 +139,7 @@ public fun <T> Flow<T>.repeat(
 private typealias DelayDurationSelector = suspend (count: Int) -> Duration
 
 private inline fun noDelay(): DelayDurationSelector? = null
+
 private inline fun fixedDelay(delay: Duration): DelayDurationSelector? =
   if (delay.isZeroOrNegative()) {
     noDelay()

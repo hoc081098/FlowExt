@@ -7,4 +7,11 @@ trim_trailing_whitespace=true
 insert_final_newline=true
 [*.{kt, kts}]
 ij_kotlin_imports_layout=*
+ktlint_code_style=ktlint_official
 ktlint_standard_filename=disabled
+ktlint_standard_multiline-expression-wrapping=disabled
+ktlint_standard_function-signature=disabled
+ktlint_standard_statement-wrapping=disabled
+ktlint_standard_string-template-indent=disabled
+ktlint_standard_discouraged-comment-location=disabled
+ktlint_standard_if-else-wrapping=disabled
