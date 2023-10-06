@@ -4,10 +4,6 @@
 
 ### Changed
 
-### Added
-
-- Add `Flow.safeCast` operator.
-
 - Update dependencies
   - `Gradle` to `8.3`.
 
@@ -15,7 +11,7 @@
 
 - Add `Flow.ignoreElements` operator.
 - Add `Flow.scanWith` operator.
-
+- Add `Flow.safeCast` operator.
 ## [0.7.0] ~ [0.7.1] - Jul 31, 2023
 
 ### Changed

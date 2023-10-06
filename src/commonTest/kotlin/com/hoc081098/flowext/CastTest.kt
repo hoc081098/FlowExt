@@ -122,24 +122,21 @@ class CastTest : BaseTest() {
   }
 
   @Test
-  fun testSafeCast() {
+  fun testSafeCast()  = runTest{
     val stringFlow: Flow<String?> = flowOf("Hello", 42, "World", 123, "Kotlin").safeCast()
     assertIs<Flow<String?>>(stringFlow)
 
-    kotlinx.coroutines.test.runTest {
-      assertContentEquals(
-        listOf("Hello", null, "World", null, "Kotlin"),
-        stringFlow.toList(),
-      )
-    }
+    assertContentEquals(
+      listOf("Hello", null, "World", null, "Kotlin"),
+      stringFlow.toList(),
+    )
+
     val intFlow: Flow<Int?> = flowOf(1, 2, 3, null).safeCast()
     assertIs<Flow<Int?>>(intFlow)
 
-    kotlinx.coroutines.test.runTest {
-      assertContentEquals(
-        listOf(1, 2, 3, null),
-        intFlow.toList(),
-      )
-    }
+    assertContentEquals(
+      listOf(1, 2, 3, null),
+      intFlow.toList(),
+    )
   }
 }
