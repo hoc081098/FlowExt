@@ -26,18 +26,14 @@ package com.hoc081098.flowext
 
 import kotlin.experimental.ExperimentalTypeInference
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.scan
 
 @OptIn(ExperimentalTypeInference::class)
 public fun <T, R> Flow<T>.scanWith(
   initialSupplier: suspend () -> R,
   @BuilderInference operation: suspend (accumulator: R, value: T) -> R,
-): Flow<R> = flow {
-  var accumulator: R = initialSupplier()
-  emit(accumulator)
-
-  collect { value ->
-    accumulator = operation(accumulator, value)
-    emit(accumulator)
-  }
-}
+): Flow<R> =
+  // inline [defer] here to avoid unnecessary allocation
+  flow { return@flow emitAll(scan(initialSupplier(), operation)) }

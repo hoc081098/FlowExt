@@ -25,11 +25,18 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseStepTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.fail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.take
 
 @ExperimentalCoroutinesApi
 class ScanWithTest : BaseStepTest() {
@@ -66,5 +73,39 @@ class ScanWithTest : BaseStepTest() {
         Event.Complete,
       ),
     )
+  }
+
+  @Test
+  fun failureUpstream() = runTest {
+    assertFailsWith<TestException>(
+      flow<Int> { throw TestException("Broken!") }
+        .scanWith({ 0 }) { acc, e -> acc + e },
+    )
+  }
+
+  @Test
+  fun failureOperation() = runTest {
+    assertFailsWith<TestException>(
+      flowOf(1, 2, 3)
+        .scanWith({ 0 }) { _, _ -> throw TestException("Broken!") },
+    )
+  }
+
+  @Test
+  fun failureInitialSupplier() = runTest {
+    assertFailsWith<TestException>(
+      flowOf(1, 2, 3)
+        .scanWith<Int, Int>({ throw TestException("Broken!") }) { acc, e -> acc + e },
+    )
+  }
+
+  @Test
+  fun cancellation() = runTest {
+    var initial = 0
+    val flow = flow<Int> { fail("Should not be called") }
+      .scanWith({ initial++ }) { acc, e -> acc + e }
+      .take(1)
+
+    repeat(10) { assertEquals(it, flow.last()) }
   }
 }
