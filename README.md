@@ -122,9 +122,10 @@ dependencies {
 - Intermediate operators
   - [`bufferCount`](#buffercount)
   - [`combine`](#combine)
-  - [`cast`](#cast--castnotnull--castnullable)
-  - [`castNotNull`](#cast--castnotnull--castnullable)
-  - [`castNullable`](#cast--castnotnull--castnullable)
+  - [`cast`](#cast--castnotnull--castnullable--safeCast)
+  - [`castNotNull`](#cast--castnotnull--castnullable--safeCast)
+  - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
+  - [`safeCast`](#cast--castnotnull--castnullable--safeCast)
   - [`concatWith`](#concatwith)
   - [`startWith`](#startwith)
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
@@ -432,7 +433,7 @@ timer: kotlin.Unit
 
 ----
 
-#### cast / castNotNull / castNullable
+#### cast / castNotNull / castNullable / safeCast
 
 - Similar
   to [RxJava cast](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#cast-java.lang.Class-)
@@ -483,6 +484,31 @@ Output:
 castNotNull: 1
 castNotNull: 2
 castNotNull: 3
+```
+
+----
+
+
+##### safeCast
+
+Adapt this `Flow<*>` to be a `Flow<R?>`.
+
+At the collection time, if this `Flow` has any value that is not an instance of R, null will be emitted.
+
+```kotlin
+flowOf<Any?>(1, 2, 3, "Kotlin", null)
+  .safeCast<Int?>()
+  .collect { v: Int? -> println("safeCast: $v") }
+```
+
+Output:
+
+```none
+safeCast: 1
+safeCast: 2
+safeCast: 3
+safeCast: null
+safeCast: null
 ```
 
 ----
