@@ -493,18 +493,12 @@ castNotNull: 3
 
 Adapt this `Flow<*>` to be a `Flow<R?>`.
 
-At the collection time, converts a Flow<*> to a Flow<R?>, if not consistent with R, returns null.
+At the collection time, if this `Flow` has any value that is not an instance of R, null will be emitted.
 
 ```kotlin
 flowOf<Any?>(1, 2, 3, "Kotlin", null)
   .safeCast<Int?>()
-  .collect { v: Int? ->
-    if (v != null) {
-      println("safeCast: $v")
-    } else {
-      println("Null value encountered.")
-    }
-  }
+  .collect { v: Int? -> println("safeCast: $v") }
 ```
 
 Output:
@@ -513,8 +507,8 @@ Output:
 safeCast: 1
 safeCast: 2
 safeCast: 3
-Null value encountered.
-Null value encountered.
+safeCast: null
+safeCast: null
 ```
 
 ----

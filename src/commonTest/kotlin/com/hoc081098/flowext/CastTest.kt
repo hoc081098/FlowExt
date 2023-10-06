@@ -28,11 +28,13 @@ import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertIs
 import kotlin.test.assertSame
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
 
 @ExperimentalCoroutinesApi
 class CastTest : BaseTest() {
@@ -99,12 +101,12 @@ class CastTest : BaseTest() {
 
   @Test
   fun testSafeCastSuccess() = runTest {
-    assertIs<Flow<Int>>(
+    assertIs<Flow<Int?>>(
       flowOf<Any?>(1, 2, 3, "hello").safeCast<Int?>(),
     )
 
-    assertIs<Flow<Int>>(
-      flowOf<Int?>(1, 2, 3)
+    assertIs<Flow<Int?>>(
+      flowOf<Any?>(1, 2, 3, "kotlin", null)
         .safeCast<Int?>(),
     )
       .test(
@@ -112,6 +114,8 @@ class CastTest : BaseTest() {
           Event.Value(1),
           Event.Value(2),
           Event.Value(3),
+          Event.Value(null),
+          Event.Value(null),
           Event.Complete,
         ),
       )
@@ -122,7 +126,20 @@ class CastTest : BaseTest() {
     val stringFlow: Flow<String?> = flowOf("Hello", 42, "World", 123, "Kotlin").safeCast()
     assertIs<Flow<String?>>(stringFlow)
 
+    kotlinx.coroutines.test.runTest {
+      assertContentEquals(
+        listOf("Hello", null, "World", null, "Kotlin"),
+        stringFlow.toList(),
+      )
+    }
     val intFlow: Flow<Int?> = flowOf(1, 2, 3, null).safeCast()
     assertIs<Flow<Int?>>(intFlow)
+
+    kotlinx.coroutines.test.runTest {
+      assertContentEquals(
+        listOf(1, 2, 3, null),
+        intFlow.toList(),
+      )
+    }
   }
 }

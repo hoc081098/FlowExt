@@ -2,11 +2,11 @@
 
 ## [Unreleased] - TODO
 
+### Changed
+
 ### Added
 
 - Add `Flow.safeCast` operator.
-
-### Changed
 
 - Update dependencies
   - `Gradle` to `8.3`.
