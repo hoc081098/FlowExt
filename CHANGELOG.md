@@ -2,6 +2,10 @@
 
 ## [Unreleased] - TODO
 
+### Added
+
+- Add `Flow.safeCast` operator.
+
 ### Changed
 
 - Update dependencies

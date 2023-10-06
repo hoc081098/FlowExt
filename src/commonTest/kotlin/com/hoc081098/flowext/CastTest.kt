@@ -96,4 +96,33 @@ class CastTest : BaseTest() {
     val flow = flowOf(1, 2, 3)
     assertSame(flow.castNullable(), flow)
   }
+
+  @Test
+  fun testSafeCastSuccess() = runTest {
+    assertIs<Flow<Int>>(
+      flowOf<Any?>(1, 2, 3, "hello").safeCast<Int?>(),
+    )
+
+    assertIs<Flow<Int>>(
+      flowOf<Int?>(1, 2, 3)
+        .safeCast<Int?>(),
+    )
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun testSafeCast() {
+    val stringFlow: Flow<String?> = flowOf("Hello", 42, "World", 123, "Kotlin").safeCast()
+    assertIs<Flow<String?>>(stringFlow)
+
+    val intFlow: Flow<Int?> = flowOf(1, 2, 3, null).safeCast()
+    assertIs<Flow<Int?>>(intFlow)
+  }
 }

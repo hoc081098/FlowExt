@@ -432,7 +432,7 @@ timer: kotlin.Unit
 
 ----
 
-#### cast / castNotNull / castNullable
+#### cast / castNotNull / castNullable / safeCast
 
 - Similar
   to [RxJava cast](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#cast-java.lang.Class-)
@@ -483,6 +483,37 @@ Output:
 castNotNull: 1
 castNotNull: 2
 castNotNull: 3
+```
+
+----
+
+
+##### safeCast
+
+Adapt this `Flow<*>` to be a `Flow<R?>`.
+
+At the collection time, converts a Flow<*> to a Flow<R?>, if not consistent with R, returns null.
+
+```kotlin
+flowOf<Any?>(1, 2, 3, "Kotlin", null)
+  .castSafely<Int?>()
+  .collect { v: Int? ->
+    if (v != null) {
+      println("safeCast: $v")
+    } else {
+      println("Null value encountered.")
+    }
+  }
+```
+
+Output:
+
+```none
+safeCast: 1
+safeCast: 2
+safeCast: 3
+Null value encountered.
+Null value encountered.
 ```
 
 ----
