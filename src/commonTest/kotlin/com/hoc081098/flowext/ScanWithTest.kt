@@ -43,15 +43,20 @@ class ScanWithTest : BaseStepTest() {
   @Test
   fun callInitialSupplierPerCollection() = runTest {
     var initial = 100
+    var nextIndex = 0
 
     val flow = flowOf(1, 2, 3, 4)
       .scanWith(
         initialSupplier = {
+          expect(nextIndex)
+
           delay(100)
           ++initial
         },
       ) { acc, value -> acc + value }
 
+    expect(1)
+    nextIndex = 2
     flow.test(
       listOf(
         Event.Value(101),
@@ -63,6 +68,9 @@ class ScanWithTest : BaseStepTest() {
       ),
     )
 
+    expect(3)
+    nextIndex = 4
+
     flow.test(
       listOf(
         Event.Value(102),
@@ -73,6 +81,8 @@ class ScanWithTest : BaseStepTest() {
         Event.Complete,
       ),
     )
+
+    finish(5)
   }
 
   @Test
