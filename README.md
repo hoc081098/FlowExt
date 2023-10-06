@@ -122,9 +122,10 @@ dependencies {
 - Intermediate operators
   - [`bufferCount`](#buffercount)
   - [`combine`](#combine)
-  - [`cast`](#cast--castnotnull--castnullable)
-  - [`castNotNull`](#cast--castnotnull--castnullable)
-  - [`castNullable`](#cast--castnotnull--castnullable)
+  - [`cast`](#cast--castnotnull--castnullable--safeCast)
+  - [`castNotNull`](#cast--castnotnull--castnullable--safeCast)
+  - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
+  - [`safeCast`](#cast--castnotnull--castnullable--safeCast)
   - [`concatWith`](#concatwith)
   - [`startWith`](#startwith)
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
