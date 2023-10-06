@@ -56,7 +56,7 @@ public inline fun <T> Flow<T>.castNullable(): Flow<T?> = this
 
 /**
  * Adapt this `Flow<*>` to be a `Flow<R?>`.
- * Add At the collection time, if this [Flow] has any value that is not an instance of R,
+ * At the collection time, if this [Flow] has any value that is not an instance of R,
  * null will be emitted
  */
 @Suppress("NOTHING_TO_INLINE")
