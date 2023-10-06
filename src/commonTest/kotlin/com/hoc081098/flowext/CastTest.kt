@@ -122,7 +122,7 @@ class CastTest : BaseTest() {
   }
 
   @Test
-  fun testSafeCast()  = runTest{
+  fun testSafeCast() = runTest {
     val stringFlow: Flow<String?> = flowOf("Hello", 42, "World", 123, "Kotlin").safeCast()
     assertIs<Flow<String?>>(stringFlow)
 
