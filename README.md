@@ -497,7 +497,7 @@ At the collection time, converts a Flow<*> to a Flow<R?>, if not consistent with
 
 ```kotlin
 flowOf<Any?>(1, 2, 3, "Kotlin", null)
-  .castSafely<Int?>()
+  .safeCast<Int?>()
   .collect { v: Int? ->
     if (v != null) {
       println("safeCast: $v")
