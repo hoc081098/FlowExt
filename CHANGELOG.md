@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased] - TODO
+## [0.7.2] - Oct 7, 2023
 
 ### Changed
 
@@ -16,7 +16,7 @@
 ### Fixed
 
 - `Flow.select`: avoid calling sub-selectors when the previous state is the same as the current state
-  (aka `distinctUntilChanged`).
+  (aka. `distinctUntilChanged`).
 
 ## [0.7.0] ~ [0.7.1] - Jul 31, 2023
 
@@ -184,7 +184,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.1...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.2...HEAD
+[0.7.2]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.2
 [0.7.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.1
 [0.7.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.0
 [0.6.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.6.1
