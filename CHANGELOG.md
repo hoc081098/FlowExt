@@ -13,6 +13,11 @@
 - Add `Flow.scanWith` operator.
 - Add `Flow.safeCast` operator.
 
+### Fixed
+
+- `Flow.select`: avoid calling sub-selectors when the previous state is the same as the current state
+  (aka `distinctUntilChanged`).
+
 ## [0.7.0] ~ [0.7.1] - Jul 31, 2023
 
 ### Changed
