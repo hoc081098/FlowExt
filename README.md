@@ -1066,6 +1066,40 @@ This is a variant of `scan` that the initial value is lazily supplied,
 which is useful when the initial value is expensive to create
 or depends on a logic that should be executed at the collection time (lazy semantics).
 
+```kotlin
+var count = 0
+val mutex = Mutex()
+
+suspend fun calculateInitialValue(): Int {
+  println("calculateInitialValue")
+  delay(1000)
+  return mutex.withLock { count++ }
+}
+
+flowOf(1, 2, 3)
+  .scanWith(::calculateInitialValue) { acc, e -> acc + e }
+  .collect { println("scanWith[1]: $it") }
+
+flowOf(1, 2, 3)
+  .scanWith(::calculateInitialValue) { acc, e -> acc + e }
+  .collect { println("scanWith[2]: $it") }
+```
+
+Output:
+
+```none
+calculateInitialValue
+scanWith[1]: 0
+scanWith[1]: 1
+scanWith[1]: 3
+scanWith[1]: 6
+calculateInitialValue
+scanWith[2]: 1
+scanWith[2]: 2
+scanWith[2]: 4
+scanWith[2]: 7
+```
+
 ----
 
 #### select
