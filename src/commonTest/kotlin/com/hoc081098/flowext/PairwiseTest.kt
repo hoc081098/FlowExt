@@ -31,6 +31,7 @@ import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
@@ -164,6 +165,25 @@ class PairwiseWithTransformTest : BaseStepTest() {
           it[0] with it[1]
         }
       }
+      .also { assertIs<Flow<MyTuple2<Int, Int>>>(it) }
+      .test(
+        listOf(
+          Event.Value(0 with 1),
+          Event.Value(1 with 2),
+          Event.Value(2 with 3),
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun testPairwiseWithSuspend() = runTest {
+    range(0, 4)
+      .pairwise { a, b ->
+        delay(100)
+        MyTuple2(a, b)
+      }
+      .also { assertIs<Flow<MyTuple2<Int, Int>>>(it) }
       .test(
         listOf(
           Event.Value(0 with 1),
