@@ -42,7 +42,7 @@ import kotlinx.coroutines.flow.take
 
 private data class MyTuple2<A, B>(val first: A, val second: B)
 
-private infix fun <A, B> A.with(second: B) = MyTuple2(this, second)
+private inline infix fun <A, B> A.with(second: B) = MyTuple2(this, second)
 
 @ExperimentalCoroutinesApi
 class PairwiseTest : BaseStepTest() {
@@ -238,6 +238,33 @@ class PairwiseWithTransformTest : BaseStepTest() {
     assertFailsWith<TestException>(
       flow<Int> { throw TestException() }
         .pairwise(::MyTuple2),
+    )
+  }
+
+  @Test
+  fun testPairwiseFailureTransform() = runTest {
+    // empty flow will not call transform function
+    emptyFlow<Int>()
+      .pairwise<_, String> { _, _ -> throw TestException("Broken!") }
+      .test(
+        listOf(
+          Event.Complete,
+        ),
+      )
+
+    // single element flow will not call transform function
+    flowOf(1)
+      .pairwise<_, String> { _, _ -> throw TestException("Broken!") }
+      .test(
+        listOf(
+          Event.Complete,
+        ),
+      )
+
+    // propagate exception from transform function
+    assertFailsWith<TestException>(
+      flowOf(1, 2)
+        .pairwise<_, String> { _, _ -> throw TestException("Broken!") },
     )
   }
 
