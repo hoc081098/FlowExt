@@ -120,11 +120,12 @@ dependencies {
   - [`timer`](#timer)
 
 - Intermediate operators
-  - [`bufferCount`](#buffercount)
+  - [`bufferCount`](#buffercount--chunked)
   - [`combine`](#combine)
   - [`cast`](#cast--castnotnull--castnullable--safeCast)
   - [`castNotNull`](#cast--castnotnull--castnullable--safeCast)
   - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
+  - [`chunked`](#buffercount--chunked)
   - [`safeCast`](#cast--castnotnull--castnullable--safeCast)
   - [`concatWith`](#concatwith)
   - [`startWith`](#startwith)
@@ -157,13 +158,14 @@ dependencies {
   - [`throttleTime`](#throttletime)
   - [`withLatestFrom`](#withlatestfrom)
 
-#### bufferCount
+#### bufferCount / chunked
 
 - Similar to [RxJS bufferCount](https://rxjs.dev/api/operators/bufferCount)
 - Similar
   to [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-)
 
 Buffers the source `Flow` values until the size hits the maximum `bufferSize` given.
+Note, `chunked` is an alias to `bufferCount`.
 
 ```kotlin
 range(start = 0, count = 10)

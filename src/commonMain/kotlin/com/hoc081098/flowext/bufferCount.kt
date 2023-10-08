@@ -28,17 +28,37 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 /**
+ * This function is an alias to [bufferCount] operator.
+ *
+ * @see bufferCount
+ */
+public fun <T> Flow<T>.chunked(bufferSize: Int): Flow<List<T>> = bufferCount(bufferSize)
+
+/**
  * Buffers the source [Flow] values until the size hits the maximum [bufferSize] given.
+ *
+ * Returns a [Flow] that emits buffers of items it collects from the current [Flow].
+ * It emits connected, non-overlapping buffers, each containing [bufferSize] items.
+ * When the current [Flow] completes, the resulting [Flow] emits the current buffer
+ * and propagates the complete event from the current [Flow].
+ * Note that if the current [Flow] throws an exception,
+ * that exception is passed on immediately without first emitting the buffer it is in the process of assembling.
+ *
  * @param bufferSize The maximum size of the buffer emitted.
  */
 public fun <T> Flow<T>.bufferCount(bufferSize: Int): Flow<List<T>> = bufferExact(bufferSize)
 
 /**
- * Buffers the source [Flow] values until the size hits the maximum [bufferSize] given.
+ * Buffers a number of values from the source [Flow] by [bufferSize]
+ * then emits the buffer and clears it, and starts a new buffer each [startBufferEvery] values.
+ *
+ * When the current [Flow] completes, the resulting [Flow] emits active buffers
+ * and propagates the complete event from the current [Flow].
+ * Note that if the current [Flow] throws an exception,
+ * that exception is passed on immediately without first emitting the buffer it is in the process of assembling.
  *
  * @param bufferSize The maximum size of the buffer emitted.
- * @param startBufferEvery Optional. Default is null.
- * Interval at which to start a new buffer.
+ * @param startBufferEvery Interval at which to start a new buffer.
  * For example if [startBufferEvery] is 2, then a new buffer will be started on every other value from the source.
  * A new buffer is started at the beginning of the source by default.
  */

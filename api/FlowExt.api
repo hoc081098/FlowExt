@@ -1,6 +1,7 @@
 public final class com/hoc081098/flowext/BufferCountKt {
 	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/Flow;
 	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;II)Lkotlinx/coroutines/flow/Flow;
+	public static final fun chunked (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/CastKt {

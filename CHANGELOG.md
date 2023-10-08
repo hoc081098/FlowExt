@@ -1,5 +1,17 @@
 # Change Log
 
+## [Unreleased] - TODO
+
+### Changed
+
+- Update dependencies
+  - `Kotlin` to `1.9.10`.
+  - `Gradle` to `8.4`.
+
+### Added
+
+- Add `Flow.chunked` operator, it is an alias to `Flow.bufferCount` operator.
+
 ## [0.7.2] - Oct 7, 2023
 
 ### Changed
