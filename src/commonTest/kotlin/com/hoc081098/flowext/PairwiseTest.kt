@@ -29,7 +29,9 @@ import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertIs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -143,6 +145,7 @@ class PairwiseWithTransformTest : BaseStepTest() {
   fun testPairwise() = runTest {
     range(0, 4)
       .pairwise(::MyTuple2)
+      .also { assertIs<Flow<MyTuple2<Int, Int>>>(it) }
       .test(
         listOf(
           Event.Value(0 with 1),

@@ -72,7 +72,7 @@ public fun <T> Flow<T>.pairwise(): Flow<Pair<T, T>> = pairwiseInternal(::Pair)
  *
  * @param transform A function to apply to each pair of consecutive emissions.
  */
-public fun <T> Flow<T>.pairwise(transform: suspend (a: T, b: T) -> T): Flow<T> =
+public fun <T, R> Flow<T>.pairwise(transform: suspend (a: T, b: T) -> R): Flow<R> =
   pairwiseInternal(transform)
 
 // ----------------------------------------- ZIP WITH NEXT -----------------------------------------
@@ -94,7 +94,7 @@ public fun <T> Flow<T>.zipWithNext(): Flow<Pair<T, T>> = pairwise()
  *
  * @see pairwise
  */
-public fun <T> Flow<T>.zipWithNext(transform: suspend (a: T, b: T) -> T): Flow<T> =
+public fun <T, R> Flow<T>.zipWithNext(transform: suspend (a: T, b: T) -> R): Flow<R> =
   pairwise(transform)
 
 // ------------------------------------------- INTERNAL -------------------------------------------

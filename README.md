@@ -148,7 +148,7 @@ dependencies {
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
   - [`ambWith`](#racewith--ambwith)
-  - [`pairwise`](#pairwise)
+  - [`pairwise`](#pairwise--zipWithNext)
   - [`repeat`](#repeat)
   - [`retryWhenWithDelayStrategy`](#retrywhenwithdelaystrategy)
   - [`retryWhenWithExponentialBackoff`](#retrywhenwithexponentialbackoff)
@@ -160,6 +160,7 @@ dependencies {
   - [`takeUntil`](#takeuntil)
   - [`throttleTime`](#throttletime)
   - [`withLatestFrom`](#withlatestfrom)
+  - [`zipWithNext`](#pairwise--zipWithNext)
 
 #### bufferCount / chunked
 
@@ -874,18 +875,25 @@ raceWith: 3
 
 ----
 
-#### pairwise
+#### pairwise / zipWithNext
 
 - Similar to [RxJS pairwise](https://rxjs.dev/api/operators/pairwise)
 
 Groups pairs of consecutive emissions together and emits them as a pair.
 Emits the `(n)th` and `(n-1)th` events as a pair.
 The first value won't be emitted until the second one arrives.
+Note, `zipWithNext` is an alias to `pairwise`.
 
 ```kotlin
 range(0, 4)
   .pairwise()
   .collect { println("pairwise: $it") }
+
+println("---")
+
+range(0, 4)
+  .zipWithNext { a, b -> "$a -> $b" }
+  .collect { println("zipWithNext: $it") }
 ```
 
 Output:
@@ -894,6 +902,10 @@ Output:
 pairwise: (0, 1)
 pairwise: (1, 2)
 pairwise: (2, 3)
+---
+zipWithNext: 0 -> 1
+zipWithNext: 1 -> 2
+zipWithNext: 2 -> 3
 ```
 
 ----
