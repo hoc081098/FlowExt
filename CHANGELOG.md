@@ -11,7 +11,7 @@
 
 - Add `Flow.ignoreElements` operator.
 - Add `Flow.scanWith` operator.
-- Add `Flow.safeCast` operator.
+- Add `Flow.safeCast` operator (thanks to [@hoangchungk53qx1](https://github.com/hoangchungk53qx1)).
 
 ### Fixed
 
