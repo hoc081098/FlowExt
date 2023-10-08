@@ -22,16 +22,20 @@
  * SOFTWARE.
  */
 
-package com.hoc081098.flowext.utils
-
-import com.hoc081098.flowext.DelicateFlowExtApi
-import kotlin.jvm.JvmField
+package com.hoc081098.flowext
 
 /**
- * This is a work-around for having nested nulls in generic code.
- * This allows for writing faster generic code instead of using `Option`.
- * This is only used as an optimisation technique in low-level code.
+ * Marks declarations in the `FlowExt` that are **delicate** &mdash;
+ * they have limited use-case and shall be used with care in general code.
+ * Any use of a delicate declaration has to be carefully reviewed to make sure it is
+ * properly used and does not create problems like memory and resource leaks.
+ * Carefully read documentation of any declaration marked as `DelicateFlowExtApi`.
  */
-@DelicateFlowExtApi
-@JvmField
-public val NULL_VALUE: Symbol = Symbol("NULL_VALUE")
+@MustBeDocumented
+@Retention(value = AnnotationRetention.BINARY)
+@RequiresOptIn(
+  level = RequiresOptIn.Level.WARNING,
+  message = "This is a delicate API and its use requires care." +
+    " Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.",
+)
+public annotation class DelicateFlowExtApi

@@ -24,11 +24,13 @@
 
 package com.hoc081098.flowext.utils
 
+import com.hoc081098.flowext.DelicateFlowExtApi
 import kotlin.jvm.JvmField
 
 /**
  * A symbol class that is used to define unique constants that are self-explanatory in debugger.
  */
+@DelicateFlowExtApi
 public class Symbol(
   @JvmField public val symbol: String,
 ) {

@@ -68,6 +68,9 @@ public final class com/hoc081098/flowext/DelayStrategy$NoDelayStrategy : com/hoc
 	public fun nextDelay-3nIYWDw (Ljava/lang/Throwable;J)J
 }
 
+public abstract interface annotation class com/hoc081098/flowext/DelicateFlowExtApi : java/lang/annotation/Annotation {
+}
+
 public final class com/hoc081098/flowext/EagerKt {
 	public static final fun flatMapConcatEager (Lkotlinx/coroutines/flow/Flow;IILkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
 	public static synthetic fun flatMapConcatEager$default (Lkotlinx/coroutines/flow/Flow;IILkotlin/jvm/functions/Function2;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
@@ -183,6 +186,9 @@ public final class com/hoc081098/flowext/NeverFlowKt {
 
 public final class com/hoc081098/flowext/PairwiseKt {
 	public static final fun pairwise (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun pairwise (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun zipWithNext (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun zipWithNext (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/RaceKt {

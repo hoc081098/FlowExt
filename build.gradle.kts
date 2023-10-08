@@ -31,6 +31,14 @@ repositories {
 kotlin {
   explicitApi()
 
+  sourceSets {
+    all {
+      languageSettings {
+        optIn("com.hoc081098.flowext.DelicateFlowExtApi")
+      }
+    }
+  }
+
   jvmToolchain {
     languageVersion.set(JavaLanguageVersion.of(17))
     vendor.set(JvmVendorSpec.AZUL)
