@@ -16,7 +16,7 @@ plugins {
   id("com.vanniktech.maven.publish") version "0.25.3"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.2"
   id("org.jetbrains.dokka") version "1.9.0"
-  id("org.jetbrains.kotlinx.kover") version "0.7.3"
+  id("org.jetbrains.kotlinx.kover") version "0.7.4"
 }
 
 val coroutinesVersion = "1.7.3"
