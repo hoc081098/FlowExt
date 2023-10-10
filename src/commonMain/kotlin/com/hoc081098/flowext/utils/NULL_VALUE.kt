@@ -35,3 +35,6 @@ import kotlin.jvm.JvmField
 @DelicateFlowExtApi
 @JvmField
 public val NULL_VALUE: Symbol = Symbol("NULL_VALUE")
+
+@JvmField
+internal val INTERNAL_NULL_VALUE: Symbol = Symbol("INTERNAL_NULL_VALUE")

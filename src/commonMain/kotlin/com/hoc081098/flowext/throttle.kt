@@ -28,7 +28,7 @@ import com.hoc081098.flowext.ThrottleConfiguration.LEADING
 import com.hoc081098.flowext.ThrottleConfiguration.LEADING_AND_TRAILING
 import com.hoc081098.flowext.ThrottleConfiguration.TRAILING
 import com.hoc081098.flowext.internal.DONE_VALUE
-import com.hoc081098.flowext.utils.NULL_VALUE
+import com.hoc081098.flowext.utils.INTERNAL_NULL_VALUE
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -244,7 +244,7 @@ public fun <T> Flow<T>.throttleTime(
 
     // Produce the values using the default (rendezvous) channel
     val values = produce {
-      collect { value -> send(value ?: NULL_VALUE) }
+      collect { value -> send(value ?: INTERNAL_NULL_VALUE) }
     }
 
     var lastValue: Any? = null
@@ -258,7 +258,7 @@ public fun <T> Flow<T>.throttleTime(
         // before we emit, otherwise reentrant code can cause
         // issues here.
         lastValue = null // Consume the value
-        return@let downstream.emit(NULL_VALUE.unbox(consumed))
+        return@let downstream.emit(INTERNAL_NULL_VALUE.unbox(consumed))
       }
     }
 
@@ -290,7 +290,7 @@ public fun <T> Flow<T>.throttleTime(
                 trySend()
               }
 
-              when (val duration = durationSelector(NULL_VALUE.unbox(value))) {
+              when (val duration = durationSelector(INTERNAL_NULL_VALUE.unbox(value))) {
                 Duration.ZERO -> onWindowClosed()
                 else -> throttled = scope.launch { delay(duration) }
               }

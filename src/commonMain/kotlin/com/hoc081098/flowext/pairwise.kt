@@ -24,7 +24,7 @@
 
 package com.hoc081098.flowext
 
-import com.hoc081098.flowext.utils.NULL_VALUE
+import com.hoc081098.flowext.utils.INTERNAL_NULL_VALUE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -100,10 +100,10 @@ public fun <T, R> Flow<T>.zipWithNext(transform: suspend (a: T, b: T) -> R): Flo
 // ------------------------------------------- INTERNAL -------------------------------------------
 
 private fun <T, R> Flow<T>.pairwiseInternal(transform: suspend (a: T, b: T) -> R): Flow<R> = flow {
-  var last: Any? = NULL_VALUE
+  var last: Any? = INTERNAL_NULL_VALUE
 
   collect {
-    if (last !== NULL_VALUE) {
+    if (last !== INTERNAL_NULL_VALUE) {
       @Suppress("UNCHECKED_CAST")
       emit(transform(last as T, it))
     }
