@@ -76,6 +76,17 @@ class PairwiseTest : BaseStepTest() {
           Event.Complete,
         ),
       )
+
+    range(0, 4)
+      .zipWithNext()
+      .test(
+        listOf(
+          Event.Value(0 to 1),
+          Event.Value(1 to 2),
+          Event.Value(2 to 3),
+          Event.Complete,
+        ),
+      )
   }
 
   @Test
@@ -165,6 +176,18 @@ class PairwiseWithTransformTest : BaseStepTest() {
           it[0] with it[1]
         }
       }
+      .also { assertIs<Flow<MyTuple2<Int, Int>>>(it) }
+      .test(
+        listOf(
+          Event.Value(0 with 1),
+          Event.Value(1 with 2),
+          Event.Value(2 with 3),
+          Event.Complete,
+        ),
+      )
+
+    range(0, 4)
+      .zipWithNext(::MyTuple2)
       .also { assertIs<Flow<MyTuple2<Int, Int>>>(it) }
       .test(
         listOf(
