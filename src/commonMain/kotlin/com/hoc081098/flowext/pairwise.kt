@@ -62,7 +62,7 @@ public fun <T> Flow<T>.pairwise(): Flow<Pair<T, T>> = pairwiseInternal(::Pair)
  * ```kotlin
  * val flow: Flow<T>
  *
- * val result: Flow<Pair<T, T>> = flow
+ * val result: Flow<R> = flow
  *   .bufferCount(bufferSize = 2, startBufferEvery = 1)
  *   .mapNotNull {
  *     if (it.size < 2) null

@@ -11,9 +11,11 @@
 ### Added
 
 - Add `Flow.chunked` operator, it is an alias to `Flow.bufferCount` operator.
-- Add `Flow.pairwise` operator, that accepts a lambda parameter to transform the consecutive
-  elements.
-- Add `Flow.zipWithNext` operator, it is an alias to `Flow.pairwise` operator.
+- Add `Flow.pairwise(transform)` operator, it is a variation of `Flow.pairwise()` operator,
+  which allows you to transform the pair of values via `transform` lambda parameter.
+
+- Add `Flow.zipWithNext()` operator, it is an alias to `Flow.pairwise()` operator.
+- Add `Flow.zipWithNext(transform)` operator, it is an alias to `Flow.pairwise(transform)` operator.
 
 ## [0.7.2] - Oct 7, 2023
 
