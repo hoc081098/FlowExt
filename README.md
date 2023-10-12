@@ -25,8 +25,11 @@
 > Kotlinx Coroutines Flow Extensions. Extensions to the Kotlin Flow library. Kotlin Flow extensions.
 > Multiplatform Kotlinx Coroutines Flow Extensions. Multiplatform Extensions to the Kotlin Flow
 > library. Multiplatform Kotlin Flow extensions. RxJS Kotlin Coroutines Flow. RxSwift Kotlin
-> Coroutines Flow. RxJava Kotlin Coroutines Flow. RxJS Kotlin Flow. RxSwift Kotlin Flow. RxJava Kotlin
-> Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. RxJava Coroutines Flow.
+> Coroutines Flow. RxJava Kotlin Coroutines Flow. RxJS Kotlin Flow. RxSwift Kotlin Flow. RxJava
+> Kotlin
+> Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. RxJava Coroutines Flow. Kotlin Flow
+> operators.
+> Coroutines Flow operators.
 
 ## Author: [Petrus Nguyễn Thái Học](https://github.com/hoc081098)
 
@@ -145,7 +148,7 @@ dependencies {
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
   - [`ambWith`](#racewith--ambwith)
-  - [`pairwise`](#pairwise)
+  - [`pairwise`](#pairwise--zipWithNext)
   - [`repeat`](#repeat)
   - [`retryWhenWithDelayStrategy`](#retrywhenwithdelaystrategy)
   - [`retryWhenWithExponentialBackoff`](#retrywhenwithexponentialbackoff)
@@ -157,6 +160,7 @@ dependencies {
   - [`takeUntil`](#takeuntil)
   - [`throttleTime`](#throttletime)
   - [`withLatestFrom`](#withlatestfrom)
+  - [`zipWithNext`](#pairwise--zipWithNext)
 
 #### bufferCount / chunked
 
@@ -871,18 +875,25 @@ raceWith: 3
 
 ----
 
-#### pairwise
+#### pairwise / zipWithNext
 
 - Similar to [RxJS pairwise](https://rxjs.dev/api/operators/pairwise)
 
 Groups pairs of consecutive emissions together and emits them as a pair.
 Emits the `(n)th` and `(n-1)th` events as a pair.
 The first value won't be emitted until the second one arrives.
+Note, `zipWithNext` is an alias to `pairwise`.
 
 ```kotlin
 range(0, 4)
   .pairwise()
   .collect { println("pairwise: $it") }
+
+println("---")
+
+range(0, 4)
+  .zipWithNext { a, b -> "$a -> $b" }
+  .collect { println("zipWithNext: $it") }
 ```
 
 Output:
@@ -891,6 +902,10 @@ Output:
 pairwise: (0, 1)
 pairwise: (1, 2)
 pairwise: (2, 3)
+---
+zipWithNext: 0 -> 1
+zipWithNext: 1 -> 2
+zipWithNext: 2 -> 3
 ```
 
 ----

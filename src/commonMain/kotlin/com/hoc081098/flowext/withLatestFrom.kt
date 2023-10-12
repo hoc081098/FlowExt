@@ -25,7 +25,7 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.AtomicRef
-import com.hoc081098.flowext.utils.NULL_VALUE
+import com.hoc081098.flowext.utils.INTERNAL_NULL_VALUE
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -49,14 +49,14 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
     try {
       coroutineScope {
         launch(start = CoroutineStart.UNDISPATCHED) {
-          other.collect { otherRef.value = it ?: NULL_VALUE }
+          other.collect { otherRef.value = it ?: INTERNAL_NULL_VALUE }
         }
 
         collect { value ->
           emit(
             transform(
               value,
-              NULL_VALUE.unbox(otherRef.value ?: return@collect),
+              INTERNAL_NULL_VALUE.unbox(otherRef.value ?: return@collect),
             ),
           )
         }

@@ -22,20 +22,20 @@
  * SOFTWARE.
  */
 
-package com.hoc081098.flowext.utils
-
-import com.hoc081098.flowext.DelicateFlowExtApi
-import kotlin.jvm.JvmField
+package com.hoc081098.flowext
 
 /**
- * A symbol class that is used to define unique constants that are self-explanatory in debugger.
+ * Marks declarations in the `FlowExt` that are **delicate** &mdash;
+ * they have limited use-case and shall be used with care in general code.
+ * Any use of a delicate declaration has to be carefully reviewed to make sure it is
+ * properly used and does not create problems like memory and resource leaks.
+ * Carefully read documentation of any declaration marked as `DelicateFlowExtApi`.
  */
-@DelicateFlowExtApi
-public class Symbol(
-  @JvmField public val symbol: String,
-) {
-  override fun toString(): String = "<$symbol>"
-
-  @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
-  public inline fun <T> unbox(value: Any?): T = if (value === this) null as T else value as T
-}
+@MustBeDocumented
+@Retention(value = AnnotationRetention.BINARY)
+@RequiresOptIn(
+  level = RequiresOptIn.Level.WARNING,
+  message = "This is a delicate API and its use requires care." +
+    " Make sure you fully read and understand documentation of the declaration that is marked as a delicate API.",
+)
+public annotation class DelicateFlowExtApi

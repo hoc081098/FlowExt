@@ -26,7 +26,7 @@
 
 package com.hoc081098.flowext
 
-import com.hoc081098.flowext.utils.NULL_VALUE
+import com.hoc081098.flowext.utils.INTERNAL_NULL_VALUE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
@@ -36,12 +36,12 @@ private typealias SubStateT = Any?
 internal fun <State, Result> Flow<State>.select1Internal(
   selector: suspend (State) -> Result,
 ): Flow<Result> = flow {
-  var latestState: Any? = NULL_VALUE // Result | NULL_VALUE
+  var latestState: Any? = INTERNAL_NULL_VALUE // Result | NULL_VALUE
 
   distinctUntilChanged().collect { state ->
     val currentState = selector(state)
 
-    if (latestState === NULL_VALUE || (latestState as Result) != currentState) {
+    if (latestState === INTERNAL_NULL_VALUE || (latestState as Result) != currentState) {
       latestState = currentState
       emit(currentState)
     }
@@ -56,7 +56,7 @@ private fun <State, Result> Flow<State>.selectInternal(
 
   return flow {
     var latestSubStates: Array<SubStateT>? = null
-    var latestState: Any? = NULL_VALUE // Result | NULL_VALUE
+    var latestState: Any? = INTERNAL_NULL_VALUE // Result | NULL_VALUE
     var reusableSubStates: Array<SubStateT>? = null
 
     distinctUntilChanged().collect { state ->
@@ -74,7 +74,7 @@ private fun <State, Result> Flow<State>.selectInternal(
             .also { latestSubStates = it },
         )
 
-        if (latestState === NULL_VALUE || (latestState as Result) != currentState) {
+        if (latestState === INTERNAL_NULL_VALUE || (latestState as Result) != currentState) {
           latestState = currentState
           emit(currentState)
         }
