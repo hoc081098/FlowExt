@@ -7,6 +7,8 @@
 - Update dependencies
   - `Kotlin` to `1.9.10`.
   - `Gradle` to `8.4`.
+ 
+- Annotate `Symbol` and `NULL_VALUE` with `@DelicateFlowExtApi`.
 
 ### Added
 
