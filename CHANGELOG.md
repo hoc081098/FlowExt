@@ -1,13 +1,13 @@
 # Change Log
 
-## [Unreleased] - TODO
+## [0.7.3] - Oct 29, 2023
 
 ### Changed
 
 - Update dependencies
   - `Kotlin` to `1.9.10`.
   - `Gradle` to `8.4`.
- 
+
 - Annotate `Symbol` and `NULL_VALUE` with `@DelicateFlowExtApi`.
 
 ### Added
@@ -203,7 +203,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.2...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.3...HEAD
+[0.7.3]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.3
 [0.7.2]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.2
 [0.7.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.1
 [0.7.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.0
