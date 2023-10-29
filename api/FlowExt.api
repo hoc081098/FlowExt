@@ -191,6 +191,15 @@ public final class com/hoc081098/flowext/PairwiseKt {
 	public static final fun zipWithNext (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public abstract interface annotation class com/hoc081098/flowext/PublishSelectorDsl : java/lang/annotation/Annotation {
+}
+
+public final class com/hoc081098/flowext/PublishWithSelectorKt {
+	public static final fun main (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun main ([Ljava/lang/String;)V
+	public static final fun publish (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function2;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/RaceKt {
 	public static final fun amb (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun amb (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
@@ -223,6 +232,21 @@ public final class com/hoc081098/flowext/RetryWhenWithDelayStrategyKt {
 
 public final class com/hoc081098/flowext/ScanWithKt {
 	public static final fun scanWith (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public abstract interface class com/hoc081098/flowext/SelectorScope {
+	public abstract fun select (Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public abstract interface class com/hoc081098/flowext/SelectorSharedFlowScope {
+	public abstract fun shareIn (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/SharingStarted;I)Lkotlinx/coroutines/flow/SharedFlow;
+	public abstract fun shared (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/SharedFlow;
+}
+
+public final class com/hoc081098/flowext/SelectorSharedFlowScope$DefaultImpls {
+	public static fun shareIn (Lcom/hoc081098/flowext/SelectorSharedFlowScope;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/SharingStarted;I)Lkotlinx/coroutines/flow/SharedFlow;
+	public static synthetic fun shareIn$default (Lcom/hoc081098/flowext/SelectorSharedFlowScope;Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/CoroutineScope;Lkotlinx/coroutines/flow/SharingStarted;IILjava/lang/Object;)Lkotlinx/coroutines/flow/SharedFlow;
+	public static synthetic fun shared$default (Lcom/hoc081098/flowext/SelectorSharedFlowScope;Lkotlinx/coroutines/flow/Flow;IILjava/lang/Object;)Lkotlinx/coroutines/flow/SharedFlow;
 }
 
 public final class com/hoc081098/flowext/SelectorsKt {

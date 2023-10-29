@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,10 @@
  * SOFTWARE.
  */
 
+@file:Suppress("ktlint:standard:property-naming")
+
 package com.hoc081098.flowext
 
-import kotlinx.coroutines.flow.shareIn as kotlinXFlowShareIn
 import kotlin.concurrent.Volatile
 import kotlin.jvm.JvmField
 import kotlinx.coroutines.CancellationException
@@ -36,19 +37,25 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn as kotlinXFlowShareIn
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
@@ -113,91 +120,252 @@ private class SimpleSuspendLazy<T : Any>(
   }
 }
 
-@FlowExtPreview
-@OptIn(DelicateCoroutinesApi::class, InternalCoroutinesApi::class)
-private class DefaultSelectorScope<T>(
-  @JvmField val scope: CoroutineScope,
-) : SynchronizedObject(),
-  SelectorScope<T>,
-  SelectorSharedFlowScope<T> {
-  // TODO: atomic
-  // Initialized in freezeAndInit
-  // Will be set to null when close or cancel
-  @JvmField
+private fun <T : Any> simpleLazyOf(initializer: () -> T): SimpleLazy<T> =
+  SimpleLazy(initializer)
+
+// TODO: Remove SynchronizedObject
+@OptIn(InternalCoroutinesApi::class)
+private class SimpleLazy<T : Any>(
+  initializer: () -> T,
+) : SynchronizedObject() {
+  private var _initializer: (() -> T)? = initializer
+
   @Volatile
-  var channels: Array<Channel<T>>? = null
+  private var value: T? = null
 
-  // TODO: atomic
-  // Initialized in freezeAndInit
-  // Will be set to null when all output flows are completed.
-  @JvmField
-  @Volatile
-  var cachedSelectedFlows: Array<SimpleSuspendLazy<Flow<Any?>>>? = null
-
-  // TODO: atomic
-  @JvmField
-  val blocks: MutableList<SelectorFunction<T, Any?>> = ArrayList()
-
-  /**
-   * Indicate that this scope is frozen, all [select] calls after this will throw [IllegalStateException].
-   */
-  @Volatile
-  @JvmField
-  var isFrozen = false // TODO: atomic
-
-  /**
-   * Indicate that a [select] calls is in progress,
-   * all [select] calls inside another [select] block will throw [IllegalStateException].
-   */
-  @JvmField
-  @Volatile
-  var isInSelectClause = false // TODO: atomic
-
-  // TODO: atomic
-  @JvmField
-  @Volatile
-  var completedCount = 0
-
-  // TODO: atomic or sync?
-  override fun <R> select(block: SelectorFunction<T, R>): Flow<R> =
-    synchronized(this) {
-      check(!isInSelectClause) { "select can not be called inside another select" }
-      check(!isFrozen) { "select only can be called inside publish, do not use SelectorScope outside publish" }
-
-      isInSelectClause = true
-
-      blocks += block
-      val index = size - 1
-
-      return defer {
-        val cached =
-          synchronized(this) {
-            // Only frozen state can reach here,
-            // that means we collect the output flow after frozen this scope
-            check(isFrozen) { "only frozen state can reach here!" }
-
-            cachedSelectedFlows
-              ?.get(index)
-              ?: error("It looks like you are trying to collect the select{} flow outside publish, please don't do that!")
-          }
-
-        @Suppress("UNCHECKED_CAST") // Always safe
-        cached.getValue() as Flow<R>
-      }.onCompletion { onCompleteASelectedFlow(index) }
-        .also { isInSelectClause = false }
+  fun getValue(): T =
+    value ?: synchronized(this) {
+      value ?: _initializer!!().also {
+        _initializer = null
+        value = it
+      }
     }
 
-  // TODO: atomic
-  private fun onCompleteASelectedFlow(index: Int) {
-    synchronized(this@DefaultSelectorScope) {
-      completedCount++
+  fun getOrNull(): T? = value
 
-      println("onCompleteASelectedFlow: completedCount = $completedCount, size = $size (index = $index)")
+  fun clear() {
+    _initializer = null
+    value = null
+  }
+}
 
-      if (completedCount == size) {
-        cachedSelectedFlows?.forEach { it.clear() }
-        cachedSelectedFlows = null
-        println("onCompleteASelectedFlow: cancel the publish scope")
+private typealias SimpleSuspendLazyOfFlow = SimpleSuspendLazy<Flow<Any?>>
+
+@FlowExtPreview
+private sealed interface DefaultSelectorScopeState<out T> {
+  data object Init : DefaultSelectorScopeState<Nothing>
+
+  sealed interface NotFrozen<T> : DefaultSelectorScopeState<T> {
+    val blocks: List<SelectorFunction<T, Any?>>
+
+    data class InSelectClause<T>(
+      override val blocks: List<SelectorFunction<T, Any?>>,
+    ) : NotFrozen<T>
+
+    data class NotInSelectClause<T>(
+      override val blocks: List<SelectorFunction<T, Any?>>,
+    ) : NotFrozen<T>
+  }
+
+  data class Frozen<T>(
+    val selectedFlowsAndChannels: SimpleLazy<Pair<List<SimpleSuspendLazyOfFlow>, List<Channel<T>>>>,
+    val completedCount: Int,
+    val blocks: List<SelectorFunction<T, Any?>>,
+  ) : DefaultSelectorScopeState<T>
+
+  data object Closed : DefaultSelectorScopeState<Nothing>
+}
+
+@OptIn(FlowExtPreview::class)
+private val <T> DefaultSelectorScopeState<T>.debug: String
+  get() = when (this) {
+    DefaultSelectorScopeState.Closed -> toString()
+    DefaultSelectorScopeState.Init -> toString()
+    is DefaultSelectorScopeState.Frozen -> {
+      val orNull = selectedFlowsAndChannels.getOrNull()
+      """
+      | Frozen(
+      |   selectedFlowsAndChannels = ${orNull?.first?.size to orNull?.second?.size},
+      |   completedCount = $completedCount,
+      |   blocks = ${blocks.size}
+      | )
+      """.trimMargin()
+    }
+
+    is DefaultSelectorScopeState.NotFrozen.InSelectClause ->
+      """
+      | NotFrozen.InSelectClause(
+      |   blocks = ${blocks.size}
+      | )
+      """.trimMargin()
+
+    is DefaultSelectorScopeState.NotFrozen.NotInSelectClause ->
+      """
+      | NotFrozen.NotInSelectClause(
+      |   blocks = ${blocks.size}
+      | )
+      """.trimMargin()
+  }
+
+@FlowExtPreview
+@OptIn(DelicateCoroutinesApi::class)
+private class DefaultSelectorScope<T>(
+  @JvmField val scope: CoroutineScope,
+) :
+  SelectorScope<T>,
+    SelectorSharedFlowScope<T> {
+  // TODO: Revert to AtomicRef
+  @JvmField
+  val stateRef = MutableStateFlow<DefaultSelectorScopeState<T>>(DefaultSelectorScopeState.Init)
+
+  init {
+    // TODO: Revert to AtomicRef
+    stateRef
+      .buffer(Channel.UNLIMITED)
+      .takeWhile { it !is DefaultSelectorScopeState.Closed }
+      .concatWith(flowOf(DefaultSelectorScopeState.Closed))
+      .onEach { state -> println("state: ${state.debug}") }
+      .launchIn(scope)
+  }
+
+  override fun <R> select(block: SelectorFunction<T, R>): Flow<R> {
+    println("call select with block: $block")
+
+    while (true) {
+      val state = stateRef.value
+
+      val updated = when (state) {
+        DefaultSelectorScopeState.Closed -> {
+          error("This scope is closed")
+        }
+
+        is DefaultSelectorScopeState.Frozen -> {
+          error("This scope is frozen. `select` only can be called inside `publish`, do not use `SelectorScope` outside `publish`")
+        }
+
+        DefaultSelectorScopeState.Init -> {
+          // Ok, lets transition to NotFrozen.InSelectClause
+          DefaultSelectorScopeState.NotFrozen.InSelectClause(blocks = listOf(block))
+        }
+
+        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+          error("`select` can not be called inside another `select`")
+        }
+
+        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+          // Ok, lets transition to NotFrozen.InSelectClause
+          DefaultSelectorScopeState.NotFrozen.InSelectClause(blocks = state.blocks + block)
+        }
+      }
+
+      if (stateRef.compareAndSet(expect = state, update = updated)) {
+        // CAS success
+        val index = updated.blocks.size - 1
+
+        val result = defer {
+          // Only frozen state can reach here,
+          // that means we collect the output flow after frozen this scope
+          val stateWhenCollecting = stateRef.value
+          check(stateWhenCollecting is DefaultSelectorScopeState.Frozen) { "only frozen state can reach here!" }
+
+          @Suppress("UNCHECKED_CAST") // We know that the type is correct
+          stateWhenCollecting
+            .selectedFlowsAndChannels
+            .getValue()
+            .first[index]
+            .getValue()
+            as Flow<R>
+        }.onCompletion { onCompleteSelectedFlow(index) }
+
+        while (true) {
+          val state = stateRef.value
+
+          val updated = when (state) {
+            is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+              // Ok, lets transition to NotFrozen.NotInSelectClause
+              DefaultSelectorScopeState.NotFrozen.NotInSelectClause(blocks = state.blocks)
+            }
+
+            is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+              // Ok, state already is NotFrozen.NotInSelectClause
+              return result
+            }
+
+            DefaultSelectorScopeState.Closed -> {
+              error("This scope is closed")
+            }
+
+            is DefaultSelectorScopeState.Frozen -> {
+              error("This scope is frozen. `select` only can be called inside `publish`, do not use `SelectorScope` outside `publish`")
+            }
+
+            DefaultSelectorScopeState.Init -> {
+              error("Cannot be here!")
+            }
+          }
+
+          if (stateRef.compareAndSet(expect = state, update = updated)) {
+            // CAS success
+            return result
+          }
+        }
+      }
+    }
+  }
+
+  private fun onCompleteSelectedFlow(index: Int) {
+    while (true) {
+      val state = stateRef.value
+
+      val updated = when (state) {
+        DefaultSelectorScopeState.Init -> {
+          error("Cannot be here!")
+        }
+
+        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+          error("Cannot be here!")
+        }
+
+        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+          error("Cannot be here!")
+        }
+
+        is DefaultSelectorScopeState.Frozen -> {
+          if (state.completedCount == state.blocks.size) {
+            // Ok, all output flows are completed. Lets transition to DefaultSelectorScopeState.Closed
+            DefaultSelectorScopeState.Closed
+          } else {
+            // Ok, lets transition to DefaultSelectorScopeState.Frozen with completedCount=completedCount + 1
+            state.copy(completedCount = state.completedCount + 1)
+          }
+        }
+
+        DefaultSelectorScopeState.Closed -> {
+          // Ok, already closed. Do nothing.
+          return
+        }
+      }
+
+      if (stateRef.compareAndSet(expect = state, update = updated)) {
+        // CAS success
+
+        println(
+          "onCompleteSelectedFlow: completedCount = ${(updated as? DefaultSelectorScopeState.Frozen)?.completedCount}, " +
+            "size = ${state.blocks.size}, " +
+            "(index = $index)",
+        )
+
+        // Once state reaches DefaultSelectorScopeState.Closed, we can clear unused lazy
+        if (updated is DefaultSelectorScopeState.Closed) {
+          state.selectedFlowsAndChannels.run {
+            getOrNull()?.first?.forEach { it.clear() }
+            clear()
+          }
+
+          println("onCompleteSelectedFlow: cancel the publish scope")
+        }
+
+        return
       }
     }
   }
@@ -209,27 +377,62 @@ private class DefaultSelectorScope<T>(
       replay = replay,
     )
 
-  // TODO: synchronized?
-  fun freezeAndInit() =
-    synchronized(this) {
-      val channels = Array(size) { Channel<T>() }.also { this.channels = it }
+  fun freezeAndInit() {
+    while (true) {
+      val state = stateRef.value
 
-      cachedSelectedFlows =
-        Array(size) { index ->
-          val block = blocks[index]
-          val flow = channels[index].consumeAsFlow()
-
-          SimpleSuspendLazy { this.block(flow) }
+      // Transition from NotFrozen to Frozen
+      when (state) {
+        DefaultSelectorScopeState.Init -> {
+          error("Not implemented")
         }
 
-      isFrozen = true
-    }
+        is DefaultSelectorScopeState.NotFrozen<T> -> {
+          // Freeze and init
+        }
 
-  private inline val size: Int get() = blocks.size
+        is DefaultSelectorScopeState.Frozen<T>, DefaultSelectorScopeState.Closed -> {
+          // Already frozen or closed
+          return
+        }
+      }
+
+      val blocks = state.blocks
+      val size = blocks.size
+      val updated = DefaultSelectorScopeState.Frozen(
+        selectedFlowsAndChannels = simpleLazyOf {
+          val channels = List(size) { Channel<T>() }
+
+          List(size) { index ->
+            val block = blocks[index]
+            val flow = channels[index].consumeAsFlow()
+            SimpleSuspendLazy { this.block(flow) }
+          } to channels
+        },
+        completedCount = 0,
+        blocks = blocks,
+      )
+
+      if (stateRef.compareAndSet(expect = state, update = updated)) {
+        // CAS success
+        return
+      }
+
+      // clear unused lazy
+      updated.selectedFlowsAndChannels.clear()
+    }
+  }
 
   suspend fun send(value: T) {
     println("send: $value")
-    for (channel in channels.orEmpty()) {
+
+    val state = stateRef.value as? DefaultSelectorScopeState.Frozen<T> ?: return
+    val channels = state
+      .selectedFlowsAndChannels
+      .getValue()
+      .second
+
+    for (channel in channels) {
       if (channel.isClosedForSend || channel.isClosedForReceive) {
         continue
       }
@@ -242,25 +445,58 @@ private class DefaultSelectorScope<T>(
     }
   }
 
-  // TODO: synchronized?
-  fun close(e: Throwable?) =
-    synchronized(this) {
-      println("close: $e")
-      for (channel in channels.orEmpty()) {
-        channel.close(e)
-      }
-      channels = null
-    }
+  private fun transitionToClosed(action: (Channel<T>) -> Unit) {
+    while (true) {
+      val state = stateRef.value
 
-  // TODO: synchronized?
-  fun cancel(e: CancellationException) =
-    synchronized(this) {
-      println("cancel: $e")
-      for (channel in channels.orEmpty()) {
-        channel.cancel(e)
+      val updated = when (state) {
+        DefaultSelectorScopeState.Init -> {
+          error("Cannot be here!")
+        }
+
+        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+          error("Cannot be here!")
+        }
+
+        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+          error("Cannot be here!")
+        }
+
+        is DefaultSelectorScopeState.Frozen -> {
+          // Ok, lets transition to DefaultSelectorScopeState.Closed
+          DefaultSelectorScopeState.Closed
+        }
+
+        DefaultSelectorScopeState.Closed -> {
+          // Ok, already closed. Do nothing.
+          return
+        }
       }
-      channels = null
+
+      if (stateRef.compareAndSet(expect = state, update = updated)) {
+        // CAS success
+
+        // Once state reaches DefaultSelectorScopeState.Closed, we can clear unused lazy and close all channels
+        state.selectedFlowsAndChannels.run {
+          getOrNull()?.first?.forEach { it.clear() }
+          getOrNull()?.second?.forEach(action)
+          clear()
+        }
+
+        return
+      }
     }
+  }
+
+  fun close(e: Throwable?) {
+    println("close: $e")
+    transitionToClosed { it.close(e) }
+  }
+
+  fun cancel(e: CancellationException) {
+    println("cancel: $e")
+    transitionToClosed { it.cancel(e) }
+  }
 }
 
 @FlowExtPreview
@@ -348,7 +584,5 @@ public suspend fun main() {
     }
     .toList()
     .also { println(it) }
-    .let {
-      check(it == listOf(Pair(1, "odd"), Pair(2, "even"), Pair("4", "string")))
-    }
+    .let { check(it == listOf(Pair(1, "odd"), Pair(2, "even"), Pair("4", "string"))) }
 }
