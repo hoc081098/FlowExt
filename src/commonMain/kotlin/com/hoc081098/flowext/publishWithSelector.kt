@@ -68,9 +68,13 @@ import kotlinx.coroutines.sync.withLock
 public annotation class PublishSelectorDsl
 
 @FlowExtPreview
-@PublishSelectorDsl
+@DslMarker
+public annotation class PublishSelectorSharedFlowDsl
+
+@FlowExtPreview
+@PublishSelectorSharedFlowDsl
 public sealed interface SelectorSharedFlowScope<T> {
-  @PublishSelectorDsl
+  @PublishSelectorSharedFlowDsl
   public fun Flow<T>.shareIn(
     replay: Int = 0,
     started: SharingStarted = SharingStarted.Lazily,
