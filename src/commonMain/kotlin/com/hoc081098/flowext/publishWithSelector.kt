@@ -71,13 +71,16 @@ public annotation class PublishSelectorDsl
 @PublishSelectorDsl
 public sealed interface SelectorSharedFlowScope<T> {
   @PublishSelectorDsl
-  public fun Flow<T>.shared(replay: Int = 0): SharedFlow<T>
+  public fun Flow<T>.shareIn(
+    replay: Int = 0,
+    started: SharingStarted = SharingStarted.Lazily,
+  ): SharedFlow<T>
 
   /** @suppress */
   @Deprecated(
     level = DeprecationLevel.ERROR,
     message = "This function is not supported",
-    replaceWith = ReplaceWith("this.shared(replay)"),
+    replaceWith = ReplaceWith("this.shareIn(replay, started)"),
   )
   public fun <T> Flow<T>.shareIn(
     scope: CoroutineScope,
@@ -211,9 +214,8 @@ private val <T> DefaultSelectorScopeState<T>.debug: String
 @OptIn(DelicateCoroutinesApi::class)
 private class DefaultSelectorScope<T>(
   @JvmField val scope: CoroutineScope,
-) :
-  SelectorScope<T>,
-    SelectorSharedFlowScope<T> {
+) : SelectorScope<T>,
+  SelectorSharedFlowScope<T> {
   // TODO: Revert to AtomicRef
   @JvmField
   val stateRef = MutableStateFlow<DefaultSelectorScopeState<T>>(DefaultSelectorScopeState.Init)
@@ -370,10 +372,10 @@ private class DefaultSelectorScope<T>(
     }
   }
 
-  override fun Flow<T>.shared(replay: Int): SharedFlow<T> =
+  override fun Flow<T>.shareIn(replay: Int, started: SharingStarted): SharedFlow<T> =
     kotlinXFlowShareIn(
       scope = scope,
-      started = SharingStarted.Lazily,
+      started = started,
       replay = replay,
     )
 
@@ -550,7 +552,7 @@ public suspend fun main() {
       merge(
         select { flow ->
           delay(1)
-          val sharedFlow = flow.shared()
+          val sharedFlow = flow.shareIn()
 
           interval(0, 100)
             .onEach { println(">>> interval: $it") }
