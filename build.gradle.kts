@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.9.10"
+  kotlin("multiplatform") version "1.9.20"
   id("com.diffplug.spotless") version "6.22.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.25.3"
@@ -82,7 +82,6 @@ kotlin {
   // According to https://kotlinlang.org/docs/native-target-support.html
 
   iosArm64()
-  iosArm32()
   iosX64()
   iosSimulatorArm64()
 
@@ -99,7 +98,6 @@ kotlin {
   watchosArm32()
   watchosArm64()
   watchosX64()
-  watchosX86()
   watchosSimulatorArm64()
   watchosDeviceArm64()
 
@@ -173,7 +171,6 @@ kotlin {
         "iosX64",
         "iosSimulatorArm64",
         "iosArm64",
-        "iosArm32",
         "macosX64",
         "macosArm64",
         "tvosArm64",
@@ -181,7 +178,6 @@ kotlin {
         "tvosSimulatorArm64",
         "watchosArm32",
         "watchosArm64",
-        "watchosX86",
         "watchosSimulatorArm64",
         "watchosX64",
         "watchosSimulatorArm64",
