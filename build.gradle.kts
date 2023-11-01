@@ -95,7 +95,7 @@ kotlin {
   tvosSimulatorArm64()
   tvosArm64()
 
-  watchosArm32
+  watchosArm32()
   watchosArm64()
   watchosX64()
   watchosSimulatorArm64()
