@@ -82,7 +82,6 @@ kotlin {
   // According to https://kotlinlang.org/docs/native-target-support.html
 
   iosArm64()
-  iosArm32()
   iosX64()
   iosSimulatorArm64()
 
@@ -96,7 +95,6 @@ kotlin {
   tvosSimulatorArm64()
   tvosArm64()
 
-  watchosArm32()
   watchosArm64()
   watchosX64()
   watchosX86()
