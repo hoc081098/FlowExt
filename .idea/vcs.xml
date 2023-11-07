@@ -6,7 +6,4 @@
       <inspection_tool class="CommitNamingConvention" enabled="true" level="WARNING" enabled_by_default="true" />
     </profile>
   </component>
-  <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
-  </component>
 </project>

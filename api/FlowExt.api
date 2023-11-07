@@ -191,6 +191,10 @@ public final class com/hoc081098/flowext/PairwiseKt {
 	public static final fun zipWithNext (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function3;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class com/hoc081098/flowext/PlusKt {
+	public static final fun plus (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class com/hoc081098/flowext/RaceKt {
 	public static final fun amb (Ljava/lang/Iterable;)Lkotlinx/coroutines/flow/Flow;
 	public static final fun amb (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;[Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
