@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,11 @@ import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlusTest : BaseTest() {
   @Test
   fun plusTwoFlow() = runTest {
-
     val flow1 = flowOf(1, 2, 3)
     val flow2 = flowOf(4, 5, 6)
 
@@ -53,7 +53,6 @@ class PlusTest : BaseTest() {
 
   @Test
   fun plusTwoFlow2() = runTest {
-
     (flowOf("a", 2, 3) + flowOf(4, 5, 6))
       .test(
         listOf(
@@ -67,5 +66,4 @@ class PlusTest : BaseTest() {
         ),
       )
   }
-
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Hoang Anh Chung
+ * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,7 @@
 
 package com.hoc081098.flowext
 
-import kotlinx.coroutines.flow.*
-
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Combines two [Flow]s of the same base type [T] into a single [Flow] by concatenating their elements.
@@ -37,9 +36,8 @@ import kotlinx.coroutines.flow.*
  * ``` kotlin
  *  val flow1 = flowOf(1, 2, 3)
  *  val flow2 = flowOf(4, 5, 6)
- *  val combinedFlow = flow1 + flow2 //1, 2, 3, 4, 5, 6
+ *  val plusFlow = flow1 + flow2 //1, 2, 3, 4, 5, 6
  * ```
  */
 
 public operator fun <T, R : T> Flow<T>.plus(other: Flow<R>): Flow<T> = concat(this, other)
-
