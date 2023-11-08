@@ -1306,10 +1306,7 @@ withLatestFrom: (4, 6)
 ```
 #### plus
 
-- RxMarbles: https://rxmarbles.com/#withLatestFrom
-- Similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom)
-
-Combines two [Flow]s of the same base type [T] into a single [Flow] by concatenating their elements.
+Concat two [Flow]s of the same base type [T] into a single [Flow] by concatenating their elements.
 
 ```kotlin
 val flow1 = flowOf(1, 2, 3)
