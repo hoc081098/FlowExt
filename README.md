@@ -121,6 +121,7 @@ dependencies {
   - [`amb`](#race--amb)
   - [`range`](#range)
   - [`timer`](#timer)
+  - [`plus`](#plus)
 
 - Intermediate operators
   - [`bufferCount`](#buffercount--chunked)
@@ -1303,6 +1304,31 @@ withLatestFrom: (2, 3)
 withLatestFrom: (3, 4)
 withLatestFrom: (4, 6)
 ```
+#### plus
+
+- RxMarbles: https://rxmarbles.com/#withLatestFrom
+- Similar to [RxJS withLatestFrom](https://rxjs.dev/api/operators/withLatestFrom)
+
+Combines two [Flow]s of the same base type [T] into a single [Flow] by concatenating their elements.
+
+```kotlin
+val flow1 = flowOf(1, 2, 3)
+val flow2 = flowOf(4, 5, 6)
+
+(flow1 + flow2).collect { println("plus: $it") }
+```
+
+Output:
+
+```none
+plus: 1
+plus: 2
+plus: 3
+plus: 4
+plus: 5
+plus: 6
+```
+
 
 ... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs
 snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
