@@ -286,6 +286,63 @@ class ConcatTest : BaseTest() {
       ),
     ).test(null, expectation)
   }
+
+  @Test
+  fun plusTwoFlow() = runTest {
+    val flow1 = flowOf(1, 2, 3)
+    val flow2 = flowOf(4, 5, 6)
+
+    (flow1 + flow2)
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Value(4),
+          Event.Value(5),
+          Event.Value(6),
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun plusTwoFlow2() = runTest {
+    (flowOf("a", 2, 3) + flowOf(4, 5, 6))
+      .test(
+        listOf(
+          Event.Value("a"),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Value(4),
+          Event.Value(5),
+          Event.Value(6),
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun testPlus_firstFailureUpstream() = runTest {
+    val flow = flowOf(1, 2, 3)
+    val failureFlow = kotlinx.coroutines.flow.flow<Nothing> { throw TestException("Crash!") }
+    val expectation: suspend (List<Event<Int>>) -> Unit = { events ->
+      val message = assertIs<TestException>(events.single().errorOrThrow()).message
+      assertEquals("Crash!", message)
+    }
+
+    (failureFlow + flow)
+      .test(null, expectation)
+
+    (failureFlow + flow + flow)
+      .test(null, expectation)
+
+    (failureFlow + flow + flow + flow)
+      .test(null, expectation)
+
+    (failureFlow + flow + flow + flow + flow)
+      .test(null, expectation)
+  }
 }
 
 private operator fun <T> Iterable<T>.times(times: Int): List<T> = (0 until times).flatMap { this }

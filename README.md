@@ -112,7 +112,7 @@ dependencies {
 ## Table of contents
 
 - Create
-  - [`concat`](#concat)
+  - [`concat`](#concat--plus)
   - [`defer`](#defer)
   - [`flowFromSuspend`](#flowfromsuspend)
   - [`interval`](#interval)
@@ -121,7 +121,7 @@ dependencies {
   - [`amb`](#race--amb)
   - [`range`](#range)
   - [`timer`](#timer)
-  - [`plus`](#plus)
+  - [`plus`](#concat--plus)
 
 - Intermediate operators
   - [`bufferCount`](#buffercount--chunked)
@@ -201,19 +201,27 @@ bufferCount: [8, 9]
 
 ----
 
-#### concat
+#### concat / plus
 
 - Similar to [RxJS concat](https://rxjs.dev/api/index/function/concat)
 - Similar
   to [RxJava concat](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concat-java.lang.Iterable-)
 
 Creates an output `Flow` which sequentially emits all values from the first given `Flow` and then moves on to the next.
+Note, `plus` is an alias to `concat`.
 
 ```kotlin
 concat(
   flow1 = flowOf(1, 2, 3),
   flow2 = flowOf(4, 5, 6)
 ).collect { println("concat: $it") }
+
+println("---")
+
+val flow1 = flowOf(1, 2, 3)
+val flow2 = flowOf(4, 5, 6)
+
+(flow1 + flow2).collect { println("plus: $it") }
 ```
 
 Output:
@@ -225,6 +233,13 @@ concat: 3
 concat: 4
 concat: 5
 concat: 6
+---
+plus: 1
+plus: 2
+plus: 3
+plus: 4
+plus: 5
+plus: 6
 ```
 
 ----
@@ -1306,25 +1321,6 @@ withLatestFrom: (4, 6)
 ```
 #### plus
 
-Concat two [Flow]s of the same base type [T] into a single [Flow] by concatenating their elements.
-
-```kotlin
-val flow1 = flowOf(1, 2, 3)
-val flow2 = flowOf(4, 5, 6)
-
-(flow1 + flow2).collect { println("plus: $it") }
-```
-
-Output:
-
-```none
-plus: 1
-plus: 2
-plus: 3
-plus: 4
-plus: 5
-plus: 6
-```
 
 
 ... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs

@@ -267,3 +267,19 @@ public fun <T> Flow<T>.startWith(others: Sequence<T>): Flow<T> = concat(others.a
  * Returns a [Flow] that emits the items in a specified [Flow] before it begins to emit items emitted by the current [Flow].
  */
 public fun <T> Flow<T>.startWith(other: Flow<T>): Flow<T> = concat(other, this)
+
+/**
+ * Combines two [Flow]s of the same base type [T] into a single [Flow] by concatenating their elements.
+ * @param other The [Flow] to concatenate with the current [Flow].
+ * @return A new [Flow] containing the concatenated elements of both the current and the [other] [Flow]s.
+ *
+ * Example:
+ *
+ * ``` kotlin
+ *  val flow1 = flowOf(1, 2, 3)
+ *  val flow2 = flowOf(4, 5, 6)
+ *  val plusFlow = flow1 + flow2 //1, 2, 3, 4, 5, 6
+ * ```
+ */
+
+public operator fun <T, R : T> Flow<T>.plus(other: Flow<R>): Flow<T> = concat(this, other)
