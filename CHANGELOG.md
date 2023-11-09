@@ -29,7 +29,7 @@
 
 - Add `Flow.zipWithNext()` operator, it is an alias to `Flow.pairwise()` operator.
 - Add `Flow.zipWithNext(transform)` operator, it is an alias to `Flow.pairwise(transform)` operator.
-- Add `Flow.plus` operator.
+- Add `Flow.plus` operator, it is an alias to `concatWith` operator.
 
 ## [0.7.2] - Oct 7, 2023
 
