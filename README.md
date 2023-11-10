@@ -1319,9 +1319,6 @@ withLatestFrom: (2, 3)
 withLatestFrom: (3, 4)
 withLatestFrom: (4, 6)
 ```
-#### plus
-
-
 
 ... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs
 snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
