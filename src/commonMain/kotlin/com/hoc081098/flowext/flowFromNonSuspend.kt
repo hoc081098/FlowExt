@@ -33,9 +33,8 @@ import kotlinx.coroutines.flow.flow
  * Example of usage:
  *
  * ```
- * suspend fun remoteCall(): R = ...
- * fun remoteCallFlow(): Flow<R> = flowFromSuspend(::remoteCall)
+ * fun call(): R = ...
+ * fun callAsFlow(): Flow<R> = flowFromNonSuspend(::call)
  * ```
  */
-public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> =
-  flow { return@flow emit(function()) }
+public fun <T> flowFromNonSuspend(function: () -> T): Flow<T> = flow { return@flow emit(function()) }

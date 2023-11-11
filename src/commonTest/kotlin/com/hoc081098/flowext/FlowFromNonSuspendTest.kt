@@ -24,18 +24,34 @@
 
 package com.hoc081098.flowext
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.test
+import kotlin.test.Test
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-/**
- * Creates a _cold_ flow that produces a single value from the given [function].
- *
- * Example of usage:
- *
- * ```
- * suspend fun remoteCall(): R = ...
- * fun remoteCallFlow(): Flow<R> = flowFromSuspend(::remoteCall)
- * ```
- */
-public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> =
-  flow { return@flow emit(function()) }
+@ExperimentalCoroutinesApi
+class FlowFromNonSuspendTest : BaseTest() {
+  @Test
+  fun flowFromNonSuspendEmitsValues() = runTest {
+    var count = 0L
+    val flow = flowFromNonSuspend {
+      count
+    }
+
+    flow.test(listOf(Event.Value(0L), Event.Complete))
+
+    ++count
+    flow.test(listOf(Event.Value(1L), Event.Complete))
+
+    ++count
+    flow.test(listOf(Event.Value(2L), Event.Complete))
+  }
+
+  @Test
+  fun deferFactoryThrows() = runTest {
+    val testException = TestException()
+
+    flowFromNonSuspend<Int> { throw testException }.test(listOf(Event.Error(testException)))
+  }
+}

@@ -1335,7 +1335,7 @@ snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
 ```License
 MIT License
 
-Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
+Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
 ```
 
 [badge-android]: http://img.shields.io/badge/android-6EDB8D.svg?style=flat
