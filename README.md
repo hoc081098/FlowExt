@@ -112,7 +112,7 @@ dependencies {
 ## Table of contents
 
 - Create
-  - [`concat`](#concat--plus)
+  - [`concat`](#concat)
   - [`defer`](#defer)
   - [`flowFromSuspend`](#flowfromsuspend)
   - [`interval`](#interval)
@@ -121,7 +121,6 @@ dependencies {
   - [`amb`](#race--amb)
   - [`range`](#range)
   - [`timer`](#timer)
-  - [`plus`](#concat--plus)
 
 - Intermediate operators
   - [`bufferCount`](#buffercount--chunked)
@@ -131,7 +130,7 @@ dependencies {
   - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
   - [`chunked`](#buffercount--chunked)
   - [`safeCast`](#cast--castnotnull--castnullable--safeCast)
-  - [`concatWith`](#concatwith)
+  - [`concatWith`](#concatwith--plus)
   - [`startWith`](#startwith)
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
   - [`exhaustMap`](#flatmapfirst--exhaustmap)
@@ -162,6 +161,7 @@ dependencies {
   - [`throttleTime`](#throttletime)
   - [`withLatestFrom`](#withlatestfrom)
   - [`zipWithNext`](#pairwise--zipWithNext)
+  - [`plus`](#concatwith--plus)
 
 #### bufferCount / chunked
 
@@ -201,7 +201,7 @@ bufferCount: [8, 9]
 
 ----
 
-#### concat / plus
+#### concat
 
 - Similar to [RxJS concat](https://rxjs.dev/api/index/function/concat)
 - Similar
@@ -215,13 +215,6 @@ concat(
   flow1 = flowOf(1, 2, 3),
   flow2 = flowOf(4, 5, 6)
 ).collect { println("concat: $it") }
-
-println("---")
-
-val flow1 = flowOf(1, 2, 3)
-val flow2 = flowOf(4, 5, 6)
-
-(flow1 + flow2).collect { println("plus: $it") }
 ```
 
 Output:
@@ -233,13 +226,6 @@ concat: 3
 concat: 4
 concat: 5
 concat: 6
----
-plus: 1
-plus: 2
-plus: 3
-plus: 4
-plus: 5
-plus: 6
 ```
 
 ----
@@ -535,7 +521,7 @@ safeCast: null
 
 ----
 
-#### concatWith
+#### concatWith / plus
 
 - Similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith)
 - Similar
@@ -547,6 +533,13 @@ Returns a `Flow` that emits the items emitted from the current `Flow`, then the 
 flowOf(1, 2, 3)
   .concatWith(flowOf(4, 5, 6))
   .collect { println("concatWith: $it") }
+
+println("---")
+
+val flow1 = flowOf(1, 2, 3)
+val flow2 = flowOf(4, 5, 6)
+
+(flow1 + flow2).collect { println("plus: $it") }
 ```
 
 Output:
@@ -558,6 +551,13 @@ concatWith: 3
 concatWith: 4
 concatWith: 5
 concatWith: 6
+---
+plus: 1
+plus: 2
+plus: 3
+plus: 4
+plus: 5
+plus: 6
 ```
 
 ----
