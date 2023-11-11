@@ -22,6 +22,10 @@
 - FlowExt provides a collection of operators, Flows and utilities for Flow, that are not provided by Kotlinx Coroutine
   themselves, but are common in other Reactive Frameworks (rxjs, RxJava, RxSwift, rxdart, ...) and standards.
 
+<p align="center">
+    <img src="https://github.com/hoc081098/FlowExt/raw/master/logo.png" width="400">
+</p>
+
 > Kotlinx Coroutines Flow Extensions. Extensions to the Kotlin Flow library. Kotlin Flow extensions.
 > Multiplatform Kotlinx Coroutines Flow Extensions. Multiplatform Extensions to the Kotlin Flow
 > library. Multiplatform Kotlin Flow extensions. RxJS Kotlin Coroutines Flow. RxSwift Kotlin
