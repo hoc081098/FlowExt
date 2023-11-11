@@ -2,6 +2,15 @@
 
 ## [Unreleased] - TODO
 
+### Changed
+
+- Update dependencies
+  - `Kotlin` to `1.9.20`.
+
+### Removed
+
+- Remove now-unsupported targets: `iosArm32`, `watchosX86`.
+
 ## [0.7.3] - Oct 29, 2023
 
 ### Changed
