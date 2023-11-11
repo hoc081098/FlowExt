@@ -22,6 +22,10 @@
 - FlowExt provides a collection of operators, Flows and utilities for Flow, that are not provided by Kotlinx Coroutine
   themselves, but are common in other Reactive Frameworks (rxjs, RxJava, RxSwift, rxdart, ...) and standards.
 
+<p align="center">
+    <img src="https://github.com/hoc081098/FlowExt/raw/master/logo.png" width="400">
+</p>
+
 > Kotlinx Coroutines Flow Extensions. Extensions to the Kotlin Flow library. Kotlin Flow extensions.
 > Multiplatform Kotlinx Coroutines Flow Extensions. Multiplatform Extensions to the Kotlin Flow
 > library. Multiplatform Kotlin Flow extensions. RxJS Kotlin Coroutines Flow. RxSwift Kotlin
@@ -42,8 +46,8 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 - `android`.
 - `jvm`.
 - `js` (`IR`).
-- `iosArm64`, `iosArm32`, `iosX64`, `iosSimulatorArm64`.
-- `watchosArm32`, `watchosArm64`, `watchosX64`, `watchosX86`, `watchosSimulatorArm64`, `watchosDeviceArm64`.
+- `iosArm64`, `iosX64`, `iosSimulatorArm64`.
+- `watchosArm32`, `watchosArm64`, `watchosX64`, `watchosSimulatorArm64`, `watchosDeviceArm64`.
 - `tvosX64`, `tvosSimulatorArm64`, `tvosArm64`.
 - `macosX64`, `macosArm64`.
 - `mingwX64`
@@ -528,6 +532,8 @@ safeCast: null
   to [RxJava concatWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatWith-org.reactivestreams.Publisher-)
 
 Returns a `Flow` that emits the items emitted from the current `Flow`, then the next, one after the other, without interleaving them.
+
+Note, `plus` is an alias to `concatWith`.
 
 ```kotlin
 flowOf(1, 2, 3)
