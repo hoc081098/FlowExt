@@ -37,4 +37,5 @@ import kotlinx.coroutines.flow.flow
  * fun remoteCallFlow(): Flow<R> = flowFromSuspend(::remoteCall)
  * ```
  */
-public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> = flow { emit(function()) }
+public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> =
+  flow { return@flow emit(function()) }
