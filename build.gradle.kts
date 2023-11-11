@@ -5,6 +5,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
@@ -247,6 +248,19 @@ kotlin {
         setExecutionSourceFrom(binaries.getTest("background", NativeBuildType.DEBUG))
       }
     }
+  }
+}
+
+tasks.withType<KotlinCompile<*>>().configureEach {
+  kotlinOptions {
+    // 'expect'/'actual' classes (including interfaces, objects, annotations, enums,
+    // and 'actual' typealiases) are in Beta.
+    // You can use -Xexpect-actual-classes flag to suppress this warning.
+    // Also see: https://youtrack.jetbrains.com/issue/KT-61573
+    freeCompilerArgs +=
+      listOf(
+        "-Xexpect-actual-classes",
+      )
   }
 }
 
