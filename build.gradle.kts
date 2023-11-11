@@ -61,22 +61,18 @@ kotlin {
       }
     }
     browser {
-      testTask(
-        Action {
-          useMocha {
-            timeout = "10s"
-          }
-        },
-      )
+      testTask {
+        useMocha {
+          timeout = "10s"
+        }
+      }
     }
     nodejs {
-      testTask(
-        Action {
-          useMocha {
-            timeout = "10s"
-          }
-        },
-      )
+      testTask {
+        useMocha {
+          timeout = "10s"
+        }
+      }
     }
   }
 
