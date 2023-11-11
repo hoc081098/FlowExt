@@ -212,7 +212,6 @@ bufferCount: [8, 9]
   to [RxJava concat](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concat-java.lang.Iterable-)
 
 Creates an output `Flow` which sequentially emits all values from the first given `Flow` and then moves on to the next.
-Note, `plus` is an alias to `concat`.
 
 ```kotlin
 concat(
@@ -532,6 +531,8 @@ safeCast: null
   to [RxJava concatWith](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concatWith-org.reactivestreams.Publisher-)
 
 Returns a `Flow` that emits the items emitted from the current `Flow`, then the next, one after the other, without interleaving them.
+
+Note, `plus` is an alias to `concatWith`.
 
 ```kotlin
 flowOf(1, 2, 3)
