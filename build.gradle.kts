@@ -108,129 +108,27 @@ kotlin {
   androidNativeX64()
 
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
       }
     }
-    val commonTest by getting {
+    commonTest {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
       }
     }
-    val jvmMain by getting {
-      dependsOn(commonMain)
-    }
-    val jvmTest by getting {
-      dependsOn(commonTest)
-
+    jvmTest {
       dependencies {
         implementation(kotlin("test-junit"))
       }
     }
-    val jsMain by getting {
-      dependsOn(commonMain)
-    }
-    val jsTest by getting {
+    jsTest {
       dependencies {
         implementation(kotlin("test-js"))
       }
-    }
-
-    val nativeMain by creating {
-      dependsOn(commonMain)
-    }
-    val nativeTest by creating {
-      dependsOn(commonTest)
-    }
-
-    val darwinMain by creating {
-      dependsOn(nativeMain)
-    }
-    val darwinTest by creating {
-      dependsOn(nativeTest)
-    }
-
-    val linuxMain by creating {
-      dependsOn(nativeMain)
-    }
-    val linuxTest by creating {
-      dependsOn(nativeTest)
-    }
-
-    val pthreadAndroidMain by creating {
-      dependsOn(nativeMain)
-    }
-    val pthreadAndroidTest by creating {
-      dependsOn(nativeTest)
-    }
-
-    val appleTargets =
-      listOf(
-        "iosX64",
-        "iosSimulatorArm64",
-        "iosArm64",
-        "macosX64",
-        "macosArm64",
-        "tvosArm64",
-        "tvosX64",
-        "tvosSimulatorArm64",
-        "watchosArm32",
-        "watchosArm64",
-        "watchosSimulatorArm64",
-        "watchosX64",
-        "watchosSimulatorArm64",
-        "watchosDeviceArm64",
-      )
-
-    val linuxTargets =
-      listOf(
-        "linuxX64",
-        "linuxArm64",
-      )
-
-    val androidNativeTargets =
-      listOf(
-        "androidNativeArm32",
-        "androidNativeArm64",
-        "androidNativeX86",
-        "androidNativeX64",
-      )
-
-    appleTargets.forEach {
-      getByName("${it}Main") {
-        dependsOn(darwinMain)
-      }
-      getByName("${it}Test") {
-        dependsOn(darwinTest)
-      }
-    }
-
-    linuxTargets.forEach {
-      getByName("${it}Main") {
-        dependsOn(linuxMain)
-      }
-      getByName("${it}Test") {
-        dependsOn(linuxTest)
-      }
-    }
-
-    androidNativeTargets.forEach {
-      getByName("${it}Main") {
-        dependsOn(pthreadAndroidMain)
-      }
-      getByName("${it}Test") {
-        dependsOn(pthreadAndroidTest)
-      }
-    }
-
-    getByName("mingwX64Main") {
-      dependsOn(nativeMain)
-    }
-    getByName("mingwX64Test") {
-      dependsOn(nativeTest)
     }
   }
 

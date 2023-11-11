@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.take
 
 private data class MyTuple2<A, B>(val first: A, val second: B)
 
+@Suppress("NOTHING_TO_INLINE")
 private inline infix fun <A, B> A.with(second: B) = MyTuple2(this, second)
 
 @ExperimentalCoroutinesApi
