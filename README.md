@@ -174,6 +174,7 @@ dependencies {
   to [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-)
 
 Buffers the source `Flow` values until the size hits the maximum `bufferSize` given.
+
 Note, `chunked` is an alias to `bufferCount`.
 
 ```kotlin
@@ -903,6 +904,7 @@ raceWith: 3
 Groups pairs of consecutive emissions together and emits them as a pair.
 Emits the `(n)th` and `(n-1)th` events as a pair.
 The first value won't be emitted until the second one arrives.
+
 Note, `zipWithNext` is an alias to `pairwise`.
 
 ```kotlin
