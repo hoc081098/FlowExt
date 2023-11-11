@@ -134,7 +134,7 @@ dependencies {
   - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
   - [`chunked`](#buffercount--chunked)
   - [`safeCast`](#cast--castnotnull--castnullable--safeCast)
-  - [`concatWith`](#concatwith)
+  - [`concatWith`](#concatwith--plus)
   - [`startWith`](#startwith)
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
   - [`exhaustMap`](#flatmapfirst--exhaustmap)
@@ -165,6 +165,7 @@ dependencies {
   - [`throttleTime`](#throttletime)
   - [`withLatestFrom`](#withlatestfrom)
   - [`zipWithNext`](#pairwise--zipWithNext)
+  - [`plus`](#concatwith--plus)
 
 #### bufferCount / chunked
 
@@ -211,6 +212,7 @@ bufferCount: [8, 9]
   to [RxJava concat](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#concat-java.lang.Iterable-)
 
 Creates an output `Flow` which sequentially emits all values from the first given `Flow` and then moves on to the next.
+Note, `plus` is an alias to `concat`.
 
 ```kotlin
 concat(
@@ -523,7 +525,7 @@ safeCast: null
 
 ----
 
-#### concatWith
+#### concatWith / plus
 
 - Similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith)
 - Similar
@@ -535,6 +537,13 @@ Returns a `Flow` that emits the items emitted from the current `Flow`, then the 
 flowOf(1, 2, 3)
   .concatWith(flowOf(4, 5, 6))
   .collect { println("concatWith: $it") }
+
+println("---")
+
+val flow1 = flowOf(1, 2, 3)
+val flow2 = flowOf(4, 5, 6)
+
+(flow1 + flow2).collect { println("plus: $it") }
 ```
 
 Output:
@@ -546,6 +555,13 @@ concatWith: 3
 concatWith: 4
 concatWith: 5
 concatWith: 6
+---
+plus: 1
+plus: 2
+plus: 3
+plus: 4
+plus: 5
+plus: 6
 ```
 
 ----

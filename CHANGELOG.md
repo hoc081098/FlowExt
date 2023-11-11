@@ -11,6 +11,10 @@
 
 - Remove now-unsupported targets: `iosArm32`, `watchosX86`.
 
+### Added
+
+- Add `Flow.plus` operator, it is an alias to `concatWith` operator.
+
 ## [0.7.3] - Oct 29, 2023
 
 ### Changed
