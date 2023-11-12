@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
  * Returns a flow containing the results of applying the given [transform] function.
  * Transformations performed parallel with given [concurrency] limit and preserving the order of elements.
  */
-@FlowPreview
+@FlowPreview // TODO: related issue https://github.com/Kotlin/kotlinx.coroutines/issues/3938
 @ExperimentalCoroutinesApi
 public fun <T, R> Flow<T>.mapEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
@@ -79,7 +79,7 @@ public fun <T, R> Flow<T>.mapEager(
  * a positive channel capacity or one of the constants defined in [Channel]. If inner [Flow] tries to emit
  * more than [bufferSize] values before being concatenated to output, then it will be suspended
  */
-@FlowPreview
+@FlowPreview // TODO: related issue https://github.com/Kotlin/kotlinx.coroutines/issues/3938
 @ExperimentalCoroutinesApi
 public fun <T, R> Flow<T>.flatMapConcatEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
@@ -109,7 +109,7 @@ public fun <T, R> Flow<T>.flatMapConcatEager(
  * a positive channel capacity or one of the constants defined in [Channel]. If [Flow] tries to emit
  * more than [bufferSize] values before being concatenated to output, then it will be suspended
  */
-@FlowPreview
+@FlowPreview // TODO: related issue https://github.com/Kotlin/kotlinx.coroutines/issues/3938
 @ExperimentalCoroutinesApi
 public fun <T> Flow<Flow<T>>.flattenConcatEager(
   concurrency: Int = DEFAULT_CONCURRENCY,
