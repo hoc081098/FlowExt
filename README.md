@@ -118,6 +118,7 @@ dependencies {
 - Create
   - [`concat`](#concat)
   - [`defer`](#defer)
+  - [`flowFromNonSuspend`](#flowfromnonsuspend)
   - [`flowFromSuspend`](#flowfromsuspend)
   - [`interval`](#interval)
   - [`neverFlow`](#neverflow)
@@ -270,12 +271,46 @@ defer: 2
 
 ----
 
+#### flowFromNonSuspend
+
+- Similar
+  to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
+
+Creates a _cold_ flow that produces a single value from the given `function`.
+It calls the function for each new `FlowCollector`.
+
+See also [flowFromSuspend](#flowFromSuspend) for the suspend version.
+
+```kotlin
+var count = 0L
+val flow = flowFromNonSuspend { count++ }
+
+flow.collect { println("flowFromNonSuspend: $it") }
+println("---")
+flow.collect { println("flowFromNonSuspend: $it") }
+println("---")
+flow.collect { println("flowFromNonSuspend: $it") }
+```
+
+Output:
+
+```none
+flowFromNonSuspend: 0
+---
+flowFromNonSuspend: 1
+---
+flowFromNonSuspend: 2
+```
+
 #### flowFromSuspend
 
 - Similar
   to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
 
 Creates a _cold_ flow that produces a single value from the given `function`.
+It calls the function for each new `FlowCollector`.
+
+See also [flowFromNonSuspend](#flowFromNonSuspend) for the non-suspend version.
 
 ```kotlin
 var count = 0L

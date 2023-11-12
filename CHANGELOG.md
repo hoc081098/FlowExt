@@ -14,6 +14,7 @@
 ### Added
 
 - Add `Flow.plus` operator, it is an alias to `concatWith` operator.
+- Add `flowFromNonSuspend`, the non-suspend version of `flowFromSuspend`.
 
 ## [0.7.3] - Oct 29, 2023
 

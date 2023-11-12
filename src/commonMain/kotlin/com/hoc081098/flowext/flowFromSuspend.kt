@@ -25,17 +25,50 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 
 /**
  * Creates a _cold_ flow that produces a single value from the given [function].
+ * It calls [function] for each new [FlowCollector].
  *
- * Example of usage:
+ * This function is similar to [RxJava's fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-).
+ * See also [flowFromNonSuspend] for the non-suspend version.
  *
- * ```
+ * ## Example of usage:
+ *
+ * ```kotlin
  * suspend fun remoteCall(): R = ...
  * fun remoteCallFlow(): Flow<R> = flowFromSuspend(::remoteCall)
  * ```
+ *
+ * ## Another example:
+ *
+ * ```kotlin
+ * var count = 0L
+ * val flow = flowFromSuspend {
+ *   delay(count)
+ *   count++
+ * }
+ *
+ * flow.collect { println("flowFromSuspend: $it") }
+ * println("---")
+ * flow.collect { println("flowFromSuspend: $it") }
+ * println("---")
+ * flow.collect { println("flowFromSuspend: $it") }
+ * ```
+ *
+ * Output:
+ *
+ * ```none
+ * flowFromSuspend: 0
+ * ---
+ * flowFromSuspend: 1
+ * ---
+ * flowFromSuspend: 2
+ * ```
+ *
+ * @see flowFromNonSuspend
  */
 public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> =
   flow { return@flow emit(function()) }
