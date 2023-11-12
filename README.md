@@ -81,7 +81,8 @@ implementation("io.github.hoc081098:FlowExt:0.7.3")
 
 ### Snapshot
 
-Snapshots of the development version are available in Sonatype's snapshots repository.
+<details>
+  <summary>Snapshots of the development version are available in Sonatype's snapshots repository.</summary>
 
 - Kotlin
 
@@ -112,6 +113,8 @@ dependencies {
   implementation("io.github.hoc081098:FlowExt:0.7.4-SNAPSHOT")
 }
 ```
+
+</details>
 
 ## Table of contents
 
