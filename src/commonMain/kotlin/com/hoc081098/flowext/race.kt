@@ -25,7 +25,6 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.ChannelResult
 import kotlinx.coroutines.channels.onFailure
 import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.produce
@@ -100,7 +99,7 @@ public fun <T> race(flows: Iterable<Flow<T>>): Flow<T> = flow {
       .singleOrNull()
       ?.let { return@coroutineScope emitAll(it) }
 
-    val (winnerIndex, winnerResult) = select<Pair<Int, ChannelResult<T>>> {
+    val (winnerIndex, winnerResult) = select {
       channels.forEachIndexed { index, channel ->
         channel.onReceiveCatching {
           index to it
