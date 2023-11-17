@@ -25,11 +25,16 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.NamedDispatchers
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 @ExperimentalCoroutinesApi
 class FlowFromSuspendTest : BaseTest() {
@@ -56,4 +61,35 @@ class FlowFromSuspendTest : BaseTest() {
 
     flowFromSuspend<Int> { throw testException }.test(listOf(Event.Error(testException)))
   }
+
+  @Test
+  fun testContextPreservation1() = runTest {
+    val flow = flowFromSuspend {
+      assertEquals("OK", NamedDispatchers.name())
+
+      withContext(Dispatchers.Default) { delay(100) }
+
+      assertEquals("OK", NamedDispatchers.name())
+      42
+    }.flowOn(NamedDispatchers("OK"))
+
+    flow.test(listOf(Event.Value(42), Event.Complete))
+  }
+
+  @Test
+  fun testContextPreservation2() = runTest {
+    val flow = flowFromSuspend {
+      assertEquals("OK", NamedDispatchers.name())
+
+      withContext(Dispatchers.Default) {
+        delay(100)
+        42
+      }.also {
+        assertEquals("OK", NamedDispatchers.name())
+      }
+    }.flowOn(NamedDispatchers("OK"))
+
+    flow.test(listOf(Event.Value(42), Event.Complete))
+  }
 }
+
