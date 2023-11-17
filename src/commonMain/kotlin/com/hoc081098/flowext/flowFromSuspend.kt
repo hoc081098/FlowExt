@@ -72,7 +72,7 @@ import kotlinx.coroutines.flow.FlowCollector
 public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> =
   FlowFromSuspend(function)
 
-// We don't need to use `AbstractFlow` here because we emit only one value.
+// We don't need to use `AbstractFlow` here because we only emit a single value.
 private class FlowFromSuspend<T>(private val function: suspend () -> T) : Flow<T> {
   override suspend fun collect(collector: FlowCollector<T>) = collector.emit(function())
 }
