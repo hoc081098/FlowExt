@@ -92,4 +92,3 @@ class FlowFromSuspendTest : BaseTest() {
     flow.test(listOf(Event.Value(42), Event.Complete))
   }
 }
-

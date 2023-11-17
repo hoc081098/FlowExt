@@ -26,7 +26,6 @@ package com.hoc081098.flowext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.flow
 
 /**
  * Creates a _cold_ flow that produces a single value from the given [function].
@@ -71,4 +70,9 @@ import kotlinx.coroutines.flow.flow
  * @see flowFromNonSuspend
  */
 public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> =
-  flow { return@flow emit(function()) }
+  FlowFromSuspend(function)
+
+// We don't need to use `AbstractFlow` here because we emit only one value.
+private class FlowFromSuspend<T>(private val function: suspend () -> T) : Flow<T> {
+  override suspend fun collect(collector: FlowCollector<T>) = collector.emit(function())
+}
