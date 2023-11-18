@@ -22,19 +22,19 @@
  * SOFTWARE.
  */
 
-@file:Suppress("ktlint:standard:property-naming")
-
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.AtomicRef
+import com.hoc081098.flowext.internal.SimpleLazy
+import com.hoc081098.flowext.internal.SimpleSuspendLazy
 import com.hoc081098.flowext.internal.loop
-import kotlin.concurrent.Volatile
+import com.hoc081098.flowext.internal.simpleLazyOf
+import com.hoc081098.flowext.internal.simpleSuspendLazy
 import kotlin.jvm.JvmField
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -54,11 +54,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn as kotlinXFlowShareIn
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.internal.SynchronizedObject
-import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 @FlowExtPreview
 @DslMarker
@@ -100,60 +96,7 @@ public sealed interface SelectorScope<T> {
   public fun <R> select(block: SelectorFunction<T, R>): Flow<R>
 }
 
-private class SimpleSuspendLazy<T : Any>(
-  initializer: suspend () -> T,
-) {
-  private val mutex = Mutex()
-
-  private var _initializer: (suspend () -> T)? = initializer
-
-  @Volatile
-  private var value: T? = null
-
-  suspend fun getValue(): T =
-    value ?: mutex.withLock {
-      value ?: _initializer!!().also {
-        _initializer = null
-        value = it
-      }
-    }
-
-  fun clear() {
-    _initializer = null
-    value = null
-  }
-}
-
-private fun <T : Any> simpleLazyOf(initializer: () -> T): SimpleLazy<T> =
-  SimpleLazy(initializer)
-
-// TODO: Remove SynchronizedObject
-@OptIn(InternalCoroutinesApi::class)
-private class SimpleLazy<T : Any>(
-  initializer: () -> T,
-) : SynchronizedObject() {
-  private var _initializer: (() -> T)? = initializer
-
-  @Volatile
-  private var value: T? = null
-
-  fun getValue(): T =
-    value ?: synchronized(this) {
-      value ?: _initializer!!().also {
-        _initializer = null
-        value = it
-      }
-    }
-
-  fun getOrNull(): T? = value
-
-  fun clear() {
-    _initializer = null
-    value = null
-  }
-}
-
-private typealias SimpleSuspendLazyOfFlow = SimpleSuspendLazy<Flow<Any?>>
+private typealias SimpleSuspendLazyOfAnyFlow = SimpleSuspendLazy<Flow<Any?>>
 
 @FlowExtPreview
 private sealed interface SelectorScopeState<out T> {
@@ -172,7 +115,12 @@ private sealed interface SelectorScopeState<out T> {
   }
 
   data class Frozen<T>(
-    val selectedFlowsAndChannels: SimpleLazy<Pair<List<SimpleSuspendLazyOfFlow>, List<Channel<T>>>>,
+    val selectedFlowsAndChannels: SimpleLazy<
+      Pair<
+        List<SimpleSuspendLazyOfAnyFlow>,
+        List<Channel<T>>,
+        >,
+      >,
     val completedCount: Int,
     val blocks: List<SelectorFunction<T, Any?>>,
   ) : SelectorScopeState<T>
@@ -365,7 +313,7 @@ private class DefaultSelectorScope<T>(
           List(size) { index ->
             val block = blocks[index]
             val flow = channels[index].consumeAsFlow()
-            SimpleSuspendLazy { this.block(flow) }
+            simpleSuspendLazy { this.block(flow) }
           } to channels
         },
         completedCount = 0,
