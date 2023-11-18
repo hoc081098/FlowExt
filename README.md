@@ -5,7 +5,7 @@
 [![Build](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml)
 [![Validate Gradle Wrapper](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Kotlin version](https://img.shields.io/badge/Kotlin-1.9.0-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
+[![Kotlin version](https://img.shields.io/badge/Kotlin-1.9.20-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
 [![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.7.3-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.7.1)
 ![badge][badge-jvm]
 ![badge][badge-android]
@@ -76,12 +76,13 @@ allprojects {
 ### Multiplatform
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt:0.7.3")
+implementation("io.github.hoc081098:FlowExt:0.7.4")
 ```
 
 ### Snapshot
 
-Snapshots of the development version are available in Sonatype's snapshots repository.
+<details>
+  <summary>Snapshots of the development version are available in Sonatype's snapshots repository.</summary>
 
 - Kotlin
 
@@ -94,7 +95,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.7.4-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.7.5-SNAPSHOT")
 }
 ```
 
@@ -109,15 +110,18 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.7.4-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.7.5-SNAPSHOT")
 }
 ```
+
+</details>
 
 ## Table of contents
 
 - Create
   - [`concat`](#concat)
   - [`defer`](#defer)
+  - [`flowFromNonSuspend`](#flowfromnonsuspend)
   - [`flowFromSuspend`](#flowfromsuspend)
   - [`interval`](#interval)
   - [`neverFlow`](#neverflow)
@@ -134,7 +138,7 @@ dependencies {
   - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
   - [`chunked`](#buffercount--chunked)
   - [`safeCast`](#cast--castnotnull--castnullable--safeCast)
-  - [`concatWith`](#concatwith)
+  - [`concatWith`](#concatwith--plus)
   - [`startWith`](#startwith)
   - [`flatMapFirst`](#flatmapfirst--exhaustmap)
   - [`exhaustMap`](#flatmapfirst--exhaustmap)
@@ -165,6 +169,7 @@ dependencies {
   - [`throttleTime`](#throttletime)
   - [`withLatestFrom`](#withlatestfrom)
   - [`zipWithNext`](#pairwise--zipWithNext)
+  - [`plus`](#concatwith--plus)
 
 #### bufferCount / chunked
 
@@ -173,6 +178,7 @@ dependencies {
   to [RxJava buffer](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Observable.html#buffer-int-int-)
 
 Buffers the source `Flow` values until the size hits the maximum `bufferSize` given.
+
 Note, `chunked` is an alias to `bufferCount`.
 
 ```kotlin
@@ -268,12 +274,46 @@ defer: 2
 
 ----
 
+#### flowFromNonSuspend
+
+- Similar
+  to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
+
+Creates a _cold_ flow that produces a single value from the given `function`.
+It calls the function for each new `FlowCollector`.
+
+See also [flowFromSuspend](#flowFromSuspend) for the suspend version.
+
+```kotlin
+var count = 0L
+val flow = flowFromNonSuspend { count++ }
+
+flow.collect { println("flowFromNonSuspend: $it") }
+println("---")
+flow.collect { println("flowFromNonSuspend: $it") }
+println("---")
+flow.collect { println("flowFromNonSuspend: $it") }
+```
+
+Output:
+
+```none
+flowFromNonSuspend: 0
+---
+flowFromNonSuspend: 1
+---
+flowFromNonSuspend: 2
+```
+
 #### flowFromSuspend
 
 - Similar
   to [RxJava fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-)
 
 Creates a _cold_ flow that produces a single value from the given `function`.
+It calls the function for each new `FlowCollector`.
+
+See also [flowFromNonSuspend](#flowFromNonSuspend) for the non-suspend version.
 
 ```kotlin
 var count = 0L
@@ -523,7 +563,7 @@ safeCast: null
 
 ----
 
-#### concatWith
+#### concatWith / plus
 
 - Similar to [RxJS concatWith](https://rxjs.dev/api/operators/concatWith)
 - Similar
@@ -531,10 +571,19 @@ safeCast: null
 
 Returns a `Flow` that emits the items emitted from the current `Flow`, then the next, one after the other, without interleaving them.
 
+Note, `plus` is an alias to `concatWith`.
+
 ```kotlin
 flowOf(1, 2, 3)
   .concatWith(flowOf(4, 5, 6))
   .collect { println("concatWith: $it") }
+
+println("---")
+
+val flow1 = flowOf(1, 2, 3)
+val flow2 = flowOf(4, 5, 6)
+
+(flow1 + flow2).collect { println("plus: $it") }
 ```
 
 Output:
@@ -546,6 +595,13 @@ concatWith: 3
 concatWith: 4
 concatWith: 5
 concatWith: 6
+---
+plus: 1
+plus: 2
+plus: 3
+plus: 4
+plus: 5
+plus: 6
 ```
 
 ----
@@ -886,6 +942,7 @@ raceWith: 3
 Groups pairs of consecutive emissions together and emits them as a pair.
 Emits the `(n)th` and `(n-1)th` events as a pair.
 The first value won't be emitted until the second one arrives.
+
 Note, `zipWithNext` is an alias to `pairwise`.
 
 ```kotlin
@@ -1316,7 +1373,7 @@ snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
 ```License
 MIT License
 
-Copyright (c) 2021-2022 Petrus Nguyễn Thái Học
+Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
 ```
 
 [badge-android]: http://img.shields.io/badge/android-6EDB8D.svg?style=flat

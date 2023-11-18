@@ -25,7 +25,7 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.internal.AtomicRef
-import com.hoc081098.flowext.utils.INTERNAL_NULL_VALUE
+import com.hoc081098.flowext.internal.INTERNAL_NULL_VALUE
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow

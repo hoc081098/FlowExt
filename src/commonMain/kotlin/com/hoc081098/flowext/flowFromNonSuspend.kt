@@ -32,48 +32,44 @@ import kotlinx.coroutines.flow.FlowCollector
  * It calls [function] for each new [FlowCollector].
  *
  * This function is similar to [RxJava's fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-).
- * See also [flowFromNonSuspend] for the non-suspend version.
+ * See also [flowFromSuspend] for the suspend version.
  *
  * ## Example of usage:
  *
  * ```kotlin
- * suspend fun remoteCall(): R = ...
- * fun remoteCallFlow(): Flow<R> = flowFromSuspend(::remoteCall)
+ * fun call(): R = ...
+ * fun callAsFlow(): Flow<R> = flowFromNonSuspend(::call)
  * ```
- *
  * ## Another example:
  *
  * ```kotlin
  * var count = 0L
- * val flow = flowFromSuspend {
- *   delay(count)
- *   count++
- * }
+ * val flow = flowFromNonSuspend { count++ }
  *
- * flow.collect { println("flowFromSuspend: $it") }
+ * flow.collect { println("flowFromNonSuspend: $it") }
  * println("---")
- * flow.collect { println("flowFromSuspend: $it") }
+ * flow.collect { println("flowFromNonSuspend: $it") }
  * println("---")
- * flow.collect { println("flowFromSuspend: $it") }
+ * flow.collect { println("flowFromNonSuspend: $it") }
  * ```
  *
  * Output:
  *
  * ```none
- * flowFromSuspend: 0
+ * flowFromNonSuspend: 0
  * ---
- * flowFromSuspend: 1
+ * flowFromNonSuspend: 1
  * ---
- * flowFromSuspend: 2
+ * flowFromNonSuspend: 2
  * ```
  *
- * @see flowFromNonSuspend
+ * @see flowFromSuspend
  */
-public fun <T> flowFromSuspend(function: suspend () -> T): Flow<T> =
-  FlowFromSuspend(function)
+public fun <T> flowFromNonSuspend(function: () -> T): Flow<T> =
+  FlowFromNonSuspend(function)
 
 // We don't need to use `AbstractFlow` here because we only emit a single value without a context switch,
 // and we guarantee all Flow's constraints: context preservation and exception transparency.
-private class FlowFromSuspend<T>(private val function: suspend () -> T) : Flow<T> {
+private class FlowFromNonSuspend<T>(private val function: () -> T) : Flow<T> {
   override suspend fun collect(collector: FlowCollector<T>) = collector.emit(function())
 }

@@ -1,6 +1,13 @@
 # Change Log
 
-## [Unreleased] - TODO
+## [Unreleased] - TBD
+
+### Changed
+
+- Optimize the implementation of `flowFromSuspend` and `flowFromNonSuspend`,
+  it is just an internal change, it does not affect the public API and behavior.
+
+## [0.7.4] - Nov 12, 2023
 
 ### Changed
 
@@ -10,6 +17,13 @@
 ### Removed
 
 - Remove now-unsupported targets: `iosArm32`, `watchosX86`.
+
+### Added
+
+- Add `Flow.plus` operator, it is an alias to `concatWith` operator
+  (thanks to [@hoangchungk53qx1](https://github.com/hoangchungk53qx1)).
+
+- Add `flowFromNonSuspend`, the non-suspend version of `flowFromSuspend`.
 
 ## [0.7.3] - Oct 29, 2023
 
@@ -214,7 +228,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.3...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.4...HEAD
+[0.7.4]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.4
 [0.7.3]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.3
 [0.7.2]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.2
 [0.7.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.1

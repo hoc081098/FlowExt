@@ -24,7 +24,7 @@
 
 package com.hoc081098.flowext
 
-import com.hoc081098.flowext.utils.INTERNAL_NULL_VALUE
+import com.hoc081098.flowext.internal.INTERNAL_NULL_VALUE
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

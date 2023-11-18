@@ -169,6 +169,22 @@ public fun <T> Flow<T>.concatWith(others: Sequence<Flow<T>>): Flow<T> {
   }
 }
 
+/**
+ * This function is an alias to [concatWith] operator.
+ *
+ * Returns a [Flow] that emits the items emitted from this [Flow], then the next, one after the other, without interleaving them.
+ *
+ * Example:
+ * ``` kotlin
+ * val flow1 = flowOf(1, 2, 3)
+ * val flow2 = flowOf(4, 5, 6)
+ * val result = flow1 + flow2 // produces the following emissions 1, 2, 3, 4, 5, 6
+ * ```
+ *
+ * @see concatWith
+ */
+public operator fun <T> Flow<T>.plus(other: Flow<T>): Flow<T> = concat(this, other)
+
 //
 // startWith
 //
