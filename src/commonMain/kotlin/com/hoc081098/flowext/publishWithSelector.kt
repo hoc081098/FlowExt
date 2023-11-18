@@ -223,9 +223,7 @@ private class DefaultSelectorScope<T>(
   override fun <R> select(block: SelectorFunction<T, R>): Flow<R> {
     println("call select with block: $block")
 
-    while (true) {
-      val state = stateRef.value
-
+    stateRef.loop { state ->
       val updated = when (state) {
         DefaultSelectorScopeState.Closed -> {
           error("This scope is closed")
@@ -269,46 +267,48 @@ private class DefaultSelectorScope<T>(
             as Flow<R>
         }.onCompletion { onCompleteSelectedFlow(index) }
 
-        while (true) {
-          val state = stateRef.value
+        transitionToNotInSelectClause()
 
-          val updated = when (state) {
-            is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
-              // Ok, lets transition to NotFrozen.NotInSelectClause
-              DefaultSelectorScopeState.NotFrozen.NotInSelectClause(blocks = state.blocks)
-            }
+        return result
+      }
+    }
+  }
 
-            is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
-              // Ok, state already is NotFrozen.NotInSelectClause
-              return result
-            }
-
-            DefaultSelectorScopeState.Closed -> {
-              error("This scope is closed")
-            }
-
-            is DefaultSelectorScopeState.Frozen -> {
-              error("This scope is frozen. `select` only can be called inside `publish`, do not use `SelectorScope` outside `publish`")
-            }
-
-            DefaultSelectorScopeState.Init -> {
-              error("Cannot be here!")
-            }
-          }
-
-          if (stateRef.compareAndSet(expect = state, update = updated)) {
-            // CAS success
-            return result
-          }
+  private fun transitionToNotInSelectClause() {
+    stateRef.loop { state ->
+      val updated = when (state) {
+        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+          // Ok, lets transition to NotFrozen.NotInSelectClause
+          DefaultSelectorScopeState.NotFrozen.NotInSelectClause(blocks = state.blocks)
         }
+
+        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+          // Ok, state already is NotFrozen.NotInSelectClause
+          return
+        }
+
+        DefaultSelectorScopeState.Closed -> {
+          error("This scope is closed")
+        }
+
+        is DefaultSelectorScopeState.Frozen -> {
+          error("This scope is frozen. `select` only can be called inside `publish`, do not use `SelectorScope` outside `publish`")
+        }
+
+        DefaultSelectorScopeState.Init -> {
+          error("Cannot be here!")
+        }
+      }
+
+      if (stateRef.compareAndSet(expect = state, update = updated)) {
+        // CAS success
+        return
       }
     }
   }
 
   private fun onCompleteSelectedFlow(index: Int) {
-    while (true) {
-      val state = stateRef.value
-
+    stateRef.loop { state ->
       val updated = when (state) {
         DefaultSelectorScopeState.Init -> {
           error("Cannot be here!")
