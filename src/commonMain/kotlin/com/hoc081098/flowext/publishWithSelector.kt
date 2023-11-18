@@ -156,10 +156,10 @@ private class SimpleLazy<T : Any>(
 private typealias SimpleSuspendLazyOfFlow = SimpleSuspendLazy<Flow<Any?>>
 
 @FlowExtPreview
-private sealed interface DefaultSelectorScopeState<out T> {
-  data object Init : DefaultSelectorScopeState<Nothing>
+private sealed interface SelectorScopeState<out T> {
+  data object Init : SelectorScopeState<Nothing>
 
-  sealed interface NotFrozen<T> : DefaultSelectorScopeState<T> {
+  sealed interface NotFrozen<T> : SelectorScopeState<T> {
     val blocks: List<SelectorFunction<T, Any?>>
 
     data class InSelectClause<T>(
@@ -175,41 +175,10 @@ private sealed interface DefaultSelectorScopeState<out T> {
     val selectedFlowsAndChannels: SimpleLazy<Pair<List<SimpleSuspendLazyOfFlow>, List<Channel<T>>>>,
     val completedCount: Int,
     val blocks: List<SelectorFunction<T, Any?>>,
-  ) : DefaultSelectorScopeState<T>
+  ) : SelectorScopeState<T>
 
-  data object Closed : DefaultSelectorScopeState<Nothing>
+  data object Closed : SelectorScopeState<Nothing>
 }
-
-@OptIn(FlowExtPreview::class)
-private val <T> DefaultSelectorScopeState<T>.debug: String
-  get() = when (this) {
-    DefaultSelectorScopeState.Closed -> toString()
-    DefaultSelectorScopeState.Init -> toString()
-    is DefaultSelectorScopeState.Frozen -> {
-      val orNull = selectedFlowsAndChannels.getOrNull()
-      """
-      | Frozen(
-      |   selectedFlowsAndChannels = ${orNull?.first?.size to orNull?.second?.size},
-      |   completedCount = $completedCount,
-      |   blocks = ${blocks.size}
-      | )
-      """.trimMargin()
-    }
-
-    is DefaultSelectorScopeState.NotFrozen.InSelectClause ->
-      """
-      | NotFrozen.InSelectClause(
-      |   blocks = ${blocks.size}
-      | )
-      """.trimMargin()
-
-    is DefaultSelectorScopeState.NotFrozen.NotInSelectClause ->
-      """
-      | NotFrozen.NotInSelectClause(
-      |   blocks = ${blocks.size}
-      | )
-      """.trimMargin()
-  }
 
 @FlowExtPreview
 @OptIn(DelicateCoroutinesApi::class)
@@ -218,33 +187,33 @@ private class DefaultSelectorScope<T>(
 ) : SelectorScope<T>,
   SelectorSharedFlowScope<T> {
   @JvmField
-  val stateRef = AtomicRef<DefaultSelectorScopeState<T>>(DefaultSelectorScopeState.Init)
+  val stateRef = AtomicRef<SelectorScopeState<T>>(SelectorScopeState.Init)
 
   override fun <R> select(block: SelectorFunction<T, R>): Flow<R> {
     println("call select with block: $block")
 
     stateRef.loop { state ->
       val updated = when (state) {
-        DefaultSelectorScopeState.Closed -> {
+        SelectorScopeState.Closed -> {
           error("This scope is closed")
         }
 
-        is DefaultSelectorScopeState.Frozen -> {
+        is SelectorScopeState.Frozen -> {
           error("This scope is frozen. `select` only can be called inside `publish`, do not use `SelectorScope` outside `publish`")
         }
 
-        DefaultSelectorScopeState.Init -> {
+        SelectorScopeState.Init -> {
           // Ok, lets transition to NotFrozen.InSelectClause
-          DefaultSelectorScopeState.NotFrozen.InSelectClause(blocks = listOf(block))
+          SelectorScopeState.NotFrozen.InSelectClause(blocks = listOf(block))
         }
 
-        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+        is SelectorScopeState.NotFrozen.InSelectClause -> {
           error("`select` can not be called inside another `select`")
         }
 
-        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+        is SelectorScopeState.NotFrozen.NotInSelectClause -> {
           // Ok, lets transition to NotFrozen.InSelectClause
-          DefaultSelectorScopeState.NotFrozen.InSelectClause(blocks = state.blocks + block)
+          SelectorScopeState.NotFrozen.InSelectClause(blocks = state.blocks + block)
         }
       }
 
@@ -256,7 +225,7 @@ private class DefaultSelectorScope<T>(
           // Only frozen state can reach here,
           // that means we collect the output flow after frozen this scope
           val stateWhenCollecting = stateRef.value
-          check(stateWhenCollecting is DefaultSelectorScopeState.Frozen) { "only frozen state can reach here!" }
+          check(stateWhenCollecting is SelectorScopeState.Frozen) { "only frozen state can reach here!" }
 
           @Suppress("UNCHECKED_CAST") // We know that the type is correct
           stateWhenCollecting
@@ -277,25 +246,25 @@ private class DefaultSelectorScope<T>(
   private fun transitionToNotInSelectClause() {
     stateRef.loop { state ->
       val updated = when (state) {
-        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+        is SelectorScopeState.NotFrozen.InSelectClause -> {
           // Ok, lets transition to NotFrozen.NotInSelectClause
-          DefaultSelectorScopeState.NotFrozen.NotInSelectClause(blocks = state.blocks)
+          SelectorScopeState.NotFrozen.NotInSelectClause(blocks = state.blocks)
         }
 
-        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+        is SelectorScopeState.NotFrozen.NotInSelectClause -> {
           // Ok, state already is NotFrozen.NotInSelectClause
           return
         }
 
-        DefaultSelectorScopeState.Closed -> {
+        SelectorScopeState.Closed -> {
           error("This scope is closed")
         }
 
-        is DefaultSelectorScopeState.Frozen -> {
+        is SelectorScopeState.Frozen -> {
           error("This scope is frozen. `select` only can be called inside `publish`, do not use `SelectorScope` outside `publish`")
         }
 
-        DefaultSelectorScopeState.Init -> {
+        SelectorScopeState.Init -> {
           error("Cannot be here!")
         }
       }
@@ -310,29 +279,29 @@ private class DefaultSelectorScope<T>(
   private fun onCompleteSelectedFlow(index: Int) {
     stateRef.loop { state ->
       val updated = when (state) {
-        DefaultSelectorScopeState.Init -> {
+        SelectorScopeState.Init -> {
           error("Cannot be here!")
         }
 
-        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+        is SelectorScopeState.NotFrozen.InSelectClause -> {
           error("Cannot be here!")
         }
 
-        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+        is SelectorScopeState.NotFrozen.NotInSelectClause -> {
           error("Cannot be here!")
         }
 
-        is DefaultSelectorScopeState.Frozen -> {
+        is SelectorScopeState.Frozen -> {
           if (state.completedCount == state.blocks.size) {
             // Ok, all output flows are completed. Lets transition to DefaultSelectorScopeState.Closed
-            DefaultSelectorScopeState.Closed
+            SelectorScopeState.Closed
           } else {
             // Ok, lets transition to DefaultSelectorScopeState.Frozen with completedCount=completedCount + 1
             state.copy(completedCount = state.completedCount + 1)
           }
         }
 
-        DefaultSelectorScopeState.Closed -> {
+        SelectorScopeState.Closed -> {
           // Ok, already closed. Do nothing.
           return
         }
@@ -342,13 +311,13 @@ private class DefaultSelectorScope<T>(
         // CAS success
 
         println(
-          "onCompleteSelectedFlow: completedCount = ${(updated as? DefaultSelectorScopeState.Frozen)?.completedCount}, " +
+          "onCompleteSelectedFlow: completedCount = ${(updated as? SelectorScopeState.Frozen)?.completedCount}, " +
             "size = ${state.blocks.size}, " +
             "(index = $index)",
         )
 
         // Once state reaches DefaultSelectorScopeState.Closed, we can clear unused lazy
-        if (updated is DefaultSelectorScopeState.Closed) {
+        if (updated is SelectorScopeState.Closed) {
           state.selectedFlowsAndChannels.run {
             getOrNull()?.first?.forEach { it.clear() }
             clear()
@@ -373,15 +342,15 @@ private class DefaultSelectorScope<T>(
     stateRef.loop { state ->
       // Transition from NotFrozen to Frozen
       when (state) {
-        DefaultSelectorScopeState.Init -> {
+        SelectorScopeState.Init -> {
           error("Not implemented")
         }
 
-        is DefaultSelectorScopeState.NotFrozen<T> -> {
+        is SelectorScopeState.NotFrozen<T> -> {
           // Freeze and init
         }
 
-        is DefaultSelectorScopeState.Frozen<T>, DefaultSelectorScopeState.Closed -> {
+        is SelectorScopeState.Frozen<T>, SelectorScopeState.Closed -> {
           // Already frozen or closed
           return
         }
@@ -389,7 +358,7 @@ private class DefaultSelectorScope<T>(
 
       val blocks = state.blocks
       val size = blocks.size
-      val updated = DefaultSelectorScopeState.Frozen(
+      val updated = SelectorScopeState.Frozen(
         selectedFlowsAndChannels = simpleLazyOf {
           val channels = List(size) { Channel<T>() }
 
@@ -416,7 +385,7 @@ private class DefaultSelectorScope<T>(
   suspend fun send(value: T) {
     println("send: $value")
 
-    val state = stateRef.value as? DefaultSelectorScopeState.Frozen<T> ?: return
+    val state = stateRef.value as? SelectorScopeState.Frozen<T> ?: return
     val channels = state
       .selectedFlowsAndChannels
       .getValue()
@@ -438,24 +407,24 @@ private class DefaultSelectorScope<T>(
   private fun transitionToClosed(action: (Channel<T>) -> Unit) {
     stateRef.loop { state ->
       val updated = when (state) {
-        DefaultSelectorScopeState.Init -> {
+        SelectorScopeState.Init -> {
           error("Cannot be here!")
         }
 
-        is DefaultSelectorScopeState.NotFrozen.InSelectClause -> {
+        is SelectorScopeState.NotFrozen.InSelectClause -> {
           error("Cannot be here!")
         }
 
-        is DefaultSelectorScopeState.NotFrozen.NotInSelectClause -> {
+        is SelectorScopeState.NotFrozen.NotInSelectClause -> {
           error("Cannot be here!")
         }
 
-        is DefaultSelectorScopeState.Frozen -> {
+        is SelectorScopeState.Frozen -> {
           // Ok, lets transition to DefaultSelectorScopeState.Closed
-          DefaultSelectorScopeState.Closed
+          SelectorScopeState.Closed
         }
 
-        DefaultSelectorScopeState.Closed -> {
+        SelectorScopeState.Closed -> {
           // Ok, already closed. Do nothing.
           return
         }
