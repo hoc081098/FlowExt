@@ -26,7 +26,6 @@ package com.hoc081098.flowext
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.flow
 
 /**
  * Creates a _cold_ flow that produces a single value from the given [function].
@@ -66,4 +65,11 @@ import kotlinx.coroutines.flow.flow
  *
  * @see flowFromSuspend
  */
-public fun <T> flowFromNonSuspend(function: () -> T): Flow<T> = flow { return@flow emit(function()) }
+public fun <T> flowFromNonSuspend(function: () -> T): Flow<T> =
+  FlowFromNonSuspend(function)
+
+// We don't need to use `AbstractFlow` here because we only emit a single value without a context switch,
+// and we guarantee all Flow's constraints: context preservation and exception transparency.
+private class FlowFromNonSuspend<T>(private val function: () -> T) : Flow<T> {
+  override suspend fun collect(collector: FlowCollector<T>) = collector.emit(function())
+}

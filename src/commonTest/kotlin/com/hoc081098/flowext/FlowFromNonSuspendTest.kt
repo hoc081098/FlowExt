@@ -25,10 +25,16 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
+import com.hoc081098.flowext.utils.NamedDispatchers
 import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.take
 
 @ExperimentalCoroutinesApi
 class FlowFromNonSuspendTest : BaseTest() {
@@ -49,9 +55,38 @@ class FlowFromNonSuspendTest : BaseTest() {
   }
 
   @Test
-  fun deferFactoryThrows() = runTest {
+  fun flowFromNonSuspendFunctionThrows() = runTest {
     val testException = TestException()
 
     flowFromNonSuspend<Int> { throw testException }.test(listOf(Event.Error(testException)))
+  }
+
+  @Test
+  fun flowFromNonSuspendCancellation() = runTest {
+    fun throwsCancellationException(): Unit = throw CancellationException("Flow was cancelled")
+    assertFailsWith<CancellationException>(
+      flowFromNonSuspend {
+        val i = 1 + 2
+        throwsCancellationException()
+        i + 3
+      },
+    )
+  }
+
+  @Test
+  fun flowFromNonSuspenddTake() = runTest {
+    flowFromNonSuspend { 100 }
+      .take(1)
+      .test(listOf(Event.Value(100), Event.Complete))
+  }
+
+  @Test
+  fun testContextPreservation1() = runTest {
+    val flow = flowFromNonSuspend {
+      assertEquals("OK", NamedDispatchers.name())
+      42
+    }.flowOn(NamedDispatchers("OK"))
+
+    flow.test(listOf(Event.Value(42), Event.Complete))
   }
 }

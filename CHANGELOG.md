@@ -1,5 +1,12 @@
 # Change Log
 
+## [Unreleased] - TBD
+
+### Changed
+
+- Optimize the implementation of `flowFromSuspend` and `flowFromNonSuspend`,
+  it is just an internal change, it does not affect the public API and behavior.
+
 ## [0.7.4] - Nov 12, 2023
 
 ### Changed
