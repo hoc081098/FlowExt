@@ -26,6 +26,8 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.internal.AtomicRef
+import com.hoc081098.flowext.internal.loop
 import kotlin.concurrent.Volatile
 import kotlin.jvm.JvmField
 import kotlinx.coroutines.CancellationException
@@ -37,25 +39,20 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn as kotlinXFlowShareIn
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
@@ -220,19 +217,8 @@ private class DefaultSelectorScope<T>(
   @JvmField val scope: CoroutineScope,
 ) : SelectorScope<T>,
   SelectorSharedFlowScope<T> {
-  // TODO: Revert to AtomicRef
   @JvmField
-  val stateRef = MutableStateFlow<DefaultSelectorScopeState<T>>(DefaultSelectorScopeState.Init)
-
-  init {
-    // TODO: Revert to AtomicRef
-    stateRef
-      .buffer(Channel.UNLIMITED)
-      .takeWhile { it !is DefaultSelectorScopeState.Closed }
-      .concatWith(flowOf(DefaultSelectorScopeState.Closed))
-      .onEach { state -> println("state: ${state.debug}") }
-      .launchIn(scope)
-  }
+  val stateRef = AtomicRef<DefaultSelectorScopeState<T>>(DefaultSelectorScopeState.Init)
 
   override fun <R> select(block: SelectorFunction<T, R>): Flow<R> {
     println("call select with block: $block")
@@ -384,9 +370,7 @@ private class DefaultSelectorScope<T>(
     )
 
   fun freezeAndInit() {
-    while (true) {
-      val state = stateRef.value
-
+    stateRef.loop { state ->
       // Transition from NotFrozen to Frozen
       when (state) {
         DefaultSelectorScopeState.Init -> {
@@ -452,9 +436,7 @@ private class DefaultSelectorScope<T>(
   }
 
   private fun transitionToClosed(action: (Channel<T>) -> Unit) {
-    while (true) {
-      val state = stateRef.value
-
+    stateRef.loop { state ->
       val updated = when (state) {
         DefaultSelectorScopeState.Init -> {
           error("Cannot be here!")
