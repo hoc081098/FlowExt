@@ -107,6 +107,7 @@ kotlin {
     commonMain {
       dependencies {
         api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+        implementation("io.github.hoc081098:channel-event-bus:0.0.2")
       }
     }
     commonTest {
