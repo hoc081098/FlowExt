@@ -72,7 +72,7 @@ jobs:
 
       - name: Upload test report artifact
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: build/reports/tests/allTests/
