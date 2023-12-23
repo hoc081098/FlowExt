@@ -24,6 +24,8 @@
 
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 
@@ -33,6 +35,8 @@ import kotlinx.coroutines.flow.FlowCollector
  *
  * This function is similar to [RxJava's fromCallable](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#fromCallable-java.util.concurrent.Callable-).
  * See also [flowFromSuspend] for the suspend version.
+ *
+ * The returned [Flow] is cancellable and has the same behaviour as [kotlinx.coroutines.flow.cancellable].
  *
  * ## Example of usage:
  *
@@ -71,5 +75,9 @@ public fun <T> flowFromNonSuspend(function: () -> T): Flow<T> =
 // We don't need to use `AbstractFlow` here because we only emit a single value without a context switch,
 // and we guarantee all Flow's constraints: context preservation and exception transparency.
 private class FlowFromNonSuspend<T>(private val function: () -> T) : Flow<T> {
-  override suspend fun collect(collector: FlowCollector<T>) = collector.emit(function())
+  override suspend fun collect(collector: FlowCollector<T>) {
+    val value = function()
+    currentCoroutineContext().ensureActive()
+    collector.emit(value)
+  }
 }
