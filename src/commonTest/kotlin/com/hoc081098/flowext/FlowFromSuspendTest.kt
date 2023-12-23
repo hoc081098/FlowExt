@@ -34,8 +34,14 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.withContext
 
@@ -118,5 +124,20 @@ class FlowFromSuspendTest : BaseTest() {
     }.flowOn(NamedDispatchers("OK"))
 
     flow.test(listOf(Event.Value(42), Event.Complete))
+  }
+
+  @Test
+  fun testCancellable() = runTest {
+    var sum = 0
+    val flow = flowFromSuspend { 1 }
+      .onStart { currentCoroutineContext().cancel() }
+      .onEach { sum += it }
+
+    flow.launchIn(this).join()
+    assertEquals(0, sum)
+
+    sum = 0
+    flow.cancellable().launchIn(this).join()
+    assertEquals(0, sum)
   }
 }
