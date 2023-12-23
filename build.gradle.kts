@@ -11,13 +11,13 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.9.20"
-  id("com.diffplug.spotless") version "6.22.0"
+  kotlin("multiplatform") version "1.9.22"
+  id("com.diffplug.spotless") version "6.23.3"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.25.3"
+  id("com.vanniktech.maven.publish") version "0.26.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.2"
   id("org.jetbrains.dokka") version "1.9.10"
-  id("org.jetbrains.kotlinx.kover") version "0.7.4"
+  id("org.jetbrains.kotlinx.kover") version "0.7.5"
 }
 
 val coroutinesVersion = "1.7.3"
