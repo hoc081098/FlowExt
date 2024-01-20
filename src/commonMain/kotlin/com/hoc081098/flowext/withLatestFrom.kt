@@ -48,7 +48,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 
     try {
       coroutineScope {
-        launch(start = CoroutineStart.UNDISPATCHED) {
+        val otherCollectionJob = launch(start = CoroutineStart.UNDISPATCHED) {
           other.collect { otherRef.value = it ?: INTERNAL_NULL_VALUE }
         }
 
@@ -60,6 +60,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
             ),
           )
         }
+        otherCollectionJob.cancelAndJoin()
       }
     } finally {
       otherRef.value = null
