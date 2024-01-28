@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Update dependencies
+  - `Kotlin` to `1.9.22`.
+
 - Optimize the implementation of `flowFromSuspend` and `flowFromNonSuspend`,
   it is just an internal change, it does not affect the public API and behavior.
 
