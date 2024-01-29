@@ -1,8 +1,11 @@
 # Change Log
 
-## [Unreleased] - TBD
+## [0.7.5] - Jan 28, 2024
 
 ### Changed
+
+- Update dependencies
+  - `Kotlin` to `1.9.22`.
 
 - Optimize the implementation of `flowFromSuspend` and `flowFromNonSuspend`,
   it is just an internal change, it does not affect the public API and behavior.
@@ -228,7 +231,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.4...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.5...HEAD
+[0.7.5]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.5
 [0.7.4]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.4
 [0.7.3]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.3
 [0.7.2]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.2
