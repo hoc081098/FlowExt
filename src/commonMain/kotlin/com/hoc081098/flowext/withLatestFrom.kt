@@ -71,4 +71,4 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 
 @Suppress("NOTHING_TO_INLINE")
 public inline fun <A, B> Flow<A>.withLatestFrom(other: Flow<B>): Flow<Pair<A, B>> =
-  withLatestFrom(other) { a, b -> a to b }
+  withLatestFrom(other, ::Pair)
