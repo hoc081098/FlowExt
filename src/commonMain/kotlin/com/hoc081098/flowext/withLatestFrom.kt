@@ -27,6 +27,7 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.internal.AtomicRef
 import com.hoc081098.flowext.internal.INTERNAL_NULL_VALUE
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -48,7 +49,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 
     try {
       coroutineScope {
-        launch(start = CoroutineStart.UNDISPATCHED) {
+        val otherCollectionJob = launch(start = CoroutineStart.UNDISPATCHED) {
           other.collect { otherRef.value = it ?: INTERNAL_NULL_VALUE }
         }
 
@@ -60,6 +61,7 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
             ),
           )
         }
+        otherCollectionJob.cancelAndJoin()
       }
     } finally {
       otherRef.value = null
@@ -69,4 +71,4 @@ public fun <A, B, R> Flow<A>.withLatestFrom(
 
 @Suppress("NOTHING_TO_INLINE")
 public inline fun <A, B> Flow<A>.withLatestFrom(other: Flow<B>): Flow<Pair<A, B>> =
-  withLatestFrom(other) { a, b -> a to b }
+  withLatestFrom(other, ::Pair)

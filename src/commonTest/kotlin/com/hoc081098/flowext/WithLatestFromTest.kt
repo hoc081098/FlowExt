@@ -130,4 +130,16 @@ class WithLatestFromTest : BaseTest() {
         ),
       )
   }
+
+  @Test
+  fun cancelOtherFlowAfterSourceFlowCompleted() = runTest {
+    flowOf(1)
+      .withLatestFrom(neverFlow().startWith(2))
+      .test(
+        listOf(
+          Event.Value(1 to 2),
+          Event.Complete,
+        ),
+      )
+  }
 }

@@ -1,5 +1,11 @@
 # Change Log
 
+## [Unreleased] - TBD
+
+### Fixed
+
+- `withLatestFrom`: fix the bug that the other Flow is not cancelled after the main Flow is completed.
+
 ## [0.7.5] - Jan 28, 2024
 
 ### Changed
