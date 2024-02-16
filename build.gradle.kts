@@ -103,6 +103,8 @@ kotlin {
   androidNativeX86()
   androidNativeX64()
 
+  applyDefaultHierarchyTemplate()
+
   sourceSets {
     commonMain {
       dependencies {
@@ -116,15 +118,35 @@ kotlin {
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
       }
     }
+
     jvmTest {
       dependencies {
         implementation(kotlin("test-junit"))
       }
     }
+
+    val nonJvmMain by creating {
+      dependsOn(commonMain.get())
+    }
+    val nonJvmTest by creating {
+      dependsOn(commonTest.get())
+    }
+
+    jsMain {
+      dependsOn(nonJvmMain)
+    }
     jsTest {
+      dependsOn(nonJvmTest)
       dependencies {
         implementation(kotlin("test-js"))
       }
+    }
+
+    nativeMain {
+      dependsOn(nonJvmMain)
+    }
+    nativeTest {
+      dependsOn(nonJvmTest)
     }
   }
 
