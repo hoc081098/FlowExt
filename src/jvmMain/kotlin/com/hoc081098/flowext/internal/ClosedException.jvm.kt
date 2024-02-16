@@ -24,15 +24,6 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlinx.coroutines.CancellationException
-
 internal actual class ClosedException actual constructor(
-  @JvmField @Transient actual val owner: Any
-) : CancellationException("Flow was aborted, no more elements needed") {
-
-  override fun fillInStackTrace(): Throwable {
-    // Prevent Android <= 6.0 bug, #1866
-    stackTrace = emptyArray()
-    return this
-  }
-}
+  @JvmField @Transient actual val owner: Any,
+) : Exception("Flow was aborted, no more elements needed")

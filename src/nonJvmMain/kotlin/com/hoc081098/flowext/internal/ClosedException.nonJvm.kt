@@ -24,8 +24,6 @@
 
 package com.hoc081098.flowext.internal
 
-import kotlinx.coroutines.CancellationException
-
 internal actual class ClosedException actual constructor(
-  actual val owner: Any
-) : CancellationException("Flow was aborted, no more elements needed")
+  actual val owner: Any,
+) : Exception("Flow was aborted, no more elements needed")

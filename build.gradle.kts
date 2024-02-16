@@ -6,10 +6,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import java.net.URL
 
 plugins {
@@ -105,6 +103,8 @@ kotlin {
   androidNativeX86()
   androidNativeX64()
 
+  applyDefaultHierarchyTemplate()
+
   sourceSets {
     commonMain {
       dependencies {
@@ -124,11 +124,6 @@ kotlin {
         implementation(kotlin("test-junit"))
       }
     }
-    jsTest {
-      dependencies {
-        implementation(kotlin("test-js"))
-      }
-    }
 
     val nonJvmMain by creating {
       dependsOn(commonMain.get())
@@ -136,22 +131,22 @@ kotlin {
     val nonJvmTest by creating {
       dependsOn(commonTest.get())
     }
-    // Reference: https://github.com/cashapp/turbine/blob/8a7eef513b09a48b1d097803263c3200b5fbfac3/build.gradle#L79-L84
-    targets.configureEach {
-      if (this.platformType == KotlinPlatformType.common) {
-        return@configureEach
-      }
-      if (this.platformType != KotlinPlatformType.jvm) {
-        this.compilations
-          .getByName("main")
-          .defaultSourceSet
-          .dependsOn(nonJvmMain)
 
-        this.compilations
-          .getByName("test")
-          .defaultSourceSet
-          .dependsOn(nonJvmTest)
+    jsMain {
+      dependsOn(nonJvmMain)
+    }
+    jsTest {
+      dependsOn(nonJvmTest)
+      dependencies {
+        implementation(kotlin("test-js"))
       }
+    }
+
+    nativeMain {
+      dependsOn(nonJvmMain)
+    }
+    nativeTest {
+      dependsOn(nonJvmTest)
     }
   }
 
