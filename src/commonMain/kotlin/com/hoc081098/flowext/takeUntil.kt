@@ -41,17 +41,19 @@ import kotlinx.coroutines.launch
  * will cause the output [Flow] of [takeUntil] to stop emitting values from the source [Flow].
  */
 public fun <T> Flow<T>.takeUntil(notifier: Flow<Any?>): Flow<T> = flow {
+  val ownershipMarker = Any()
+
   try {
     coroutineScope {
       val job = launch(start = CoroutineStart.UNDISPATCHED) {
         notifier.take(1).collect()
-        throw ClosedException(this@flow)
+        throw ClosedException(ownershipMarker)
       }
 
       collect { emit(it) }
       job.cancel()
     }
   } catch (e: ClosedException) {
-    e.checkOwnership(this@flow)
+    e.checkOwnership(owner = ownershipMarker)
   }
 }

@@ -22,38 +22,17 @@
  * SOFTWARE.
  */
 
-package com.hoc081098.flowext
+package com.hoc081098.flowext.internal
 
-import com.hoc081098.flowext.internal.ClosedException
-import com.hoc081098.flowext.internal.checkOwnership
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.CancellationException
 
-/**
- * Represents all of the notifications from the source [Flow] as `value` emissions marked with their original types within [Event] objects.
- */
-public fun <T> Flow<T>.materialize(): Flow<Event<T>> = map<T, Event<T>> { Event.Value(it) }
-  .onCompletion { if (it === null) emit(Event.Complete) }
-  .catch { emit(Event.Error(it)) }
+internal actual class ClosedException actual constructor(
+  @JvmField @Transient actual val owner: Any
+) : CancellationException("Flow was aborted, no more elements needed") {
 
-/**
- * Converts a [Flow] of [Event] objects into the emissions that they represent.
- */
-public fun <T> Flow<Event<T>>.dematerialize(): Flow<T> = flow {
-  val ownershipMarker = Any()
-
-  try {
-    collect {
-      when (it) {
-        Event.Complete -> throw ClosedException(ownershipMarker)
-        is Event.Error -> throw it.error
-        is Event.Value -> emit(it.value)
-      }
-    }
-  } catch (e: ClosedException) {
-    e.checkOwnership(owner = ownershipMarker)
+  override fun fillInStackTrace(): Throwable {
+    // Prevent Android <= 6.0 bug, #1866
+    stackTrace = emptyArray()
+    return this
   }
 }
