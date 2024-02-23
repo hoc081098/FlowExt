@@ -83,7 +83,7 @@ kotlin {
     }
   }
 
-// If false - WASM targets will not be configured in multiplatform projects.
+  // If false - WASM targets will not be configured in multiplatform projects.
   val kmpWasmEnabled =
     System.getProperty("kwasm", "true")
       .toBoolean()
