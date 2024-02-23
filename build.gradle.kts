@@ -292,7 +292,6 @@ tasks.withType<DokkaTask>().configureEach {
   }
 }
 
-
 /**
  * [Reference](https://github.com/square/okio/blob/55b7210fb3d52de07f4bc1122c5062e38df576d9/build.gradle.kts#L227-L248).
  *
