@@ -28,7 +28,7 @@ plugins {
 val coroutinesVersion = "1.8.0"
 val ktlintVersion = "1.0.0"
 // If false - WASM targets will not be configured in multiplatform projects.
-val kmpWasmEnabled by lazy { envOrProp("kwasm").toBooleanStrictOrNull() ?: true }
+val kmpWasmEnabled by lazy { System.getProperty("kwasm", "true").toBoolean() }
 
 repositories {
   mavenCentral()
@@ -328,9 +328,3 @@ plugins.withType<NodeJsRootPlugin> {
     args += "--ignore-engines"
   }
 }
-
-fun Project.envOrProp(name: String): String =
-  providers
-    .environmentVariable(name)
-    .orElse(providers.gradleProperty(name))
-    .getOrElse("")
