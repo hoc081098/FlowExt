@@ -2,6 +2,15 @@
 
 ## [Unreleased] - TBD
 
+### Changed
+
+- Update dependencies
+  - [KotlinX Coroutines `1.8.0`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.0).
+
+### Added
+
+- **New**: Add support for Kotlin/Wasm (`wasmJs` target) 🎉.
+
 ### Fixed
 
 - `withLatestFrom`: fix the bug that the other Flow is not cancelled after the main Flow is completed.
