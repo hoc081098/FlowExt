@@ -27,6 +27,8 @@ plugins {
 
 val coroutinesVersion = "1.8.0"
 val ktlintVersion = "1.0.0"
+// If false - WASM targets will not be configured in multiplatform projects.
+val kmpWasmEnabled by lazy { envOrProp("kwasm").toBooleanStrictOrNull() ?: true }
 
 repositories {
   mavenCentral()
@@ -82,23 +84,27 @@ kotlin {
       }
     }
   }
-  @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
-  wasmJs {
-    // Module name should be different from the one from JS
-    // otherwise IC tasks that start clashing different modules with the same module name
-    moduleName = project.name + "Wasm"
 
-    browser {
-      testTask {
-        useMocha {
-          timeout = "10s"
+  println(">>> kmpWasmEnabled=$kmpWasmEnabled")
+  if (kmpWasmEnabled) {
+    @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+    wasmJs {
+      // Module name should be different from the one from JS
+      // otherwise IC tasks that start clashing different modules with the same module name
+      moduleName = project.name + "Wasm"
+
+      browser {
+        testTask {
+          useMocha {
+            timeout = "10s"
+          }
         }
       }
-    }
-    nodejs {
-      testTask {
-        useMocha {
-          timeout = "10s"
+      nodejs {
+        testTask {
+          useMocha {
+            timeout = "10s"
+          }
         }
       }
     }
@@ -177,13 +183,15 @@ kotlin {
       }
     }
 
-    val wasmJsMain by getting {
-      dependsOn(jsAndWasmMain)
-    }
-    val wasmJsTest by getting {
-      dependsOn(jsAndWasmTest)
-      dependencies {
-        implementation(kotlin("test-wasm-js"))
+    if (kmpWasmEnabled) {
+      val wasmJsMain by getting {
+        dependsOn(jsAndWasmMain)
+      }
+      val wasmJsTest by getting {
+        dependsOn(jsAndWasmTest)
+        dependencies {
+          implementation(kotlin("test-wasm-js"))
+        }
       }
     }
 
@@ -320,3 +328,9 @@ plugins.withType<NodeJsRootPlugin> {
     args += "--ignore-engines"
   }
 }
+
+fun Project.envOrProp(name: String): String =
+  providers
+    .environmentVariable(name)
+    .orElse(providers.gradleProperty(name))
+    .getOrElse("")

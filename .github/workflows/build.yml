@@ -56,7 +56,12 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Build
+      - name: Build (no WASM)
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: ./gradlew build --stacktrace -Dkwasm=false
+
+      - name: Build (including WASM)
+        if: ${{ matrix.os != 'windows-latest' }}
         run: ./gradlew build --stacktrace
 
       - name: Kover Xml Report
