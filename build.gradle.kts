@@ -27,8 +27,6 @@ plugins {
 
 val coroutinesVersion = "1.8.0"
 val ktlintVersion = "1.0.0"
-// If false - WASM targets will not be configured in multiplatform projects.
-val kmpWasmEnabled by lazy { System.getProperty("kwasm", "true").toBoolean() }
 
 repositories {
   mavenCentral()
@@ -85,7 +83,12 @@ kotlin {
     }
   }
 
-  println(">>> kmpWasmEnabled=$kmpWasmEnabled")
+// If false - WASM targets will not be configured in multiplatform projects.
+  val kmpWasmEnabled =
+    System.getProperty("kwasm", "true")
+      .toBoolean()
+      .also { println(">>> kmpWasmEnabled=$it") }
+
   if (kmpWasmEnabled) {
     @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
     wasmJs {
