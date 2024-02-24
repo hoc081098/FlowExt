@@ -77,7 +77,7 @@ allprojects {
 ### Multiplatform
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt:0.7.5")
+implementation("io.github.hoc081098:FlowExt:0.8.0")
 ```
 
 ### Snapshot
@@ -96,7 +96,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.7.6-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.8.1-SNAPSHOT")
 }
 ```
 
@@ -111,7 +111,7 @@ allprojects {
 }
 
 dependencies {
-  implementation("io.github.hoc081098:FlowExt:0.7.5-SNAPSHOT")
+  implementation("io.github.hoc081098:FlowExt:0.8.1-SNAPSHOT")
 }
 ```
 

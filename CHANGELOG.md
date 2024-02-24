@@ -1,10 +1,10 @@
 # Change Log
 
-## [Unreleased] - TBD
+## [0.8.0] - Feb 24, 2024
 
 ### Changed
 
-- Update dependencies
+- Update dependencies:
   - [KotlinX Coroutines `1.8.0`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.0).
 
 ### Added
@@ -13,7 +13,7 @@
 
 ### Fixed
 
-- `withLatestFrom`: fix the bug that the other Flow is not cancelled after the main Flow is completed.
+- `withLatestFrom`: fix a bug where the other `Flow` is not cancelled after the main `Flow` is completed.
 
 ## [0.7.5] - Jan 28, 2024
 
@@ -246,7 +246,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.5...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.8.0...HEAD
+[0.8.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.0
 [0.7.5]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.5
 [0.7.4]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.4
 [0.7.3]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.3
