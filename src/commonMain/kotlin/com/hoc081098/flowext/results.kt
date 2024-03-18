@@ -25,16 +25,15 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 /**
  * Maps values in the [Flow] to [successful results][Result.success],
  * and catches and wraps any exception into a [failure result][Result.failure].
  */
-public fun <T> Flow<T>.asResultFlow(): Flow<Result<T>> =
+public fun <T> Flow<T>.mapToResult(): Flow<Result<T>> =
   map { Result.success(it) }
-    .catch { emit(Result.failure(it)) }
+    .onErrorReturn { Result.failure(it) }
 
 /**
  * Maps a [Flow] of [Result]s to a [Flow] of a mapped [Result]s.
@@ -44,7 +43,7 @@ public fun <T> Flow<T>.asResultFlow(): Flow<Result<T>> =
  *
  * @see Result.mapCatching
  */
-public fun <T, R> Flow<Result<T>>.mapCatching(transform: suspend (T) -> R): Flow<Result<R>> =
+public fun <T, R> Flow<Result<T>>.mapResultCatching(transform: suspend (T) -> R): Flow<Result<R>> =
   map { result -> result.mapCatching { transform(it) } }
 
 /**
@@ -53,5 +52,5 @@ public fun <T, R> Flow<Result<T>>.mapCatching(transform: suspend (T) -> R): Flow
  *
  * @see Result.getOrThrow
  */
-public fun <T> Flow<Result<T>>.throwIfFailure(): Flow<T> =
+public fun <T> Flow<Result<T>>.throwFailure(): Flow<T> =
   map { it.getOrThrow() }
