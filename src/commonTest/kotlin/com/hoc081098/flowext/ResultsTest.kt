@@ -24,16 +24,18 @@
 
 package com.hoc081098.flowext
 
+import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlin.test.fail
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runTest
 
-class ResultsTest {
+@ExperimentalCoroutinesApi
+class ResultsTest : BaseTest() {
   @Test
   fun testMapToResult_emitSuccessValues() = runTest {
     flowOf(1, 2, 3)
