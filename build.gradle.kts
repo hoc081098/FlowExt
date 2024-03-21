@@ -34,6 +34,13 @@ repositories {
   gradlePluginPortal()
 }
 
+apiValidation {
+  @OptIn(kotlinx.validation.ExperimentalBCVApi::class)
+  klib {
+    enabled = true
+  }
+}
+
 kotlin {
   explicitApi()
 
