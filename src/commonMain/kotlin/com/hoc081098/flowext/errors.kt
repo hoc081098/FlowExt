@@ -31,14 +31,14 @@ import kotlinx.coroutines.flow.emitAll
 /**
  * Catches exceptions in the flow completion and emits a single [item], then completes normally.
  */
-public fun <T> Flow<T>.onErrorReturnItem(item: T): Flow<T> =
+public fun <T> Flow<T>.catchAndReturn(item: T): Flow<T> =
   catch { emit(item) }
 
 /**
  * Catches exceptions in the flow completion and emits a single [item] provided by [itemSupplier],
  * then completes normally.
  */
-public fun <T> Flow<T>.onErrorReturn(
+public fun <T> Flow<T>.catchAndReturn(
   itemSupplier: suspend (cause: Throwable) -> T,
 ): Flow<T> =
   catch { cause -> emit(itemSupplier(cause)) }
@@ -47,14 +47,14 @@ public fun <T> Flow<T>.onErrorReturn(
  * Catches exceptions in the flow completion and emits all the items from the [fallback] flow.
  * If the [fallback] flow also throws an exception, the exception is not caught and is rethrown.
  */
-public fun <T> Flow<T>.onErrorResumeWith(fallback: Flow<T>): Flow<T> =
+public fun <T> Flow<T>.catchAndResume(fallback: Flow<T>): Flow<T> =
   catch { emitAll(fallback) }
 
 /**
  * Catches exceptions in the flow completion and emits all the items provided by [fallbackSupplier].
  * If the fallback flow also throws an exception, the exception is not caught and is rethrown.
  */
-public fun <T> Flow<T>.onErrorResumeNext(
+public fun <T> Flow<T>.catchAndResume(
   fallbackSupplier: suspend (cause: Throwable) -> Flow<T>,
 ): Flow<T> =
   catch { cause -> emitAll(fallbackSupplier(cause)) }

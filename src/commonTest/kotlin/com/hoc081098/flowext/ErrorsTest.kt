@@ -28,6 +28,8 @@ import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertIs
+import kotlin.test.fail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -35,14 +37,14 @@ import kotlinx.coroutines.flow.flowOf
 @ExperimentalCoroutinesApi
 class ErrorsTest : BaseTest() {
   @Test
-  fun testOnErrorReturnItem_emitsFallback() = runTest {
+  fun testCatchAndReturnItem_emitsFallback() = runTest {
     val testException = TestException()
 
     flow {
       emit(1)
       throw testException
     }
-      .onErrorReturnItem(2)
+      .catchAndReturn(2)
       .test(
         listOf(
           Event.Value(1),
@@ -54,9 +56,9 @@ class ErrorsTest : BaseTest() {
   }
 
   @Test
-  fun testOnErrorReturnItem_successCase() = runTest {
+  fun testCatchAndReturnItem_successCase() = runTest {
     flowOf(1, 2, 3)
-      .onErrorReturnItem(42)
+      .catchAndReturn(42)
       .test(
         listOf(
           Event.Value(1),
@@ -66,5 +68,54 @@ class ErrorsTest : BaseTest() {
         ),
         null,
       )
+  }
+
+  @Test
+  fun testCatchAndReturnWithLambda_emitsFallback() = runTest {
+    var count = 2
+
+    val testException = TestException()
+
+    val flow = flow {
+      emit(1)
+      throw testException
+    }
+      .catchAndReturn {
+        assertIs<TestException>(it)
+        count++
+      }
+
+    flow.test(
+      listOf(
+        Event.Value(1),
+        Event.Value(2),
+        Event.Complete,
+      ),
+      null,
+    )
+    flow.test(
+      listOf(
+        Event.Value(1),
+        Event.Value(3),
+        Event.Complete,
+      ),
+      null,
+    )
+  }
+
+  @Test
+  fun testCatchAndReturnWithLambda_successCase() = runTest {
+    val flow = flowOf(1, 2, 3)
+      .catchAndReturn { fail("Should be unreached") }
+
+    flow.test(
+      listOf(
+        Event.Value(1),
+        Event.Value(2),
+        Event.Value(3),
+        Event.Complete,
+      ),
+      null,
+    )
   }
 }

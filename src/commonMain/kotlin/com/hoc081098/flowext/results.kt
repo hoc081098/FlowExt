@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.map
  */
 public fun <T> Flow<T>.mapToResult(): Flow<Result<T>> =
   map { Result.success(it) }
-    .onErrorReturn { Result.failure(it) }
+    .catchAndReturn { Result.failure(it) }
 
 /**
  * Maps a [Flow] of [Result]s to a [Flow] of a mapped [Result]s.
