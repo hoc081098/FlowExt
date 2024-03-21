@@ -31,6 +31,7 @@ import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.fail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
@@ -82,6 +83,7 @@ class ErrorsTest : BaseTest() {
     }
       .catchAndReturn {
         assertIs<TestException>(it)
+        delay(10)
         count++
       }
 
@@ -106,7 +108,66 @@ class ErrorsTest : BaseTest() {
   @Test
   fun testCatchAndReturnWithLambda_successCase() = runTest {
     val flow = flowOf(1, 2, 3)
-      .catchAndReturn { fail("Should be unreached") }
+      .catchAndReturn {
+        delay(10)
+        fail("Should be unreached")
+      }
+
+    flow.test(
+      listOf(
+        Event.Value(1),
+        Event.Value(2),
+        Event.Value(3),
+        Event.Complete,
+      ),
+      null,
+    )
+  }
+
+  @Test
+  fun testCatchAdnResumeWithLambda_emitsFallback() = runTest {
+    val testException = TestException()
+    var count = 2
+
+    val flow = flow {
+      emit(1)
+      throw testException
+    }.catchAndResume {
+      assertIs<TestException>(it)
+      delay(10)
+      flowOf(count, count + 1).also { count++ }
+    }
+
+    flow
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete,
+        ),
+        null,
+      )
+
+    flow
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(3),
+          Event.Value(4),
+          Event.Complete,
+        ),
+        null,
+      )
+  }
+
+  @Test
+  fun testCatchAdnResumeWithLambda_successCase() = runTest {
+    val flow = flowOf(1, 2, 3)
+      .catchAndResume {
+        delay(10)
+        fail("Should be unreached")
+      }
 
     flow.test(
       listOf(
