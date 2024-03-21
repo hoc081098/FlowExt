@@ -126,7 +126,56 @@ class ErrorsTest : BaseTest() {
   }
 
   @Test
-  fun testCatchAdnResumeWithLambda_emitsFallback() = runTest {
+  fun testCatchAndResumeFlow_emitsFallback() = runTest {
+    val testException = TestException()
+    var count = 2
+
+    val flow = flow {
+      emit(1)
+      throw testException
+    }.catchAndResume(defer { flowOf(count, count + 1).also { count++ } })
+
+    flow
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(2),
+          Event.Value(3),
+          Event.Complete,
+        ),
+        null,
+      )
+
+    flow
+      .test(
+        listOf(
+          Event.Value(1),
+          Event.Value(3),
+          Event.Value(4),
+          Event.Complete,
+        ),
+        null,
+      )
+  }
+
+  @Test
+  fun testCatchAndResumeFlow_successCase() = runTest {
+    val flow = flowOf(1, 2, 3)
+      .catchAndResume(flow { fail("Should be unreached") })
+
+    flow.test(
+      listOf(
+        Event.Value(1),
+        Event.Value(2),
+        Event.Value(3),
+        Event.Complete,
+      ),
+      null,
+    )
+  }
+
+  @Test
+  fun testCatchAndResumeWithLambda_emitsFallback() = runTest {
     val testException = TestException()
     var count = 2
 
@@ -163,7 +212,7 @@ class ErrorsTest : BaseTest() {
   }
 
   @Test
-  fun testCatchAdnResumeWithLambda_successCase() = runTest {
+  fun testCatchAndResumeWithLambda_successCase() = runTest {
     val flow = flowOf(1, 2, 3)
       .catchAndResume {
         delay(10)
