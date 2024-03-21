@@ -43,6 +43,7 @@ public fun <T> Flow<T>.mapToResult(): Flow<Result<T>> =
  *
  * @see Result.mapCatching
  */
+@FlowExtPreview
 public fun <T, R> Flow<Result<T>>.mapResultCatching(transform: suspend (T) -> R): Flow<Result<R>> =
   map { result -> result.mapCatching { transform(it) } }
 
@@ -52,5 +53,6 @@ public fun <T, R> Flow<Result<T>>.mapResultCatching(transform: suspend (T) -> R)
  *
  * @see Result.getOrThrow
  */
+@FlowExtPreview
 public fun <T> Flow<Result<T>>.throwFailure(): Flow<T> =
   map { it.getOrThrow() }
