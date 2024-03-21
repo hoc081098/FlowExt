@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.map
  * Maps values in the [Flow] to [successful results][Result.success],
  * and catches and wraps any exception into a [failure result][Result.failure].
  */
+@FlowExtPreview
 public fun <T> Flow<T>.mapToResult(): Flow<Result<T>> =
   map { Result.success(it) }
     .catchAndReturn { Result.failure(it) }
