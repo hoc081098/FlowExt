@@ -35,6 +35,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
+@FlowExtPreview
 @ExperimentalCoroutinesApi
 class ErrorsTest : BaseTest() {
   @Test

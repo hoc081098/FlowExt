@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
+@FlowExtPreview
 @ExperimentalCoroutinesApi
 class ResultsTest : BaseTest() {
   @Test
