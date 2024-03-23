@@ -1,5 +1,21 @@
 # Change Log
 
+## [Unreleased] - TBD
+
+## [0.8.1-Beta] - Mar 23, 2024
+
+### Changed
+
+- Update dependencies:
+  - [Kotlin `1.9.23`](https://github.com/JetBrains/kotlin/releases/tag/v1.9.23).
+  - [KotlinX Coroutines `1.8.1-Beta`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.1-Beta).
+  - `Gradle` to `8.7`.
+
+### Added
+
+- Add `Flow.catchAndReturn`, `Flow.catchAndReturn` operators.
+- Add `Flow.mapToResult`, `Flow.mapResultCatching`, `Flow.throwFailure` operators.
+
 ## [0.8.0] - Feb 24, 2024
 
 ### Changed
@@ -246,7 +262,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.8.0...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.8.1-Beta...HEAD
+[0.8.1-Beta]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.1-Beta
 [0.8.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.0
 [0.7.5]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.5
 [0.7.4]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.4
