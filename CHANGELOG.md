@@ -13,7 +13,7 @@
 
 ### Added
 
-- Add `Flow.catchAndReturn`, `Flow.catchAndReturn` operators.
+- Add `Flow.catchAndReturn`, `Flow.catchAndResume` operators.
 - Add `Flow.mapToResult`, `Flow.mapResultCatching`, `Flow.throwFailure` operators.
 
 ## [0.8.0] - Feb 24, 2024
