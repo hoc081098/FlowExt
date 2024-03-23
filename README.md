@@ -865,7 +865,7 @@ and catches and wraps any exception into a failure result (aka `Result.failure`)
 flowOf(1, 2)
   .concatWith(flow { throw RuntimeException("error") })
   .mapToResult()
-  .collect { println("mapToResult: $it") }
+  .collect { result: Result<Int> -> println("mapToResult: $result") }
 ```
 
 Output:
@@ -890,9 +890,9 @@ flowOf(1, 2)
   .mapToResult()
   .mapResultCatching {
     if (it == 1) throw RuntimeException("another error")
-    else it * 2
+    else (it * 2).toString()
   }
-  .collect { println("mapResultCatching: $it") }
+  .collect { result: Result<String> -> println("mapResultCatching: $result") }
 ```
 
 Output:
