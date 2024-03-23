@@ -161,6 +161,7 @@ dependencies {
   - [`mapToUnit`](#maptounit)
   - [`mapToResult`](#mapToResult)
   - [`mapResultCatching`](#mapResultCatching)
+  - [`throwFailure`](#throwFailure)
   - [`materialize`](#materialize)
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
@@ -901,6 +902,33 @@ Output:
 mapResultCatching: Failure(java.lang.RuntimeException: another error)
 mapResultCatching: Success(4)
 mapResultCatching: Failure(java.lang.RuntimeException: original error)
+```
+
+----
+
+#### throwFailure
+
+Maps a `Flow` of `Result`s to a `Flow` of values from successful results.
+Failure results are re-thrown as exceptions.
+
+```kotlin
+try {
+  flowOf(1, 2)
+    .concatWith(flow { throw RuntimeException("original error") })
+    .mapToResult()
+    .throwFailure()
+    .collect { v: Int -> println("throwFailure: $v") }
+} catch (e: Throwable) {
+  println("throwFailure: caught $e")
+}
+```
+
+Output:
+
+```none
+throwFailure: 1
+throwFailure: 2
+throwFailure: caught java.lang.RuntimeException: original error
 ```
 
 ----
