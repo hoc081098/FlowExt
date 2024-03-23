@@ -160,6 +160,7 @@ dependencies {
   - [`mapTo`](#mapto)
   - [`mapToUnit`](#maptounit)
   - [`mapToResult`](#mapToResult)
+  - [`mapResultCatching`](#mapResultCatching)
   - [`materialize`](#materialize)
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
@@ -873,6 +874,33 @@ Output:
 mapToResult: Success(1)
 mapToResult: Success(2)
 mapToResult: Failure(java.lang.RuntimeException: error)
+```
+
+----
+
+#### mapResultCatching
+
+Maps a `Flow` of `Result`s to a `Flow` of a mapped `Result`s.
+Any exception thrown by the `transform` function is caught,
+and emitted as a failure result] (aka `Result.failure`) to the resulting flow.
+
+```kotlin
+flowOf(1, 2)
+  .concatWith(flow { throw RuntimeException("original error") })
+  .mapToResult()
+  .mapResultCatching {
+    if (it == 1) throw RuntimeException("another error")
+    else it * 2
+  }
+  .collect { println("mapResultCatching: $it") }
+```
+
+Output:
+
+```none
+mapResultCatching: Failure(java.lang.RuntimeException: another error)
+mapResultCatching: Success(4)
+mapResultCatching: Failure(java.lang.RuntimeException: original error)
 ```
 
 ----
