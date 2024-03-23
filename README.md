@@ -159,6 +159,7 @@ dependencies {
   - [`mapIndexed`](#mapindexed)
   - [`mapTo`](#mapto)
   - [`mapToUnit`](#maptounit)
+  - [`mapToResult`](#mapToResult)
   - [`materialize`](#materialize)
   - [`dematerialize`](#dematerialize)
   - [`raceWith`](#racewith--ambwith)
@@ -850,6 +851,28 @@ Output:
 mapToUnit: kotlin.Unit
 mapToUnit: kotlin.Unit
 mapToUnit: kotlin.Unit
+```
+
+----
+
+#### mapToResult
+
+Maps values in the `Flow` to successful results (aka `Result.success`),
+and catches and wraps any exception into a failure result (aka `Result.failure`).
+
+```kotlin
+flowOf(1, 2)
+  .concatWith(flow { throw RuntimeException("error") })
+  .mapToResult()
+  .collect { println("mapToResult: $it") }
+```
+
+Output:
+
+```none
+mapToResult: Success(1)
+mapToResult: Success(2)
+mapToResult: Failure(java.lang.RuntimeException: error)
 ```
 
 ----
