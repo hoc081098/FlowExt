@@ -513,7 +513,7 @@ timer: kotlin.Unit
   - [RxSwift catchAndReturn](https://github.com/ReactiveX/RxSwift/blob/551639293147e54fddced6f967a60d115818e18e/RxSwift/Observables/Catch.swift#L46)
 
 ```kotlin
-    flowOf(1, 2)
+flowOf(1, 2)
   .concatWith(flow { throw RuntimeException("original error") })
   .catchAndReturn(3)
   .collect { v: Int -> println("catchAndReturn: $v") }
