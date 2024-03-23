@@ -143,6 +143,7 @@ dependencies {
   - [`cast`](#cast--castnotnull--castnullable--safeCast)
   - [`castNotNull`](#cast--castnotnull--castnullable--safeCast)
   - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
+  - [`catchAndReturn`, `catchAndResume`](#catchAndReturn--catchAndResume)
   - [`chunked`](#buffercount--chunked)
   - [`safeCast`](#cast--castnotnull--castnullable--safeCast)
   - [`concatWith`](#concatwith--plus)
@@ -497,6 +498,68 @@ timer: kotlin.Unit
 
 - Similar
   to [RxJava cast](http://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#cast-java.lang.Class-)
+
+----
+
+#### catchAndReturn / catchAndResume
+
+- Catches exceptions in the flow completion, and emits a single item or resumes with another flow.
+
+- Similar to
+  - [RxJava onErrorReturn](https://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#onErrorReturn-io.reactivex.rxjava3.functions.Function-)
+  - [RxJava onErrorReturnItem](https://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#onErrorReturnItem-T-)
+  - [RxJava onErrorResumeNext](https://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#onErrorResumeNext-io.reactivex.rxjava3.functions.Function-)
+  - [RxJava onErrorResumeWith](https://reactivex.io/RxJava/3.x/javadoc/io/reactivex/rxjava3/core/Flowable.html#onErrorResumeWith-org.reactivestreams.Publisher-)
+  - [RxSwift catchAndReturn](https://github.com/ReactiveX/RxSwift/blob/551639293147e54fddced6f967a60d115818e18e/RxSwift/Observables/Catch.swift#L46)
+
+```kotlin
+    flowOf(1, 2)
+  .concatWith(flow { throw RuntimeException("original error") })
+  .catchAndReturn(3)
+  .collect { v: Int -> println("catchAndReturn: $v") }
+
+println("---")
+
+flowOf(1, 2)
+  .concatWith(flow { throw RuntimeException("original error") })
+  .catchAndReturn { e: Throwable -> e.message?.length ?: 0 }
+  .collect { v: Int -> println("catchAndReturn: $v") }
+
+println("---")
+
+flowOf(1, 2)
+  .concatWith(flow { throw RuntimeException("original error") })
+  .catchAndResume(flowOf(3, 4))
+  .collect { v: Int -> println("catchAndResume: $v") }
+
+println("---")
+
+flowOf(1, 2)
+  .concatWith(flow { throw RuntimeException("original error") })
+  .catchAndResume { e: Throwable -> flowOf(e.message?.length ?: 0) }
+  .collect { v: Int -> println("catchAndResume: $v") }
+```
+
+Output:
+
+```none
+catchAndReturn: 1
+catchAndReturn: 2
+catchAndReturn: 3
+---
+catchAndReturn: 1
+catchAndReturn: 2
+catchAndReturn: 14
+---
+catchAndResume: 1
+catchAndResume: 2
+catchAndResume: 3
+catchAndResume: 4
+---
+catchAndResume: 1
+catchAndResume: 2
+catchAndResume: 14
+```
 
 ----
 
