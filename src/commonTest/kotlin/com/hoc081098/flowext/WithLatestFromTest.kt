@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2024 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -123,6 +123,18 @@ class WithLatestFromTest : BaseTest() {
           throw CancellationException("")
         },
       )
+      .test(
+        listOf(
+          Event.Value(1 to 2),
+          Event.Complete,
+        ),
+      )
+  }
+
+  @Test
+  fun cancelOtherFlowAfterSourceFlowCompleted() = runTest {
+    flowOf(1)
+      .withLatestFrom(neverFlow().startWith(2))
       .test(
         listOf(
           Event.Value(1 to 2),

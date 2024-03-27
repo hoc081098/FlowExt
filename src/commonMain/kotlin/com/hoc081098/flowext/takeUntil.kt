@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2024 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,17 +41,19 @@ import kotlinx.coroutines.launch
  * will cause the output [Flow] of [takeUntil] to stop emitting values from the source [Flow].
  */
 public fun <T> Flow<T>.takeUntil(notifier: Flow<Any?>): Flow<T> = flow {
+  val ownershipMarker = Any()
+
   try {
     coroutineScope {
       val job = launch(start = CoroutineStart.UNDISPATCHED) {
         notifier.take(1).collect()
-        throw ClosedException(this@flow)
+        throw ClosedException(ownershipMarker)
       }
 
       collect { emit(it) }
       job.cancel()
     }
   } catch (e: ClosedException) {
-    e.checkOwnership(this@flow)
+    e.checkOwnership(owner = ownershipMarker)
   }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2024 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,15 +43,17 @@ public fun <T> Flow<T>.materialize(): Flow<Event<T>> = map<T, Event<T>> { Event.
  * Converts a [Flow] of [Event] objects into the emissions that they represent.
  */
 public fun <T> Flow<Event<T>>.dematerialize(): Flow<T> = flow {
+  val ownershipMarker = Any()
+
   try {
     collect {
       when (it) {
-        Event.Complete -> throw ClosedException(this)
+        Event.Complete -> throw ClosedException(ownershipMarker)
         is Event.Error -> throw it.error
         is Event.Value -> emit(it.value)
       }
     }
   } catch (e: ClosedException) {
-    e.checkOwnership(this@flow)
+    e.checkOwnership(owner = ownershipMarker)
   }
 }

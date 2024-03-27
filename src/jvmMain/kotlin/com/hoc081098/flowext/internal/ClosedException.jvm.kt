@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2024 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,6 @@
 
 package com.hoc081098.flowext.internal
 
-internal actual class AtomicRef<T> actual constructor(initialValue: T) {
-  actual var value: T = initialValue
-
-  actual fun compareAndSet(
-    expect: T,
-    update: T,
-  ): Boolean =
-    if (expect == value) {
-      value = update
-      true
-    } else {
-      false
-    }
-}
+internal actual class ClosedException actual constructor(
+  @JvmField @Transient actual val owner: Any,
+) : Exception("Flow was aborted, no more elements needed")

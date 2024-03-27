@@ -17,10 +17,10 @@ jobs:
 
       - name: Extract release notes
         id: release_notes
-        uses: ffurrer2/extract-release-notes@v1
+        uses: ffurrer2/extract-release-notes@v2
 
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body: ${{ steps.release_notes.outputs.release_notes }}
         env:
@@ -30,7 +30,7 @@ jobs:
     needs: create-gh-release
     strategy:
       matrix:
-        os: [ macos-11 ]
+        os: [ macos-14 ]
       # run sequentially to avoid conflicts for closeAndReleaseRepository
       # max-parallel: 1
 
@@ -43,20 +43,15 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
-      - name: Cache gradle, wrapper and buildSrc
-        uses: actions/cache@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ matrix.os }}-gradle-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
-          restore-keys: |
-            ${{ matrix.os }}-gradle-
+          gradle-home-cache-cleanup: true
 
       - name: Cache konan
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.konan/cache
@@ -81,7 +76,7 @@ jobs:
 
       - name: Publish release
         run: ./gradlew publish --stacktrace
-        if: matrix.os == 'macos-11'
+        if: matrix.os == 'macos-14'
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
@@ -107,7 +102,7 @@ jobs:
         run: ./gradlew dokkaHtml --no-parallel --stacktrace
 
       - name: Deploy docs 🚀 to website
-        if: ${{ matrix.os == 'macos-11' }}
+        if: ${{ matrix.os == 'macos-14' }}
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
           branch: gh-pages # The branch the action should deploy to.

@@ -2,7 +2,41 @@
 
 ## [Unreleased] - TBD
 
+## [0.8.1-Beta] - Mar 23, 2024
+
 ### Changed
+
+- Update dependencies:
+  - [Kotlin `1.9.23`](https://github.com/JetBrains/kotlin/releases/tag/v1.9.23).
+  - [KotlinX Coroutines `1.8.1-Beta`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.1-Beta).
+  - `Gradle` to `8.7`.
+
+### Added
+
+- Add `Flow.catchAndReturn`, `Flow.catchAndResume` operators.
+- Add `Flow.mapToResult`, `Flow.mapResultCatching`, `Flow.throwFailure` operators.
+
+## [0.8.0] - Feb 24, 2024
+
+### Changed
+
+- Update dependencies:
+  - [KotlinX Coroutines `1.8.0`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.0).
+
+### Added
+
+- **New**: Add support for Kotlin/Wasm (`wasmJs` target) 🎉.
+
+### Fixed
+
+- `withLatestFrom`: fix a bug where the other `Flow` is not cancelled after the main `Flow` is completed.
+
+## [0.7.5] - Jan 28, 2024
+
+### Changed
+
+- Update dependencies
+  - `Kotlin` to `1.9.22`.
 
 - Optimize the implementation of `flowFromSuspend` and `flowFromNonSuspend`,
   it is just an internal change, it does not affect the public API and behavior.
@@ -228,7 +262,10 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.7.4...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.8.1-Beta...HEAD
+[0.8.1-Beta]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.1-Beta
+[0.8.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.0
+[0.7.5]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.5
 [0.7.4]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.4
 [0.7.3]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.3
 [0.7.2]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.2

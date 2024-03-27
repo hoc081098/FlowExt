@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021-2023 Petrus Nguyễn Thái Học
+ * Copyright (c) 2021-2024 Petrus Nguyễn Thái Học
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,13 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
 
 @ExperimentalCoroutinesApi
@@ -88,5 +94,20 @@ class FlowFromNonSuspendTest : BaseTest() {
     }.flowOn(NamedDispatchers("OK"))
 
     flow.test(listOf(Event.Value(42), Event.Complete))
+  }
+
+  @Test
+  fun testCancellable() = runTest {
+    var sum = 0
+    val flow = flowFromNonSuspend { 1 }
+      .onStart { currentCoroutineContext().cancel() }
+      .onEach { sum += it }
+
+    flow.launchIn(this).join()
+    assertEquals(0, sum)
+
+    sum = 0
+    flow.cancellable().launchIn(this).join()
+    assertEquals(0, sum)
   }
 }
