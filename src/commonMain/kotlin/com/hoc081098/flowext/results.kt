@@ -24,6 +24,7 @@
 
 package com.hoc081098.flowext
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -46,7 +47,15 @@ public fun <T> Flow<T>.mapToResult(): Flow<Result<T>> =
  */
 @FlowExtPreview
 public fun <T, R> Flow<Result<T>>.mapResultCatching(transform: suspend (T) -> R): Flow<Result<R>> =
-  map { result -> result.mapCatching { transform(it) } }
+  map { result ->
+    result
+      .mapCatching { transform(it) }
+      .onFailure {
+        if (it is CancellationException) {
+          throw it
+        }
+      }
+  }
 
 /**
  * Maps a [Flow] of [Result]s to a [Flow] of values from successful results.
