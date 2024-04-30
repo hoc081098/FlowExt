@@ -76,4 +76,16 @@ suspend inline fun <reified T : Throwable> assertFailsWith(flow: Flow<*>) {
   }
 }
 
+suspend inline fun <reified T : Throwable, R> assertFailsWith(
+  flow: Flow<R>,
+  crossinline collector: (R) -> Unit,
+) {
+  try {
+    flow.collect { collector(it) }
+    fail("Should be unreached")
+  } catch (e: Throwable) {
+    assertTrue(e is T, "Expected exception ${T::class}, but had $e instead")
+  }
+}
+
 suspend fun Flow<Int>.sum() = fold(0) { acc, value -> acc + value }

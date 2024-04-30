@@ -26,13 +26,20 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.fail
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 @FlowExtPreview
 @ExperimentalCoroutinesApi
@@ -101,6 +108,28 @@ class ResultsTest : BaseTest() {
         ),
         null,
       )
+
+    // Does not catch CancellationException
+    val receivedFirst = CompletableDeferred<Unit>()
+    val job = launch {
+      val receivedResults = mutableListOf<Result<String>>()
+
+      assertFailsWith<CancellationException, Result<String>>(
+        flowOf(
+          Result.success(1),
+          Result.success(2),
+          Result.success(3),
+        ).mapResultCatching { if (it == 2) awaitCancellation() else it.toString() },
+      ) {
+        receivedResults += it
+        receivedFirst.complete(Unit)
+      }
+
+      assertEquals(Result.success("1"), receivedResults.single())
+    }
+
+    receivedFirst.await()
+    job.cancelAndJoin()
   }
 
   @Test

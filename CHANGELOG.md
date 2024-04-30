@@ -2,6 +2,11 @@
 
 ## [Unreleased] - TBD
 
+### Fixed
+
+- `Flow.mapResultCatching` now does not catch `CancellationException`
+  thrown from the `transform` lambda.
+
 ## [0.8.1-Beta] - Mar 23, 2024
 
 ### Changed

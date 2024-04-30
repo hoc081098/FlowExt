@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -68,7 +68,7 @@ jobs:
         run: ./gradlew koverXmlReport
 
       - name: Upload Test Report
-        uses: codecov/codecov-action@v4.1.1
+        uses: codecov/codecov-action@v4.3.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -89,7 +89,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -151,7 +151,7 @@ jobs:
 
       - name: Deploy docs 🚀 to website
         if: ${{ github.ref == 'refs/heads/master' && github.repository == 'hoc081098/FlowExt' && matrix.os == 'macos-14' }}
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        uses: JamesIves/github-pages-deploy-action@v4.6.0
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build/dokka/html # The folder the action should deploy.
