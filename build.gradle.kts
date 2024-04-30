@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "2.0.0-RC1"
+  kotlin("multiplatform") version "2.0.0-RC2"
   id("com.diffplug.spotless") version "6.25.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.28.0"
