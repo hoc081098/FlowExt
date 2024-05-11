@@ -83,7 +83,7 @@ allprojects {
 ### Multiplatform
 
 ```groovy
-implementation("io.github.hoc081098:FlowExt:0.8.1-Beta")
+implementation("io.github.hoc081098:FlowExt:0.8.1")
 ```
 
 ### Snapshot

@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.8.1] - TBD
+## [0.8.1] - May 11, 2024
 
 ### Changed
 
@@ -285,7 +285,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.8.1-Beta...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/0.8.1...HEAD
+[0.8.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.1
 [0.8.1-Beta]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.1-Beta
 [0.8.0]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.0
 [0.7.5]: https://github.com/hoc081098/FlowExt/releases/tag/0.7.5
