@@ -1,0 +1,32 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:base",
+    ":semanticCommitsDisabled"
+  ],
+  commitBodyTable: true,
+  labels: ["dependencies"],
+  assignees: ["hoc081098"],
+  reviewers: ["hoc081098"],
+  automerge: true,
+  platformAutomerge: true,
+  platformCommit: true,
+  assignAutomerge: true,
+  rebaseWhen: "conflicted",
+  ignoreDeps: [
+  ],
+  packageRules: [
+    {
+      matchPackagePatterns: [
+        "*"
+      ],
+      matchUpdateTypes: [
+        "major",
+        "minor",
+        "patch"
+      ],
+      groupName: "all dependencies",
+      groupSlug: "all-deps"
+    }
+  ]
+}
