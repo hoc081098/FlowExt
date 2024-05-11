@@ -1,11 +1,29 @@
 # Change Log
 
-## [Unreleased] - TBD
+## [0.8.1] - TBD
 
-### Fixed
+### Changed
+
+- Update dependencies:
+  - [Kotlin `1.9.24`](https://github.com/JetBrains/kotlin/releases/tag/v1.9.24).
+  - [KotlinX Coroutines `1.8.1`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.1).
+  - `Gradle` to `8.7`.
+
+### Added
+
+- Add `Flow.catchAndReturn`, `Flow.catchAndResume` operators.
+- Add `Flow.mapToResult`, `Flow.mapResultCatching`, `Flow.throwFailure` operators.
+
+### Changed
+
+- `Flow.chunked(bufferSize: Int)` / `Flow.bufferCount(bufferSize: Int)`: reduce unnecessary allocations.
+
+##### Changelog relative to version [0.8.1-Beta]
 
 - `Flow.mapResultCatching` now does not catch `CancellationException`
   thrown from the `transform` lambda.
+
+- [Kotlin `1.9.24`](https://github.com/JetBrains/kotlin/releases/tag/v1.9.24).
 
 ## [0.8.1-Beta] - Mar 23, 2024
 

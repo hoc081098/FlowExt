@@ -118,20 +118,19 @@ private fun <T> Flow<T>.bufferSkip(bufferSize: Int, skip: Int): Flow<List<T>> {
 
 private fun <T> Flow<T>.bufferExact(bufferSize: Int): Flow<List<T>> {
   return flow {
-    var buffer: MutableList<T> = mutableListOf()
+    var buffer: MutableList<T>? = null
 
     collect { element ->
-      buffer += element
+      val b = buffer ?: mutableListOf<T>().also { buffer = it }
+      b += element
 
-      if (buffer.size >= bufferSize) {
-        emit(buffer)
-        buffer = mutableListOf()
+      if (b.size >= bufferSize) {
+        emit(b)
+        buffer = null
       }
     }
 
     // Emits remaining buffer
-    if (buffer.isNotEmpty()) {
-      emit(buffer)
-    }
+    buffer?.let { emit(it) }
   }
 }
