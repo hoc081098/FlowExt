@@ -24,6 +24,9 @@
 
 package com.hoc081098.flowext.internal
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.native.ref.createCleaner
 import kotlinx.cinterop.Arena
 import kotlinx.cinterop.alloc
@@ -51,7 +54,10 @@ internal actual class Lock actual constructor() {
   @ExperimentalStdlibApi
   private val cleaner = createCleaner(resources, Resources::destroy)
 
+  @OptIn(ExperimentalContracts::class)
   actual inline fun <T> synchronizedImpl(block: () -> T): T {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+
     lock()
     return try {
       block()
