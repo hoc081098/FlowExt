@@ -27,6 +27,7 @@ package com.hoc081098.flowext.internal
 /**
  * Concurrent map implementation. Please do not use it.
  */
+@Suppress("unused")
 internal actual class ConcurrentHashMap<K : Any, V : Any> internal actual constructor() : MutableMap<K, V> {
   private val delegate = LinkedHashMap<K, V>()
   private val lock = Lock()

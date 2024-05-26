@@ -24,6 +24,7 @@
 
 package com.hoc081098.flowext.internal
 
+@Suppress("unused")
 internal actual class ConcurrentHashMap<K : Any, V : Any> private constructor(
   private val delegate: java.util.concurrent.ConcurrentHashMap<K, V>,
 ) : MutableMap<K, V> by delegate {
