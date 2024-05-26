@@ -25,7 +25,7 @@
 package com.hoc081098.flowext.internal
 
 internal actual class ConcurrentHashMap<K : Any, V : Any> private constructor(
-  private val delegate: MutableMap<K, V>
+  private val delegate: MutableMap<K, V>,
 ) : MutableMap<K, V> by delegate {
   internal actual constructor() : this(HashMap())
 
