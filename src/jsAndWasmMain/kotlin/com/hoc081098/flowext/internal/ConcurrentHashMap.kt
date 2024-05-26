@@ -24,5 +24,18 @@
 
 package com.hoc081098.flowext.internal
 
-@Suppress("ACTUAL_WITHOUT_EXPECT")
-internal actual typealias ConcurrentHashMap<K, V> = HashMap<K, V>
+@Suppress("unused")
+internal actual class ConcurrentHashMap<K : Any, V : Any> private constructor(
+  private val delegate: MutableMap<K, V>,
+) : MutableMap<K, V> by delegate {
+  internal actual constructor() : this(HashMap())
+
+  override fun hashCode(): Int = delegate.hashCode()
+
+  override fun equals(other: Any?): Boolean {
+    if (other !is Map<*, *>) return false
+    return other == delegate
+  }
+
+  override fun toString(): String = "ConcurrentHashMap.js by $delegate"
+}

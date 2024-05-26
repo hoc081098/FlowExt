@@ -3,20 +3,16 @@ import com.vanniktech.maven.publish.MavenPublishBasePlugin
 import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "1.9.24"
+  kotlin("multiplatform") version "2.0.0"
   id("com.diffplug.spotless") version "6.25.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.28.0"
@@ -41,6 +37,7 @@ apiValidation {
   }
 }
 
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
   explicitApi()
 
@@ -58,20 +55,16 @@ kotlin {
   }
 
   jvm {
-    compilations.all {
-      compilerOptions.configure {
-        jvmTarget = JvmTarget.JVM_1_8
-      }
+    compilerOptions {
+      jvmTarget = JvmTarget.JVM_1_8
     }
   }
 
   js(IR) {
     moduleName = project.name
-    compilations.configureEach {
-      compilerOptions.configure {
-        sourceMap.set(true)
-        moduleKind.set(JsModuleKind.MODULE_COMMONJS)
-      }
+    compilerOptions {
+      sourceMap.set(true)
+      moduleKind.set(JsModuleKind.MODULE_COMMONJS)
     }
 
     browser {
@@ -230,16 +223,17 @@ kotlin {
   }
 }
 
-tasks.withType<KotlinCompile<*>>().configureEach {
-  kotlinOptions {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+  compilerOptions {
     // 'expect'/'actual' classes (including interfaces, objects, annotations, enums,
     // and 'actual' typealiases) are in Beta.
     // You can use -Xexpect-actual-classes flag to suppress this warning.
     // Also see: https://youtrack.jetbrains.com/issue/KT-61573
-    freeCompilerArgs +=
+    freeCompilerArgs.addAll(
       listOf(
         "-Xexpect-actual-classes",
-      )
+      ),
+    )
   }
 }
 
@@ -307,34 +301,5 @@ tasks.withType<DokkaTask>().configureEach {
         remoteLineSuffix.set("#L")
       }
     }
-  }
-}
-
-/**
- * [Reference](https://github.com/square/okio/blob/55b7210fb3d52de07f4bc1122c5062e38df576d9/build.gradle.kts#L227-L248).
- *
- * Select a NodeJS version with WASI and WASM GC.
- * https://github.com/Kotlin/kotlin-wasm-examples/blob/main/wasi-example/build.gradle.kts
- */
-plugins.withType<NodeJsRootPlugin> {
-  extensions.getByType<NodeJsRootExtension>().apply {
-    if (DefaultNativePlatform.getCurrentOperatingSystem().isWindows) {
-      // We're waiting for a Windows build of NodeJS that can do WASM GC + WASI.
-      nodeVersion = "21.4.0"
-    } else {
-      // Reference:
-      // https://github.com/drewhamilton/Poko/blob/72ec8d24cf48a74b3d1125c94f0e625ab956b93f/build.gradle.kts#L17-L19
-      // WASM requires a canary Node.js version. This is the last v21 canary, and has both
-      // darwin-arm64 and darwin-x64 artifacts:
-      nodeVersion = "21.0.0-v8-canary20231024d0ddc81258"
-      nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
-    }
-  }
-  // Suppress an error because yarn doesn't like our Node version string.
-  //   warning You are using Node "21.0.0-v8-canary20231024d0ddc81258" which is not supported and
-  //   may encounter bugs or unexpected behavior.
-  //   error karma@6.4.2: The engine "node" is incompatible with this module.
-  tasks.withType<KotlinNpmInstallTask>().all {
-    args += "--ignore-engines"
   }
 }
