@@ -30,7 +30,7 @@ import kotlin.contracts.contract
 
 @Suppress("Unused")
 internal expect class Lock() {
-  @Suppress("NO_ACTUAL_FOR_EXPECT", "EXPECTED_DECLARATION_WITH_BODY")
+  @Suppress("EXPECTED_DECLARATION_WITH_BODY", "WRONG_INVOCATION_KIND")
   @OptIn(ExperimentalContracts::class)
   inline fun <T> synchronizedImpl(block: () -> T): T {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
