@@ -25,7 +25,7 @@
 package com.hoc081098.flowext.internal
 
 @Suppress("Unused")
-internal expect class ConcurrentHashMap<K, V> internal constructor() : MutableMap<K, V> {
+internal expect class ConcurrentHashMap<K : Any, V : Any> internal constructor() : MutableMap<K, V> {
   override fun remove(key: K): V?
 
   override fun clear()
