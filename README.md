@@ -5,8 +5,8 @@
 [![Build](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/build.yml)
 [![Validate Gradle Wrapper](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml/badge.svg)](https://github.com/hoc081098/FlowExt/actions/workflows/gradle-wrapper-validation.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Kotlin version](https://img.shields.io/badge/Kotlin-1.9.24-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
-[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.8.1-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.1)
+[![Kotlin version](https://img.shields.io/badge/Kotlin-2.0.0-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
+[![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.9.0_RC-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.9.0-RC)
 ![badge][badge-android]
 ![badge][badge-wearos]
 ![badge][badge-android-native]
@@ -63,9 +63,11 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 ## API
 
-> **Note**: This is still a relatively early version of FlowExt, with much more to be desired. I gladly accept PRs, ideas, opinions, or improvements. Thank you! :)
+> **Note**: I gladly accept PRs, ideas, opinions, or improvements. Thank you! :)
 
 ### 0.x release docs: https://hoc081098.github.io/FlowExt/docs/0.x
+
+### 1.x release docs: https://hoc081098.github.io/FlowExt/docs/1.x
 
 ### Snapshot docs: https://hoc081098.github.io/FlowExt/docs/latest
 
@@ -1514,7 +1516,7 @@ withLatestFrom: (3, 4)
 withLatestFrom: (4, 6)
 ```
 
-... and more, please check out [Docs 0.x](https://hoc081098.github.io/FlowExt/docs/0.x)/[Docs
+... and more, please check out [Docs 1.x](https://hoc081098.github.io/FlowExt/docs/1.x)/[Docs
 snapshot](https://hoc081098.github.io/FlowExt/docs/latest).
 
 ## License
