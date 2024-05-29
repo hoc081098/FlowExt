@@ -41,7 +41,6 @@ import kotlinx.coroutines.flow.flow
  * Note: If the source [Flow] is completed synchronously immediately (e.g. [emptyFlow]),
  * this will cause an infinite loop.
  */
-@FlowExtPreview
 public fun <T> Flow<T>.repeat(): Flow<T> =
   repeatInternal(
     flow = this,
@@ -58,7 +57,6 @@ public fun <T> Flow<T>.repeat(): Flow<T> =
  * and [delay] returns [Duration.ZERO] or a negative value,
  * this will cause an infinite loop.
  */
-@FlowExtPreview
 public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> =
   repeatInternal(
     flow = this,
@@ -74,7 +72,6 @@ public fun <T> Flow<T>.repeat(delay: suspend (count: Int) -> Duration): Flow<T> 
  * Note: If the source [Flow] is completed synchronously immediately (e.g. [emptyFlow]),
  * and [delay] is [Duration.ZERO], this will cause an infinite loop.
  */
-@FlowExtPreview
 public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
   repeatInternal(
     flow = this,
@@ -89,7 +86,6 @@ public fun <T> Flow<T>.repeat(delay: Duration): Flow<T> =
  * Returns a [Flow] that repeats all values emitted by the original [Flow] at most [count] times.
  * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
-@FlowExtPreview
 public fun <T> Flow<T>.repeat(count: Int): Flow<T> =
   repeatInternal(
     flow = this,
@@ -104,7 +100,6 @@ public fun <T> Flow<T>.repeat(count: Int): Flow<T> =
  *
  * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
-@FlowExtPreview
 public fun <T> Flow<T>.repeat(
   count: Int,
   delay: suspend (count: Int) -> Duration,
@@ -122,7 +117,6 @@ public fun <T> Flow<T>.repeat(
  *
  * If [count] is zero or negative, the resulting [Flow] completes immediately without emitting any items (i.e. [emptyFlow]).
  */
-@FlowExtPreview
 public fun <T> Flow<T>.repeat(
   count: Int,
   delay: Duration,
@@ -160,7 +154,6 @@ private class FixedDelayDurationSelector(val duration: Duration) : DelayDuration
   override suspend fun invoke(count: Int): Duration = duration
 }
 
-@FlowExtPreview
 private fun <T> repeatInternal(
   flow: Flow<T>,
   count: Int,
@@ -171,6 +164,7 @@ private fun <T> repeatInternal(
     flow = flow,
     delay = delay,
   )
+
   count <= 0 -> emptyFlow()
   else -> repeatAtMostCount(
     flow = flow,
@@ -179,7 +173,6 @@ private fun <T> repeatInternal(
   )
 }
 
-@FlowExtPreview
 private fun <T> repeatIndefinitely(
   flow: Flow<T>,
   delay: DelayDurationSelector?,
@@ -189,12 +182,14 @@ private fun <T> repeatIndefinitely(
       emitAll(flow)
     }
   }
+
   is FixedDelayDurationSelector -> flow {
     while (true) {
       emitAll(flow)
       coroutinesDelay(delay.duration)
     }
   }
+
   else -> flow {
     var soFar = 1
 
@@ -205,7 +200,6 @@ private fun <T> repeatIndefinitely(
   }
 }
 
-@FlowExtPreview
 private fun <T> repeatAtMostCount(
   flow: Flow<T>,
   count: Int,
@@ -216,12 +210,14 @@ private fun <T> repeatAtMostCount(
       emitAll(flow)
     }
   }
+
   is FixedDelayDurationSelector -> flow {
     repeat(count) {
       emitAll(flow)
       coroutinesDelay(delay.duration)
     }
   }
+
   else -> flow {
     for (soFar in 1..count) {
       emitAll(flow)

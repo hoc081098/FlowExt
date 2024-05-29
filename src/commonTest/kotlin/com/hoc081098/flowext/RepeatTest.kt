@@ -55,7 +55,6 @@ fun <T> Iterable<T>.cycled(): Sequence<T> = sequence {
   }
 }
 
-@FlowExtPreview
 @ExperimentalCoroutinesApi
 class RepeatForeverTest : BaseTest() {
   @Test
@@ -180,7 +179,6 @@ class RepeatForeverTest : BaseTest() {
   }
 }
 
-@FlowExtPreview
 @ExperimentalCoroutinesApi
 class RepeatAtMostTest : BaseTest() {
   @Test

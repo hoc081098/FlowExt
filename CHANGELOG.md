@@ -1,5 +1,15 @@
 # Change Log
 
+## [1.0.0-RC] - TBD
+
+### Changed
+
+- Update dependencies:
+  - [Kotlin `2.0.0`](https://github.com/JetBrains/kotlin/releases/tag/v2.0.0).
+  - [KotlinX Coroutines `1.9.0-RC`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.9.0-RC).
+
+- Promote `Flow.repeat` operators to stable.
+
 ## [0.8.1] - May 11, 2024
 
 ### Changed
