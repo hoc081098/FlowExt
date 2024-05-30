@@ -32,6 +32,8 @@
     <img src="https://github.com/hoc081098/FlowExt/raw/master/logo.png" width="400">
 </p>
 
+<details>
+
 > Kotlinx Coroutines Flow Extensions. Extensions to the Kotlin Flow library. Kotlin Flow extensions.
 > Multiplatform Kotlinx Coroutines Flow Extensions. Multiplatform Extensions to the Kotlin Flow
 > library. Multiplatform Kotlin Flow extensions. RxJS Kotlin Coroutines Flow. RxSwift Kotlin
@@ -40,6 +42,8 @@
 > Flow. RxJS Coroutines Flow. RxSwift Coroutines Flow. RxJava Coroutines Flow. Kotlin Flow
 > operators.
 > Coroutines Flow operators.
+
+</details>
 
 ## Author: [Petrus Nguyễn Thái Học](https://github.com/hoc081098)
 
