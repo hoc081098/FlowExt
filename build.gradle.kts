@@ -16,7 +16,7 @@ plugins {
   id("com.diffplug.spotless") version "6.25.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.29.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.15.0-Beta.2"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.0"
   id("org.jetbrains.dokka") version "1.9.20"
   id("org.jetbrains.kotlinx.kover") version "0.8.2"
 }
