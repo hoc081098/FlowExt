@@ -18,10 +18,10 @@ plugins {
   id("com.vanniktech.maven.publish") version "0.29.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.15.0-Beta.2"
   id("org.jetbrains.dokka") version "1.9.20"
-  id("org.jetbrains.kotlinx.kover") version "0.8.2"
+  id("org.jetbrains.kotlinx.kover") version "0.8.3"
 }
 
-val coroutinesVersion = "1.9.0-RC"
+val coroutinesVersion = "1.9.0-RC.2"
 val ktlintVersion = "1.0.0"
 
 repositories {
