@@ -89,6 +89,8 @@ kotlin {
       .toBoolean()
       .also { println(">>> kmpWasmEnabled=$it") }
 
+  tasks.getByName("apiCheck") { onlyIf { kmpWasmEnabled } }
+
   if (kmpWasmEnabled) {
     @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
     wasmJs {
