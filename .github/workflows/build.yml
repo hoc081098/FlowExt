@@ -151,7 +151,7 @@ jobs:
 
       - name: Deploy docs 🚀 to website
         if: ${{ github.ref == 'refs/heads/master' && github.repository == 'hoc081098/FlowExt' && matrix.os == 'macos-14' }}
-        uses: JamesIves/github-pages-deploy-action@v4.6.3
+        uses: JamesIves/github-pages-deploy-action@v4.6.4
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build/dokka/html # The folder the action should deploy.
