@@ -12,11 +12,11 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URL
 
 plugins {
-  kotlin("multiplatform") version "2.0.10"
+  kotlin("multiplatform") version "2.0.20"
   id("com.diffplug.spotless") version "6.25.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.29.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.15.0-Beta.2"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
   id("org.jetbrains.dokka") version "1.9.20"
   id("org.jetbrains.kotlinx.kover") version "0.8.3"
 }
@@ -88,6 +88,9 @@ kotlin {
     System.getProperty("kwasm", "true")
       .toBoolean()
       .also { println(">>> kmpWasmEnabled=$it") }
+
+  tasks.getByName("apiCheck") { onlyIf { kmpWasmEnabled } }
+  tasks.getByName("klibApiCheck") { onlyIf { kmpWasmEnabled } }
 
   if (kmpWasmEnabled) {
     @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)

@@ -6,40 +6,106 @@
 // - Show declarations: true
 
 // Library unique name: <FlowExt>
-abstract fun interface com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy|null[0]
-    abstract fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
-    final class ExponentialBackoffDelayStrategy : com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy|null[0]
-        constructor <init>(kotlin.time/Duration, kotlin/Double, kotlin.time/Duration) // com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy.<init>|<init>(kotlin.time.Duration;kotlin.Double;kotlin.time.Duration){}[0]
-        final fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
-    }
-    final class FixedTimeDelayStrategy : com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy|null[0]
-        constructor <init>(kotlin.time/Duration) // com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy.<init>|<init>(kotlin.time.Duration){}[0]
-        final fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
-    }
-    final object NoDelayStrategy : com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy.NoDelayStrategy|null[0]
-        final fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.NoDelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
-    }
+open annotation class com.hoc081098.flowext/DelicateFlowExtApi : kotlin/Annotation { // com.hoc081098.flowext/DelicateFlowExtApi|null[0]
+    constructor <init>() // com.hoc081098.flowext/DelicateFlowExtApi.<init>|<init>(){}[0]
 }
-abstract interface <#A: kotlin/Any?, #B: kotlin/Any?> com.hoc081098.flowext/GroupedFlow : kotlinx.coroutines.flow/Flow<#B> { // com.hoc081098.flowext/GroupedFlow|null[0]
-    abstract val key // com.hoc081098.flowext/GroupedFlow.key|{}key[0]
-        abstract fun <get-key>(): #A // com.hoc081098.flowext/GroupedFlow.key.<get-key>|<get-key>(){}[0]
+
+open annotation class com.hoc081098.flowext/FlowExtPreview : kotlin/Annotation { // com.hoc081098.flowext/FlowExtPreview|null[0]
+    constructor <init>() // com.hoc081098.flowext/FlowExtPreview.<init>|<init>(){}[0]
 }
-final class com.hoc081098.flowext.utils/Symbol { // com.hoc081098.flowext.utils/Symbol|null[0]
-    constructor <init>(kotlin/String) // com.hoc081098.flowext.utils/Symbol.<init>|<init>(kotlin.String){}[0]
-    final fun toString(): kotlin/String // com.hoc081098.flowext.utils/Symbol.toString|toString(){}[0]
-    final inline fun <#A1: kotlin/Any?> unbox(kotlin/Any?): #A1 // com.hoc081098.flowext.utils/Symbol.unbox|unbox(kotlin.Any?){0§<kotlin.Any?>}[0]
-    final val symbol // com.hoc081098.flowext.utils/Symbol.symbol|{}symbol[0]
-        final fun <get-symbol>(): kotlin/String // com.hoc081098.flowext.utils/Symbol.symbol.<get-symbol>|<get-symbol>(){}[0]
-}
+
 final enum class com.hoc081098.flowext/ThrottleConfiguration : kotlin/Enum<com.hoc081098.flowext/ThrottleConfiguration> { // com.hoc081098.flowext/ThrottleConfiguration|null[0]
     enum entry LEADING // com.hoc081098.flowext/ThrottleConfiguration.LEADING|null[0]
     enum entry LEADING_AND_TRAILING // com.hoc081098.flowext/ThrottleConfiguration.LEADING_AND_TRAILING|null[0]
     enum entry TRAILING // com.hoc081098.flowext/ThrottleConfiguration.TRAILING|null[0]
-    final fun valueOf(kotlin/String): com.hoc081098.flowext/ThrottleConfiguration // com.hoc081098.flowext/ThrottleConfiguration.valueOf|valueOf#static(kotlin.String){}[0]
-    final fun values(): kotlin/Array<com.hoc081098.flowext/ThrottleConfiguration> // com.hoc081098.flowext/ThrottleConfiguration.values|values#static(){}[0]
+
     final val entries // com.hoc081098.flowext/ThrottleConfiguration.entries|#static{}entries[0]
         final fun <get-entries>(): kotlin.enums/EnumEntries<com.hoc081098.flowext/ThrottleConfiguration> // com.hoc081098.flowext/ThrottleConfiguration.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.hoc081098.flowext/ThrottleConfiguration // com.hoc081098.flowext/ThrottleConfiguration.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.hoc081098.flowext/ThrottleConfiguration> // com.hoc081098.flowext/ThrottleConfiguration.values|values#static(){}[0]
 }
+
+abstract fun interface com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy|null[0]
+    abstract fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
+
+    final class ExponentialBackoffDelayStrategy : com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy|null[0]
+        constructor <init>(kotlin.time/Duration, kotlin/Double, kotlin.time/Duration) // com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy.<init>|<init>(kotlin.time.Duration;kotlin.Double;kotlin.time.Duration){}[0]
+
+        final fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.ExponentialBackoffDelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
+    }
+
+    final class FixedTimeDelayStrategy : com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy|null[0]
+        constructor <init>(kotlin.time/Duration) // com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy.<init>|<init>(kotlin.time.Duration){}[0]
+
+        final fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.FixedTimeDelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
+    }
+
+    final object NoDelayStrategy : com.hoc081098.flowext/DelayStrategy { // com.hoc081098.flowext/DelayStrategy.NoDelayStrategy|null[0]
+        final fun nextDelay(kotlin/Throwable, kotlin/Long): kotlin.time/Duration // com.hoc081098.flowext/DelayStrategy.NoDelayStrategy.nextDelay|nextDelay(kotlin.Throwable;kotlin.Long){}[0]
+    }
+}
+
+abstract interface <#A: kotlin/Any?, #B: kotlin/Any?> com.hoc081098.flowext/GroupedFlow : kotlinx.coroutines.flow/Flow<#B> { // com.hoc081098.flowext/GroupedFlow|null[0]
+    abstract val key // com.hoc081098.flowext/GroupedFlow.key|{}key[0]
+        abstract fun <get-key>(): #A // com.hoc081098.flowext/GroupedFlow.key.<get-key>|<get-key>(){}[0]
+}
+
+sealed interface <#A: out kotlin/Any?> com.hoc081098.flowext/Event { // com.hoc081098.flowext/Event|null[0]
+    final class <#A1: out kotlin/Any?> Value : com.hoc081098.flowext/Event<#A1> { // com.hoc081098.flowext/Event.Value|null[0]
+        constructor <init>(#A1) // com.hoc081098.flowext/Event.Value.<init>|<init>(1:0){}[0]
+
+        final val value // com.hoc081098.flowext/Event.Value.value|{}value[0]
+            final fun <get-value>(): #A1 // com.hoc081098.flowext/Event.Value.value.<get-value>|<get-value>(){}[0]
+
+        final fun component1(): #A1 // com.hoc081098.flowext/Event.Value.component1|component1(){}[0]
+        final fun copy(#A1 = ...): com.hoc081098.flowext/Event.Value<#A1> // com.hoc081098.flowext/Event.Value.copy|copy(1:0){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Value.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Value.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Value.toString|toString(){}[0]
+    }
+
+    final class Error : com.hoc081098.flowext/Event<kotlin/Nothing> { // com.hoc081098.flowext/Event.Error|null[0]
+        constructor <init>(kotlin/Throwable) // com.hoc081098.flowext/Event.Error.<init>|<init>(kotlin.Throwable){}[0]
+
+        final val error // com.hoc081098.flowext/Event.Error.error|{}error[0]
+            final fun <get-error>(): kotlin/Throwable // com.hoc081098.flowext/Event.Error.error.<get-error>|<get-error>(){}[0]
+
+        final fun component1(): kotlin/Throwable // com.hoc081098.flowext/Event.Error.component1|component1(){}[0]
+        final fun copy(kotlin/Throwable = ...): com.hoc081098.flowext/Event.Error // com.hoc081098.flowext/Event.Error.copy|copy(kotlin.Throwable){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Error.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Error.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Error.toString|toString(){}[0]
+    }
+
+    final object Complete : com.hoc081098.flowext/Event<kotlin/Nothing> { // com.hoc081098.flowext/Event.Complete|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Complete.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Complete.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Complete.toString|toString(){}[0]
+    }
+}
+
+sealed interface com.hoc081098.flowext/NeverFlow : kotlinx.coroutines.flow/Flow<kotlin/Nothing> { // com.hoc081098.flowext/NeverFlow|null[0]
+    abstract suspend fun collect(kotlinx.coroutines.flow/FlowCollector<kotlin/Nothing>): kotlin/Nothing // com.hoc081098.flowext/NeverFlow.collect|collect(kotlinx.coroutines.flow.FlowCollector<kotlin.Nothing>){}[0]
+
+    final object Companion : com.hoc081098.flowext/NeverFlow { // com.hoc081098.flowext/NeverFlow.Companion|null[0]
+        final suspend fun collect(kotlinx.coroutines.flow/FlowCollector<kotlin/Nothing>): kotlin/Nothing // com.hoc081098.flowext/NeverFlow.Companion.collect|collect(kotlinx.coroutines.flow.FlowCollector<kotlin.Nothing>){}[0]
+    }
+}
+
+final class com.hoc081098.flowext.utils/Symbol { // com.hoc081098.flowext.utils/Symbol|null[0]
+    constructor <init>(kotlin/String) // com.hoc081098.flowext.utils/Symbol.<init>|<init>(kotlin.String){}[0]
+
+    final val symbol // com.hoc081098.flowext.utils/Symbol.symbol|{}symbol[0]
+        final fun <get-symbol>(): kotlin/String // com.hoc081098.flowext.utils/Symbol.symbol.<get-symbol>|<get-symbol>(){}[0]
+
+    final fun toString(): kotlin/String // com.hoc081098.flowext.utils/Symbol.toString|toString(){}[0]
+    final inline fun <#A1: kotlin/Any?> unbox(kotlin/Any?): #A1 // com.hoc081098.flowext.utils/Symbol.unbox|unbox(kotlin.Any?){0§<kotlin.Any?>}[0]
+}
+
+final val com.hoc081098.flowext.utils/NULL_VALUE // com.hoc081098.flowext.utils/NULL_VALUE|{}NULL_VALUE[0]
+    final fun <get-NULL_VALUE>(): com.hoc081098.flowext.utils/Symbol // com.hoc081098.flowext.utils/NULL_VALUE.<get-NULL_VALUE>|<get-NULL_VALUE>(){}[0]
+
 final fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?, #D: kotlin/Any?, #E: kotlin/Any?, #F: kotlin/Any?, #G: kotlin/Any?, #H: kotlin/Any?, #I: kotlin/Any?, #J: kotlin/Any?, #K: kotlin/Any?, #L: kotlin/Any?, #M: kotlin/Any?> com.hoc081098.flowext/combine(kotlinx.coroutines.flow/Flow<#A>, kotlinx.coroutines.flow/Flow<#B>, kotlinx.coroutines.flow/Flow<#C>, kotlinx.coroutines.flow/Flow<#D>, kotlinx.coroutines.flow/Flow<#E>, kotlinx.coroutines.flow/Flow<#F>, kotlinx.coroutines.flow/Flow<#G>, kotlinx.coroutines.flow/Flow<#H>, kotlinx.coroutines.flow/Flow<#I>, kotlinx.coroutines.flow/Flow<#J>, kotlinx.coroutines.flow/Flow<#K>, kotlinx.coroutines.flow/Flow<#L>, kotlin.coroutines/SuspendFunction12<#A, #B, #C, #D, #E, #F, #G, #H, #I, #J, #K, #L, #M>): kotlinx.coroutines.flow/Flow<#M> // com.hoc081098.flowext/combine|combine(kotlinx.coroutines.flow.Flow<0:0>;kotlinx.coroutines.flow.Flow<0:1>;kotlinx.coroutines.flow.Flow<0:2>;kotlinx.coroutines.flow.Flow<0:3>;kotlinx.coroutines.flow.Flow<0:4>;kotlinx.coroutines.flow.Flow<0:5>;kotlinx.coroutines.flow.Flow<0:6>;kotlinx.coroutines.flow.Flow<0:7>;kotlinx.coroutines.flow.Flow<0:8>;kotlinx.coroutines.flow.Flow<0:9>;kotlinx.coroutines.flow.Flow<0:10>;kotlinx.coroutines.flow.Flow<0:11>;kotlin.coroutines.SuspendFunction12<0:0,0:1,0:2,0:3,0:4,0:5,0:6,0:7,0:8,0:9,0:10,0:11,0:12>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>;3§<kotlin.Any?>;4§<kotlin.Any?>;5§<kotlin.Any?>;6§<kotlin.Any?>;7§<kotlin.Any?>;8§<kotlin.Any?>;9§<kotlin.Any?>;10§<kotlin.Any?>;11§<kotlin.Any?>;12§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?, #D: kotlin/Any?, #E: kotlin/Any?, #F: kotlin/Any?, #G: kotlin/Any?, #H: kotlin/Any?, #I: kotlin/Any?, #J: kotlin/Any?, #K: kotlin/Any?, #L: kotlin/Any?> com.hoc081098.flowext/combine(kotlinx.coroutines.flow/Flow<#A>, kotlinx.coroutines.flow/Flow<#B>, kotlinx.coroutines.flow/Flow<#C>, kotlinx.coroutines.flow/Flow<#D>, kotlinx.coroutines.flow/Flow<#E>, kotlinx.coroutines.flow/Flow<#F>, kotlinx.coroutines.flow/Flow<#G>, kotlinx.coroutines.flow/Flow<#H>, kotlinx.coroutines.flow/Flow<#I>, kotlinx.coroutines.flow/Flow<#J>, kotlinx.coroutines.flow/Flow<#K>, kotlin.coroutines/SuspendFunction11<#A, #B, #C, #D, #E, #F, #G, #H, #I, #J, #K, #L>): kotlinx.coroutines.flow/Flow<#L> // com.hoc081098.flowext/combine|combine(kotlinx.coroutines.flow.Flow<0:0>;kotlinx.coroutines.flow.Flow<0:1>;kotlinx.coroutines.flow.Flow<0:2>;kotlinx.coroutines.flow.Flow<0:3>;kotlinx.coroutines.flow.Flow<0:4>;kotlinx.coroutines.flow.Flow<0:5>;kotlinx.coroutines.flow.Flow<0:6>;kotlinx.coroutines.flow.Flow<0:7>;kotlinx.coroutines.flow.Flow<0:8>;kotlinx.coroutines.flow.Flow<0:9>;kotlinx.coroutines.flow.Flow<0:10>;kotlin.coroutines.SuspendFunction11<0:0,0:1,0:2,0:3,0:4,0:5,0:6,0:7,0:8,0:9,0:10,0:11>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>;3§<kotlin.Any?>;4§<kotlin.Any?>;5§<kotlin.Any?>;6§<kotlin.Any?>;7§<kotlin.Any?>;8§<kotlin.Any?>;9§<kotlin.Any?>;10§<kotlin.Any?>;11§<kotlin.Any?>}[0]
 final fun <#A: kotlin/Any?, #B: kotlin/Any?, #C: kotlin/Any?, #D: kotlin/Any?, #E: kotlin/Any?, #F: kotlin/Any?, #G: kotlin/Any?, #H: kotlin/Any?, #I: kotlin/Any?, #J: kotlin/Any?, #K: kotlin/Any?> com.hoc081098.flowext/combine(kotlinx.coroutines.flow/Flow<#A>, kotlinx.coroutines.flow/Flow<#B>, kotlinx.coroutines.flow/Flow<#C>, kotlinx.coroutines.flow/Flow<#D>, kotlinx.coroutines.flow/Flow<#E>, kotlinx.coroutines.flow/Flow<#F>, kotlinx.coroutines.flow/Flow<#G>, kotlinx.coroutines.flow/Flow<#H>, kotlinx.coroutines.flow/Flow<#I>, kotlinx.coroutines.flow/Flow<#J>, kotlin.coroutines/SuspendFunction10<#A, #B, #C, #D, #E, #F, #G, #H, #I, #J, #K>): kotlinx.coroutines.flow/Flow<#K> // com.hoc081098.flowext/combine|combine(kotlinx.coroutines.flow.Flow<0:0>;kotlinx.coroutines.flow.Flow<0:1>;kotlinx.coroutines.flow.Flow<0:2>;kotlinx.coroutines.flow.Flow<0:3>;kotlinx.coroutines.flow.Flow<0:4>;kotlinx.coroutines.flow.Flow<0:5>;kotlinx.coroutines.flow.Flow<0:6>;kotlinx.coroutines.flow.Flow<0:7>;kotlinx.coroutines.flow.Flow<0:8>;kotlinx.coroutines.flow.Flow<0:9>;kotlin.coroutines.SuspendFunction10<0:0,0:1,0:2,0:3,0:4,0:5,0:6,0:7,0:8,0:9,0:10>){0§<kotlin.Any?>;1§<kotlin.Any?>;2§<kotlin.Any?>;3§<kotlin.Any?>;4§<kotlin.Any?>;5§<kotlin.Any?>;6§<kotlin.Any?>;7§<kotlin.Any?>;8§<kotlin.Any?>;9§<kotlin.Any?>;10§<kotlin.Any?>}[0]
@@ -151,44 +217,3 @@ final inline fun <#A: reified kotlin/Any> (kotlinx.coroutines.flow/Flow<#A?>).co
 final inline fun <#A: reified kotlin/Any?> (kotlinx.coroutines.flow/Flow<*>).com.hoc081098.flowext/cast(): kotlinx.coroutines.flow/Flow<#A> // com.hoc081098.flowext/cast|cast@kotlinx.coroutines.flow.Flow<*>(){0§<kotlin.Any?>}[0]
 final inline fun <#A: reified kotlin/Any?> (kotlinx.coroutines.flow/Flow<*>).com.hoc081098.flowext/safeCast(): kotlinx.coroutines.flow/Flow<#A?> // com.hoc081098.flowext/safeCast|safeCast@kotlinx.coroutines.flow.Flow<*>(){0§<kotlin.Any?>}[0]
 final inline fun com.hoc081098.flowext/neverFlow(): com.hoc081098.flowext/NeverFlow // com.hoc081098.flowext/neverFlow|neverFlow(){}[0]
-final val com.hoc081098.flowext.utils/NULL_VALUE // com.hoc081098.flowext.utils/NULL_VALUE|{}NULL_VALUE[0]
-    final fun <get-NULL_VALUE>(): com.hoc081098.flowext.utils/Symbol // com.hoc081098.flowext.utils/NULL_VALUE.<get-NULL_VALUE>|<get-NULL_VALUE>(){}[0]
-open annotation class com.hoc081098.flowext/DelicateFlowExtApi : kotlin/Annotation { // com.hoc081098.flowext/DelicateFlowExtApi|null[0]
-    constructor <init>() // com.hoc081098.flowext/DelicateFlowExtApi.<init>|<init>(){}[0]
-}
-open annotation class com.hoc081098.flowext/FlowExtPreview : kotlin/Annotation { // com.hoc081098.flowext/FlowExtPreview|null[0]
-    constructor <init>() // com.hoc081098.flowext/FlowExtPreview.<init>|<init>(){}[0]
-}
-sealed interface <#A: out kotlin/Any?> com.hoc081098.flowext/Event { // com.hoc081098.flowext/Event|null[0]
-    final class <#A1: out kotlin/Any?> Value : com.hoc081098.flowext/Event<#A1> { // com.hoc081098.flowext/Event.Value|null[0]
-        constructor <init>(#A1) // com.hoc081098.flowext/Event.Value.<init>|<init>(1:0){}[0]
-        final fun component1(): #A1 // com.hoc081098.flowext/Event.Value.component1|component1(){}[0]
-        final fun copy(#A1 = ...): com.hoc081098.flowext/Event.Value<#A1> // com.hoc081098.flowext/Event.Value.copy|copy(1:0){}[0]
-        final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Value.equals|equals(kotlin.Any?){}[0]
-        final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Value.hashCode|hashCode(){}[0]
-        final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Value.toString|toString(){}[0]
-        final val value // com.hoc081098.flowext/Event.Value.value|{}value[0]
-            final fun <get-value>(): #A1 // com.hoc081098.flowext/Event.Value.value.<get-value>|<get-value>(){}[0]
-    }
-    final class Error : com.hoc081098.flowext/Event<kotlin/Nothing> { // com.hoc081098.flowext/Event.Error|null[0]
-        constructor <init>(kotlin/Throwable) // com.hoc081098.flowext/Event.Error.<init>|<init>(kotlin.Throwable){}[0]
-        final fun component1(): kotlin/Throwable // com.hoc081098.flowext/Event.Error.component1|component1(){}[0]
-        final fun copy(kotlin/Throwable = ...): com.hoc081098.flowext/Event.Error // com.hoc081098.flowext/Event.Error.copy|copy(kotlin.Throwable){}[0]
-        final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Error.equals|equals(kotlin.Any?){}[0]
-        final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Error.hashCode|hashCode(){}[0]
-        final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Error.toString|toString(){}[0]
-        final val error // com.hoc081098.flowext/Event.Error.error|{}error[0]
-            final fun <get-error>(): kotlin/Throwable // com.hoc081098.flowext/Event.Error.error.<get-error>|<get-error>(){}[0]
-    }
-    final object Complete : com.hoc081098.flowext/Event<kotlin/Nothing> { // com.hoc081098.flowext/Event.Complete|null[0]
-        final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Complete.equals|equals(kotlin.Any?){}[0]
-        final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Complete.hashCode|hashCode(){}[0]
-        final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Complete.toString|toString(){}[0]
-    }
-}
-sealed interface com.hoc081098.flowext/NeverFlow : kotlinx.coroutines.flow/Flow<kotlin/Nothing> { // com.hoc081098.flowext/NeverFlow|null[0]
-    abstract suspend fun collect(kotlinx.coroutines.flow/FlowCollector<kotlin/Nothing>): kotlin/Nothing // com.hoc081098.flowext/NeverFlow.collect|collect(kotlinx.coroutines.flow.FlowCollector<kotlin.Nothing>){}[0]
-    final object Companion : com.hoc081098.flowext/NeverFlow { // com.hoc081098.flowext/NeverFlow.Companion|null[0]
-        final suspend fun collect(kotlinx.coroutines.flow/FlowCollector<kotlin/Nothing>): kotlin/Nothing // com.hoc081098.flowext/NeverFlow.Companion.collect|collect(kotlinx.coroutines.flow.FlowCollector<kotlin.Nothing>){}[0]
-    }
-}
