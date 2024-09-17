@@ -1,5 +1,15 @@
 # Change Log
 
+## [Unreleased]
+
+## [1.0.0] - TBD
+
+- Update dependencies:
+  - [Kotlin `2.0.20`](https://github.com/JetBrains/kotlin/releases/tag/v2.0.20).
+  - [KotlinX Coroutines `1.9.0`](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.9.0).
+
+- Promote `Flow.repeat` operators to stable.
+
 ## [1.0.0-RC] - May 30, 2024
 
 ### Changed
@@ -295,7 +305,8 @@
 
 - Test for Publishing.
 
-[Unreleased]: https://github.com/hoc081098/FlowExt/compare/1.0.0-RC...HEAD
+[Unreleased]: https://github.com/hoc081098/FlowExt/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/hoc081098/FlowExt/releases/tag/1.0.0
 [1.0.0-RC]: https://github.com/hoc081098/FlowExt/releases/tag/1.0.0-RC
 [0.8.1]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.1
 [0.8.1-Beta]: https://github.com/hoc081098/FlowExt/releases/tag/0.8.1-Beta
