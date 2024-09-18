@@ -7,6 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Kotlin version](https://img.shields.io/badge/Kotlin-2.0.0-blueviolet?logo=kotlin&logoColor=white)](http://kotlinlang.org)
 [![KotlinX Coroutines version](https://img.shields.io/badge/Kotlinx_Coroutines-1.9.0_RC-blueviolet?logo=kotlin&logoColor=white)](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.9.0-RC)
+[![klibs.io](https://img.shields.io/badge/KLIBS_IO-blueviolet?logo=kotlin&logoColor=white)](https://klibs.io/project/hoc081098/FlowExt)
 ![badge][badge-android]
 ![badge][badge-wearos]
 ![badge][badge-android-native]
