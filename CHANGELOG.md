@@ -10,6 +10,9 @@
 
 - Promote `Flow.repeat` operators to stable.
 
+- `Event.Value` and `Event.Error` are now normal classes annotated with [@Poko](https://github.com/drewhamilton/Poko)
+  (previously they were `data class`es).
+
 ## [1.0.0-RC] - May 30, 2024
 
 ### Changed
