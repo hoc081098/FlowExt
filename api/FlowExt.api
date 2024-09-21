@@ -100,9 +100,6 @@ public final class com/hoc081098/flowext/Event$Complete : com/hoc081098/flowext/
 
 public final class com/hoc081098/flowext/Event$Error : com/hoc081098/flowext/Event {
 	public fun <init> (Ljava/lang/Throwable;)V
-	public final fun component1 ()Ljava/lang/Throwable;
-	public final fun copy (Ljava/lang/Throwable;)Lcom/hoc081098/flowext/Event$Error;
-	public static synthetic fun copy$default (Lcom/hoc081098/flowext/Event$Error;Ljava/lang/Throwable;ILjava/lang/Object;)Lcom/hoc081098/flowext/Event$Error;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getError ()Ljava/lang/Throwable;
 	public fun hashCode ()I
@@ -111,9 +108,6 @@ public final class com/hoc081098/flowext/Event$Error : com/hoc081098/flowext/Eve
 
 public final class com/hoc081098/flowext/Event$Value : com/hoc081098/flowext/Event {
 	public fun <init> (Ljava/lang/Object;)V
-	public final fun component1 ()Ljava/lang/Object;
-	public final fun copy (Ljava/lang/Object;)Lcom/hoc081098/flowext/Event$Value;
-	public static synthetic fun copy$default (Lcom/hoc081098/flowext/Event$Value;Ljava/lang/Object;ILjava/lang/Object;)Lcom/hoc081098/flowext/Event$Value;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getValue ()Ljava/lang/Object;
 	public fun hashCode ()I

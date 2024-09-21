@@ -19,6 +19,7 @@ plugins {
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
   id("org.jetbrains.dokka") version "1.9.20"
   id("org.jetbrains.kotlinx.kover") version "0.8.3"
+  id("dev.drewhamilton.poko") version "0.17.1"
 }
 
 val coroutinesVersion = "1.9.0"
@@ -93,7 +94,7 @@ kotlin {
   tasks.getByName("klibApiCheck") { onlyIf { kmpWasmEnabled } }
 
   if (kmpWasmEnabled) {
-    @OptIn(org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl::class)
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
       // Module name should be different from the one from JS
       // otherwise IC tasks that start clashing different modules with the same module name

@@ -26,6 +26,8 @@
 
 package com.hoc081098.flowext
 
+import dev.drewhamilton.poko.Poko
+
 /**
  * Represents the reactive signal types: `value`, `error` and `complete`,
  * and holds their parameter values (a value, a [Throwable], nothing).
@@ -37,14 +39,16 @@ public sealed interface Event<out T> {
   /**
    * A value event containing the given [value].
    */
-  public data class Value<out T>(public val value: T) : Event<T> {
+  @Poko
+  public class Value<out T>(public val value: T) : Event<T> {
     override fun toString(): String = "Event.Value($value)"
   }
 
   /**
    * A error event containing the [error].
    */
-  public data class Error(public val error: Throwable) : Event<Nothing> {
+  @Poko
+  public class Error(public val error: Throwable) : Event<Nothing> {
     override fun toString(): String = "Event.Error($error)"
   }
 

@@ -58,8 +58,6 @@ sealed interface <#A: out kotlin/Any?> com.hoc081098.flowext/Event { // com.hoc0
         final val value // com.hoc081098.flowext/Event.Value.value|{}value[0]
             final fun <get-value>(): #A1 // com.hoc081098.flowext/Event.Value.value.<get-value>|<get-value>(){}[0]
 
-        final fun component1(): #A1 // com.hoc081098.flowext/Event.Value.component1|component1(){}[0]
-        final fun copy(#A1 = ...): com.hoc081098.flowext/Event.Value<#A1> // com.hoc081098.flowext/Event.Value.copy|copy(1:0){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Value.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Value.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Value.toString|toString(){}[0]
@@ -71,8 +69,6 @@ sealed interface <#A: out kotlin/Any?> com.hoc081098.flowext/Event { // com.hoc0
         final val error // com.hoc081098.flowext/Event.Error.error|{}error[0]
             final fun <get-error>(): kotlin/Throwable // com.hoc081098.flowext/Event.Error.error.<get-error>|<get-error>(){}[0]
 
-        final fun component1(): kotlin/Throwable // com.hoc081098.flowext/Event.Error.component1|component1(){}[0]
-        final fun copy(kotlin/Throwable = ...): com.hoc081098.flowext/Event.Error // com.hoc081098.flowext/Event.Error.copy|copy(kotlin.Throwable){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // com.hoc081098.flowext/Event.Error.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // com.hoc081098.flowext/Event.Error.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // com.hoc081098.flowext/Event.Error.toString|toString(){}[0]
