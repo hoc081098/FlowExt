@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-## [1.0.0] - TBD
+## [1.0.0] - Sep 22, 2024
+
+This is our first stable release! Thanks everyone for using FlowExt, reporting bugs, providing feedback and sending PRs.
+
+### Changed
 
 - Update dependencies:
   - [Kotlin `2.0.20`](https://github.com/JetBrains/kotlin/releases/tag/v2.0.20).
