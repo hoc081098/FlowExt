@@ -103,7 +103,7 @@ jobs:
 
       - name: Deploy docs 🚀 to website
         if: ${{ matrix.os == 'macos-14' }}
-        uses: JamesIves/github-pages-deploy-action@v4.6.4
+        uses: JamesIves/github-pages-deploy-action@v4.6.6
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build/dokka/html # The folder the action should deploy.
