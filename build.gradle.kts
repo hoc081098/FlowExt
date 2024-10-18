@@ -19,7 +19,7 @@ plugins {
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
   id("org.jetbrains.dokka") version "1.9.20"
   id("org.jetbrains.kotlinx.kover") version "0.8.3"
-  id("dev.drewhamilton.poko") version "0.17.1"
+  id("dev.drewhamilton.poko") version "0.17.2"
 }
 
 val coroutinesVersion = "1.9.0"
