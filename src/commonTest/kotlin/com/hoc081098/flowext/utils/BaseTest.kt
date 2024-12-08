@@ -94,7 +94,7 @@ suspend inline fun <reified T : Throwable, R> assertFailsWith(
 
 suspend fun Flow<Int>.sum() = fold(0) { acc, value -> acc + value }
 
-inline fun <reified T> asserReadonlyStateFlow(stateFlow: StateFlow<T>, value: T) {
+inline fun <reified T> assertReadonlyStateFlow(stateFlow: StateFlow<T>, value: T) {
   assertFalse { stateFlow is MutableStateFlow<T> }
   assertFails { (stateFlow as MutableStateFlow<T>).value = value }
 }

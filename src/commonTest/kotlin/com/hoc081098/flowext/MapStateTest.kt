@@ -25,7 +25,7 @@
 package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
-import com.hoc081098.flowext.utils.asserReadonlyStateFlow
+import com.hoc081098.flowext.utils.assertReadonlyStateFlow
 import com.hoc081098.flowext.utils.test
 import kotlin.math.abs
 import kotlin.test.Test
@@ -44,7 +44,7 @@ class MapStateTest : BaseTest() {
     val source = MutableStateFlow(1)
     val mapped: StateFlow<Int> = source.mapState { abs(it) + 1 }
 
-    asserReadonlyStateFlow(mapped, 42)
+    assertReadonlyStateFlow(mapped, 42)
 
     launch {
       mapped
