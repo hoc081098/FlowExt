@@ -46,6 +46,7 @@ import kotlinx.coroutines.flow.stateIn
  * @see map
  * @see combineStates
  */
+@FlowExtPreview
 public fun <T, R> StateFlow<T>.mapState(transform: (value: T) -> R): StateFlow<R> =
   MappedAsStateFlow(this, transform)
 
@@ -59,6 +60,7 @@ public fun <T, R> StateFlow<T>.mapState(transform: (value: T) -> R): StateFlow<R
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -79,6 +81,7 @@ public fun <T1, T2, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -100,6 +103,7 @@ public fun <T1, T2, T3, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -122,6 +126,7 @@ public fun <T1, T2, T3, T4, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -145,6 +150,7 @@ public fun <T1, T2, T3, T4, T5, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, T6, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -178,6 +184,7 @@ public fun <T1, T2, T3, T4, T5, T6, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, T6, T7, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -213,6 +220,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -250,6 +258,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -289,6 +298,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -332,6 +342,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -377,6 +388,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combineStates(
  * @see combine
  * @see mapState
  */
+@FlowExtPreview
 public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R> combineStates(
   flow1: StateFlow<T1>,
   flow2: StateFlow<T2>,
@@ -435,6 +447,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R> combineStates(
  */
 @Suppress("UnnecessaryOptInAnnotation")
 @OptIn(ExperimentalForInheritanceCoroutinesApi::class)
+@FlowExtPreview
 private class MappedAsStateFlow<T, R>(
   private val source: StateFlow<T>,
   private val transform: (T) -> R,
@@ -460,6 +473,7 @@ private class MappedAsStateFlow<T, R>(
  */
 @Suppress("UnnecessaryOptInAnnotation")
 @OptIn(ExperimentalForInheritanceCoroutinesApi::class)
+@FlowExtPreview
 private class DerivedStateFlow<T>(
   private val source: Flow<T>,
   private val valueSupplier: () -> T,
