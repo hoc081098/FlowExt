@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 /**
- * Map a [StateFlow] to another [StateFlow] with the given [transform] function.
+ * Map a [StateFlow] to another read-only [StateFlow] with the given [transform] function.
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest value of the source [StateFlow].
@@ -51,7 +51,7 @@ public fun <T, R> StateFlow<T>.mapState(transform: (value: T) -> R): StateFlow<R
   MappedAsStateFlow(this, transform)
 
 /**
- * Combine two [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine two [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -72,7 +72,7 @@ public fun <T1, T2, R> combineStates(
   )
 
 /**
- * Combine three [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine three [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -94,7 +94,7 @@ public fun <T1, T2, T3, R> combineStates(
   )
 
 /**
- * Combine four [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine four [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -117,7 +117,7 @@ public fun <T1, T2, T3, T4, R> combineStates(
   )
 
 /**
- * Combine five [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine five [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -141,7 +141,7 @@ public fun <T1, T2, T3, T4, T5, R> combineStates(
   )
 
 /**
- * Combine six [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine six [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -175,7 +175,7 @@ public fun <T1, T2, T3, T4, T5, T6, R> combineStates(
   )
 
 /**
- * Combine seven [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine seven [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -211,7 +211,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, R> combineStates(
   )
 
 /**
- * Combine eight [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine eight [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -249,7 +249,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combineStates(
   )
 
 /**
- * Combine nine [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine nine [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -289,7 +289,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combineStates(
   )
 
 /**
- * Combine ten [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine ten [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -333,7 +333,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combineStates(
   )
 
 /**
- * Combine eleven [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine eleven [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
@@ -379,7 +379,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combineStates(
   )
 
 /**
- * Combine twelve [StateFlow]s into a new [StateFlow] with the given [transform] function.
+ * Combine twelve [StateFlow]s into a new read-only [StateFlow] with the given [transform] function..
  *
  * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
  * with the latest values of the source [StateFlow]s.
