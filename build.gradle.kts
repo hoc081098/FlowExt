@@ -18,8 +18,8 @@ plugins {
   id("com.vanniktech.maven.publish") version "0.30.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
   id("org.jetbrains.dokka") version "2.0.0"
-  id("org.jetbrains.kotlinx.kover") version "0.8.3"
-  id("dev.drewhamilton.poko") version "0.18.0"
+  id("org.jetbrains.kotlinx.kover") version "0.9.0"
+  id("dev.drewhamilton.poko") version "0.18.1"
 }
 
 val coroutinesVersion = "1.9.0"
