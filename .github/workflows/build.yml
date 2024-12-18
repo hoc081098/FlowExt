@@ -68,7 +68,7 @@ jobs:
         run: ./gradlew koverXmlReport
 
       - name: Upload Test Report
-        uses: codecov/codecov-action@v5.1.1
+        uses: codecov/codecov-action@v5.1.2
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
