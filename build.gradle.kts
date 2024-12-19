@@ -16,13 +16,13 @@ plugins {
   id("com.diffplug.spotless") version "6.25.0"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.30.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.16.3"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
   id("org.jetbrains.dokka") version "2.0.0"
   id("org.jetbrains.kotlinx.kover") version "0.9.0"
   id("dev.drewhamilton.poko") version "0.18.1"
 }
 
-val coroutinesVersion = "1.9.0"
+val coroutinesVersion = "1.10.0"
 val ktlintVersion = "1.0.0"
 
 repositories {
