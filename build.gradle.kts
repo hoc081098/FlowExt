@@ -13,7 +13,7 @@ import java.net.URL
 
 plugins {
   kotlin("multiplatform") version "2.1.0"
-  id("com.diffplug.spotless") version "7.0.1"
+  id("com.diffplug.spotless") version "7.0.2"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.30.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
