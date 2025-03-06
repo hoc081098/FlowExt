@@ -15,7 +15,7 @@ plugins {
   kotlin("multiplatform") version "2.1.10"
   id("com.diffplug.spotless") version "7.0.2"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.30.0"
+  id("com.vanniktech.maven.publish") version "0.31.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
   id("org.jetbrains.dokka") version "2.0.0"
   id("org.jetbrains.kotlinx.kover") version "0.9.1"
