@@ -1,6 +1,5 @@
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
 import com.vanniktech.maven.publish.MavenPublishBasePlugin
-import com.vanniktech.maven.publish.SonatypeHost
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
@@ -9,17 +8,17 @@ import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import java.net.URL
+import java.net.URI
 
 plugins {
-  kotlin("multiplatform") version "2.1.10"
+  kotlin("multiplatform") version "2.2.0"
   id("com.diffplug.spotless") version "7.0.2"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.30.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.17.0"
+  id("com.vanniktech.maven.publish") version "0.34.0"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
   id("org.jetbrains.dokka") version "2.0.0"
   id("org.jetbrains.kotlinx.kover") version "0.9.1"
-  id("dev.drewhamilton.poko") version "0.18.5"
+  id("dev.drewhamilton.poko") version "0.19.2"
 }
 
 val coroutinesVersion = "1.10.1"
@@ -62,7 +61,7 @@ kotlin {
   }
 
   js(IR) {
-    moduleName = project.name
+    outputModuleName = project.name
     compilerOptions {
       sourceMap.set(true)
       moduleKind.set(JsModuleKind.MODULE_COMMONJS)
@@ -98,7 +97,7 @@ kotlin {
     wasmJs {
       // Module name should be different from the one from JS
       // otherwise IC tasks that start clashing different modules with the same module name
-      moduleName = project.name + "Wasm"
+      outputModuleName = project.name + "Wasm"
 
       browser {
         testTask {
@@ -249,7 +248,7 @@ spotless {
       .setEditorConfigPath("$rootDir/.editorconfig")
 
     trimTrailingWhitespace()
-    indentWithSpaces()
+    leadingTabsToSpaces()
     endWithNewline()
 
     licenseHeaderFile(rootProject.file("spotless/license.txt"))
@@ -262,7 +261,7 @@ spotless {
       .setEditorConfigPath("$rootDir/.editorconfig")
 
     trimTrailingWhitespace()
-    indentWithSpaces()
+    leadingTabsToSpaces()
     endWithNewline()
   }
 }
@@ -270,7 +269,7 @@ spotless {
 allprojects {
   plugins.withType<MavenPublishBasePlugin> {
     extensions.configure<MavenPublishBaseExtension> {
-      publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
+      publishToMavenCentral(automaticRelease = true)
       signAllPublications()
     }
   }
@@ -295,13 +294,19 @@ tasks.withType<AbstractTestTask> {
 }
 
 tasks.withType<DokkaTask>().configureEach {
+}
+
+dokka {
   dokkaSourceSets {
     configureEach {
-      externalDocumentationLink("https://kotlinlang.org/api/kotlinx.coroutines/")
+      externalDocumentationLinks.register("kotlinx-coroutines-docs") {
+        url("https://kotlinlang.org/api/kotlinx.coroutines/")
+        packageListUrl("https://kotlinlang.org/api/kotlinx.coroutines/package-list")
+      }
 
       sourceLink {
         localDirectory.set(file("src"))
-        remoteUrl.set(URL("https://github.com/hoc081098/FlowExt/tree/master/src"))
+        remoteUrl.set(URI("https://github.com/hoc081098/FlowExt/tree/master/src"))
         remoteLineSuffix.set("#L")
       }
     }
