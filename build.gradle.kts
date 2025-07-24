@@ -21,7 +21,7 @@ plugins {
   id("dev.drewhamilton.poko") version "0.19.2"
 }
 
-val coroutinesVersion = "1.10.1"
+val coroutinesVersion = "1.10.2"
 val ktlintVersion = "1.0.0"
 
 repositories {
