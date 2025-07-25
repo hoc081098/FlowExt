@@ -99,7 +99,7 @@ jobs:
       #    ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
       - name: Generate docs
-        run: ./gradlew dokkaHtml --no-parallel --stacktrace
+        run: ./gradlew dokkaGenerate --no-parallel --stacktrace
 
       - name: Deploy docs 🚀 to website
         if: ${{ matrix.os == 'macos-14' }}
