@@ -12,16 +12,16 @@ import java.net.URI
 
 plugins {
   kotlin("multiplatform") version "2.2.0"
-  id("com.diffplug.spotless") version "7.0.2"
+  id("com.diffplug.spotless") version "7.2.1"
   id("maven-publish")
   id("com.vanniktech.maven.publish") version "0.34.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
   id("org.jetbrains.dokka") version "2.0.0"
   id("org.jetbrains.kotlinx.kover") version "0.9.1"
-  id("dev.drewhamilton.poko") version "0.19.2"
+  id("dev.drewhamilton.poko") version "0.19.3"
 }
 
-val coroutinesVersion = "1.10.1"
+val coroutinesVersion = "1.10.2"
 val ktlintVersion = "1.0.0"
 
 repositories {
