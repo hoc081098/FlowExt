@@ -24,12 +24,16 @@
 
 package com.hoc081098.flowext.utils
 
+import kotlin.test.assertFails
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -89,3 +93,8 @@ suspend inline fun <reified T : Throwable, R> assertFailsWith(
 }
 
 suspend fun Flow<Int>.sum() = fold(0) { acc, value -> acc + value }
+
+inline fun <reified T> assertReadonlyStateFlow(stateFlow: StateFlow<T>, value: T) {
+  assertFalse { stateFlow is MutableStateFlow<T> }
+  assertFails { (stateFlow as MutableStateFlow<T>).value = value }
+}
