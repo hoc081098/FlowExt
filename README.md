@@ -96,7 +96,7 @@ implementation("io.github.hoc081098:FlowExt:1.0.0")
 ### Snapshot
 
 <details>
-  <summary>Snapshots of the development version are available in Sonatype's snapshots repository.</summary>
+  <summary>Snapshots of the development version are available in the Central Portal Snapshots repository.</summary>
 
 - Kotlin
 
@@ -104,7 +104,7 @@ implementation("io.github.hoc081098:FlowExt:1.0.0")
 allprojects {
   repositories {
     ...
-    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    maven(url = "https://central.sonatype.com/repository/maven-snapshots/")
   }
 }
 
