@@ -34,26 +34,16 @@ import kotlin.jvm.JvmField
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn as kotlinXFlowShareIn
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 @FlowExtPreview
@@ -138,8 +128,6 @@ private class DefaultSelectorScope<T>(
   val stateRef = AtomicRef<SelectorScopeState<T>>(SelectorScopeState.Init)
 
   override fun <R> select(block: SelectorFunction<T, R>): Flow<R> {
-    println("call select with block: $block")
-
     stateRef.loop { state ->
       val updated = when (state) {
         SelectorScopeState.Closed -> {
@@ -258,20 +246,12 @@ private class DefaultSelectorScope<T>(
       if (stateRef.compareAndSet(expect = state, update = updated)) {
         // CAS success
 
-        println(
-          "onCompleteSelectedFlow: completedCount = ${(updated as? SelectorScopeState.Frozen)?.completedCount}, " +
-            "size = ${state.blocks.size}, " +
-            "(index = $index)",
-        )
-
         // Once state reaches DefaultSelectorScopeState.Closed, we can clear unused lazy
         if (updated is SelectorScopeState.Closed) {
           state.selectedFlowsAndChannels.run {
             getOrNull()?.first?.forEach { it.clear() }
             clear()
           }
-
-          println("onCompleteSelectedFlow: cancel the publish scope")
         }
 
         return
@@ -331,8 +311,6 @@ private class DefaultSelectorScope<T>(
   }
 
   suspend fun send(value: T) {
-    println("send: $value")
-
     val state = stateRef.value as? SelectorScopeState.Frozen<T> ?: return
     val channels = state
       .selectedFlowsAndChannels
@@ -394,12 +372,10 @@ private class DefaultSelectorScope<T>(
   }
 
   fun close(e: Throwable?) {
-    println("close: $e")
     transitionToClosed { it.close(e) }
   }
 
   fun cancel(e: CancellationException) {
-    println("cancel: $e")
     transitionToClosed { it.cancel(e) }
   }
 }
@@ -434,60 +410,4 @@ public fun <T, R> Flow<T>.publish(selector: suspend SelectorScope<T>.() -> Flow<
       emitAll(output)
     }
   }
-}
-
-@OptIn(FlowExtPreview::class, ExperimentalCoroutinesApi::class)
-public suspend fun main() {
-  flow<Any?> {
-    println("Collect...")
-    delay(100)
-    emit(1)
-    delay(100)
-    emit(2)
-    delay(100)
-    emit(3)
-    delay(100)
-    emit("4")
-  }.onEach { println(">>> onEach: $it") }
-    .publish {
-      delay(100)
-
-      merge(
-        select { flow ->
-          delay(1)
-          val sharedFlow = flow.shareIn()
-
-          interval(0, 100)
-            .onEach { println(">>> interval: $it") }
-            .flatMapMerge { value ->
-              timer(value, 50)
-                .withLatestFrom(sharedFlow)
-                .map { it to "shared" }
-            }.takeUntil(sharedFlow.filter { it == 3 })
-        },
-        select { flow ->
-          flow
-            .filterIsInstance<Int>()
-            .filter { it % 2 == 0 }
-            .map { it to "even" }
-            .take(1)
-        },
-        select { flow ->
-          flow
-            .filterIsInstance<Int>()
-            .filter { it % 2 != 0 }
-            .map { it to "odd" }
-            .take(1)
-        },
-        select { flow ->
-          flow
-            .filterIsInstance<String>()
-            .map { it to "string" }
-            .take(1)
-        },
-      )
-    }
-    .toList()
-    .also { println(it) }
-    .let { check(it == listOf(Pair(1, "odd"), Pair(2, "even"), Pair("4", "string"))) }
 }

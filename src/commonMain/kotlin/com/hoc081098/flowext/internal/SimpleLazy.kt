@@ -31,7 +31,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.internal.SynchronizedObject
 import kotlinx.coroutines.internal.synchronized
 
-// TODO: Remove SynchronizedObject
+// Using SynchronizedObject from kotlinx.coroutines provides a multiplatform lock primitive
+// while avoiding JVM-specific synchronization APIs.
 @OptIn(InternalCoroutinesApi::class)
 internal class SimpleLazy<T : Any>(
   initializer: () -> T,
