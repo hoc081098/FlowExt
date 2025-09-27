@@ -74,6 +74,48 @@ public inline fun <A, B> Flow<A>.withLatestFrom(other: Flow<B>): Flow<Pair<A, B>
   withLatestFrom(other, ::Pair)
 
 /**
+ * Merges multiple [Flow]s into one [Flow] by combining each value from self with the latest values from the other [Flow]s, if any.
+ * Values emitted by self before all other [Flow]s have emitted any values will be omitted.
+ *
+ * @param others Array of other [Flow]s
+ * @param transform A transform function to apply to each value from self combined with the latest values from the other [Flow]s, if any.
+ */
+public fun <A, R> Flow<A>.withLatestFrom(
+  others: Array<out Flow<*>>,
+  transform: suspend (A, Array<Any?>) -> R,
+): Flow<R> {
+  return flow {
+    val refs = Array<AtomicRef<Any?>>(others.size) { AtomicRef(null) }
+
+    try {
+      coroutineScope {
+        val jobs = others.mapIndexed { index, flow ->
+          launch(start = CoroutineStart.UNDISPATCHED) {
+            flow.collect { refs[index].value = it ?: INTERNAL_NULL_VALUE }
+          }
+        }
+
+        collect { value ->
+          val values = Array<Any?>(refs.size) { index ->
+            refs[index].value ?: return@collect
+          }
+          
+          val unboxedValues = Array<Any?>(values.size) { index ->
+            INTERNAL_NULL_VALUE.unbox(values[index])
+          }
+          
+          emit(transform(value, unboxedValues))
+        }
+        
+        jobs.forEach { it.cancelAndJoin() }
+      }
+    } finally {
+      refs.forEach { it.value = null }
+    }
+  }
+}
+
+/**
  * Merges three [Flow]s into one [Flow] by combining each value from self with the latest values from the other [Flow]s, if any.
  * Values emitted by self before all other [Flow]s have emitted any values will be omitted.
  *
@@ -86,37 +128,12 @@ public fun <A, B, C, R> Flow<A>.withLatestFrom(
   other3: Flow<C>,
   transform: suspend (A, B, C) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+    )
   }
 }
 
@@ -141,45 +158,13 @@ public fun <A, B, C, D, R> Flow<A>.withLatestFrom(
   other4: Flow<D>,
   transform: suspend (A, B, C, D) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-    val other4Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other4Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other4.collect { other4Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          val value4 = other4Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-              INTERNAL_NULL_VALUE.unbox(value4),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-        other4Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-      other4Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3, other4)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+      others[2] as D,
+    )
   }
 }
 
@@ -200,53 +185,14 @@ public fun <A, B, C, D, E, R> Flow<A>.withLatestFrom(
   other5: Flow<E>,
   transform: suspend (A, B, C, D, E) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-    val other4Ref = AtomicRef<Any?>(null)
-    val other5Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other4Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other4.collect { other4Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other5Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other5.collect { other5Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          val value4 = other4Ref.value ?: return@collect
-          val value5 = other5Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-              INTERNAL_NULL_VALUE.unbox(value4),
-              INTERNAL_NULL_VALUE.unbox(value5),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-        other4Job.cancelAndJoin()
-        other5Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-      other4Ref.value = null
-      other5Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3, other4, other5)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+      others[2] as D,
+      others[3] as E,
+    )
   }
 }
 
@@ -269,61 +215,15 @@ public fun <A, B, C, D, E, F, R> Flow<A>.withLatestFrom(
   other6: Flow<F>,
   transform: suspend (A, B, C, D, E, F) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-    val other4Ref = AtomicRef<Any?>(null)
-    val other5Ref = AtomicRef<Any?>(null)
-    val other6Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other4Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other4.collect { other4Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other5Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other5.collect { other5Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other6Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other6.collect { other6Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          val value4 = other4Ref.value ?: return@collect
-          val value5 = other5Ref.value ?: return@collect
-          val value6 = other6Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-              INTERNAL_NULL_VALUE.unbox(value4),
-              INTERNAL_NULL_VALUE.unbox(value5),
-              INTERNAL_NULL_VALUE.unbox(value6),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-        other4Job.cancelAndJoin()
-        other5Job.cancelAndJoin()
-        other6Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-      other4Ref.value = null
-      other5Ref.value = null
-      other6Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3, other4, other5, other6)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+      others[2] as D,
+      others[3] as E,
+      others[4] as F,
+    )
   }
 }
 
@@ -348,69 +248,16 @@ public fun <A, B, C, D, E, F, G, R> Flow<A>.withLatestFrom(
   other7: Flow<G>,
   transform: suspend (A, B, C, D, E, F, G) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-    val other4Ref = AtomicRef<Any?>(null)
-    val other5Ref = AtomicRef<Any?>(null)
-    val other6Ref = AtomicRef<Any?>(null)
-    val other7Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other4Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other4.collect { other4Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other5Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other5.collect { other5Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other6Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other6.collect { other6Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other7Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other7.collect { other7Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          val value4 = other4Ref.value ?: return@collect
-          val value5 = other5Ref.value ?: return@collect
-          val value6 = other6Ref.value ?: return@collect
-          val value7 = other7Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-              INTERNAL_NULL_VALUE.unbox(value4),
-              INTERNAL_NULL_VALUE.unbox(value5),
-              INTERNAL_NULL_VALUE.unbox(value6),
-              INTERNAL_NULL_VALUE.unbox(value7),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-        other4Job.cancelAndJoin()
-        other5Job.cancelAndJoin()
-        other6Job.cancelAndJoin()
-        other7Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-      other4Ref.value = null
-      other5Ref.value = null
-      other6Ref.value = null
-      other7Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3, other4, other5, other6, other7)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+      others[2] as D,
+      others[3] as E,
+      others[4] as F,
+      others[5] as G,
+    )
   }
 }
 
@@ -437,77 +284,17 @@ public fun <A, B, C, D, E, F, G, H, R> Flow<A>.withLatestFrom(
   other8: Flow<H>,
   transform: suspend (A, B, C, D, E, F, G, H) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-    val other4Ref = AtomicRef<Any?>(null)
-    val other5Ref = AtomicRef<Any?>(null)
-    val other6Ref = AtomicRef<Any?>(null)
-    val other7Ref = AtomicRef<Any?>(null)
-    val other8Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other4Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other4.collect { other4Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other5Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other5.collect { other5Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other6Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other6.collect { other6Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other7Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other7.collect { other7Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other8Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other8.collect { other8Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          val value4 = other4Ref.value ?: return@collect
-          val value5 = other5Ref.value ?: return@collect
-          val value6 = other6Ref.value ?: return@collect
-          val value7 = other7Ref.value ?: return@collect
-          val value8 = other8Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-              INTERNAL_NULL_VALUE.unbox(value4),
-              INTERNAL_NULL_VALUE.unbox(value5),
-              INTERNAL_NULL_VALUE.unbox(value6),
-              INTERNAL_NULL_VALUE.unbox(value7),
-              INTERNAL_NULL_VALUE.unbox(value8),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-        other4Job.cancelAndJoin()
-        other5Job.cancelAndJoin()
-        other6Job.cancelAndJoin()
-        other7Job.cancelAndJoin()
-        other8Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-      other4Ref.value = null
-      other5Ref.value = null
-      other6Ref.value = null
-      other7Ref.value = null
-      other8Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3, other4, other5, other6, other7, other8)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+      others[2] as D,
+      others[3] as E,
+      others[4] as F,
+      others[5] as G,
+      others[6] as H,
+    )
   }
 }
 
@@ -536,85 +323,18 @@ public fun <A, B, C, D, E, F, G, H, I, R> Flow<A>.withLatestFrom(
   other9: Flow<I>,
   transform: suspend (A, B, C, D, E, F, G, H, I) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-    val other4Ref = AtomicRef<Any?>(null)
-    val other5Ref = AtomicRef<Any?>(null)
-    val other6Ref = AtomicRef<Any?>(null)
-    val other7Ref = AtomicRef<Any?>(null)
-    val other8Ref = AtomicRef<Any?>(null)
-    val other9Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other4Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other4.collect { other4Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other5Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other5.collect { other5Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other6Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other6.collect { other6Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other7Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other7.collect { other7Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other8Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other8.collect { other8Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other9Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other9.collect { other9Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          val value4 = other4Ref.value ?: return@collect
-          val value5 = other5Ref.value ?: return@collect
-          val value6 = other6Ref.value ?: return@collect
-          val value7 = other7Ref.value ?: return@collect
-          val value8 = other8Ref.value ?: return@collect
-          val value9 = other9Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-              INTERNAL_NULL_VALUE.unbox(value4),
-              INTERNAL_NULL_VALUE.unbox(value5),
-              INTERNAL_NULL_VALUE.unbox(value6),
-              INTERNAL_NULL_VALUE.unbox(value7),
-              INTERNAL_NULL_VALUE.unbox(value8),
-              INTERNAL_NULL_VALUE.unbox(value9),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-        other4Job.cancelAndJoin()
-        other5Job.cancelAndJoin()
-        other6Job.cancelAndJoin()
-        other7Job.cancelAndJoin()
-        other8Job.cancelAndJoin()
-        other9Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-      other4Ref.value = null
-      other5Ref.value = null
-      other6Ref.value = null
-      other7Ref.value = null
-      other8Ref.value = null
-      other9Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3, other4, other5, other6, other7, other8, other9)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+      others[2] as D,
+      others[3] as E,
+      others[4] as F,
+      others[5] as G,
+      others[6] as H,
+      others[7] as I,
+    )
   }
 }
 
@@ -645,92 +365,18 @@ public fun <A, B, C, D, E, F, G, H, I, J, R> Flow<A>.withLatestFrom(
   other10: Flow<J>,
   transform: suspend (A, B, C, D, E, F, G, H, I, J) -> R,
 ): Flow<R> {
-  return flow {
-    val other2Ref = AtomicRef<Any?>(null)
-    val other3Ref = AtomicRef<Any?>(null)
-    val other4Ref = AtomicRef<Any?>(null)
-    val other5Ref = AtomicRef<Any?>(null)
-    val other6Ref = AtomicRef<Any?>(null)
-    val other7Ref = AtomicRef<Any?>(null)
-    val other8Ref = AtomicRef<Any?>(null)
-    val other9Ref = AtomicRef<Any?>(null)
-    val other10Ref = AtomicRef<Any?>(null)
-
-    try {
-      coroutineScope {
-        val other2Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other2.collect { other2Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other3Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other3.collect { other3Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other4Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other4.collect { other4Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other5Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other5.collect { other5Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other6Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other6.collect { other6Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other7Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other7.collect { other7Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other8Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other8.collect { other8Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other9Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other9.collect { other9Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-        val other10Job = launch(start = CoroutineStart.UNDISPATCHED) {
-          other10.collect { other10Ref.value = it ?: INTERNAL_NULL_VALUE }
-        }
-
-        collect { value ->
-          val value2 = other2Ref.value ?: return@collect
-          val value3 = other3Ref.value ?: return@collect
-          val value4 = other4Ref.value ?: return@collect
-          val value5 = other5Ref.value ?: return@collect
-          val value6 = other6Ref.value ?: return@collect
-          val value7 = other7Ref.value ?: return@collect
-          val value8 = other8Ref.value ?: return@collect
-          val value9 = other9Ref.value ?: return@collect
-          val value10 = other10Ref.value ?: return@collect
-          emit(
-            transform(
-              value,
-              INTERNAL_NULL_VALUE.unbox(value2),
-              INTERNAL_NULL_VALUE.unbox(value3),
-              INTERNAL_NULL_VALUE.unbox(value4),
-              INTERNAL_NULL_VALUE.unbox(value5),
-              INTERNAL_NULL_VALUE.unbox(value6),
-              INTERNAL_NULL_VALUE.unbox(value7),
-              INTERNAL_NULL_VALUE.unbox(value8),
-              INTERNAL_NULL_VALUE.unbox(value9),
-              INTERNAL_NULL_VALUE.unbox(value10),
-            ),
-          )
-        }
-        other2Job.cancelAndJoin()
-        other3Job.cancelAndJoin()
-        other4Job.cancelAndJoin()
-        other5Job.cancelAndJoin()
-        other6Job.cancelAndJoin()
-        other7Job.cancelAndJoin()
-        other8Job.cancelAndJoin()
-        other9Job.cancelAndJoin()
-        other10Job.cancelAndJoin()
-      }
-    } finally {
-      other2Ref.value = null
-      other3Ref.value = null
-      other4Ref.value = null
-      other5Ref.value = null
-      other6Ref.value = null
-      other7Ref.value = null
-      other8Ref.value = null
-      other9Ref.value = null
-      other10Ref.value = null
-    }
+  return withLatestFrom(arrayOf(other2, other3, other4, other5, other6, other7, other8, other9, other10)) { value, others ->
+    transform(
+      value,
+      others[0] as B,
+      others[1] as C,
+      others[2] as D,
+      others[3] as E,
+      others[4] as F,
+      others[5] as G,
+      others[6] as H,
+      others[7] as I,
+      others[8] as J,
+    )
   }
 }
