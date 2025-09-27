@@ -313,4 +313,94 @@ class WithLatestFromTest : BaseTest() {
       ),
     )
   }
+
+  @Test
+  fun testWithLatestFrom7() = runTest {
+    val f1 = flowOf(1, 2, 3, 4)
+    val f2 = flowOf("a", "b", "c", "d", "e")
+    val f3 = flowOf(true, false, true)
+    val f4 = flowOf('x', 'y', 'z')
+    val f5 = flowOf(10.0, 20.0, 30.0)
+    val f6 = flowOf("first", "second", "third")
+    val f7 = flowOf(100L, 200L, 300L)
+    assertEquals(
+      f2.withLatestFrom(f1, f3, f4, f5, f6, f7) { a, b, c, d, e, f, g -> "$a-$b-$c-$d-$e-$f-$g" }.toList(),
+      listOf(
+        "a-4-true-z-30-third-300",
+        "b-4-true-z-30-third-300",
+        "c-4-true-z-30-third-300",
+        "d-4-true-z-30-third-300",
+        "e-4-true-z-30-third-300",
+      ),
+    )
+  }
+
+  @Test
+  fun testWithLatestFrom8() = runTest {
+    val f1 = flowOf(1, 2, 3, 4)
+    val f2 = flowOf("a", "b", "c", "d", "e")
+    val f3 = flowOf(true, false, true)
+    val f4 = flowOf('x', 'y', 'z')
+    val f5 = flowOf(10.0, 20.0, 30.0)
+    val f6 = flowOf("first", "second", "third")
+    val f7 = flowOf(100L, 200L, 300L)
+    val f8 = flowOf(0.1f, 0.2f, 0.3f)
+    assertEquals(
+      f2.withLatestFrom(f1, f3, f4, f5, f6, f7, f8) { a, b, c, d, e, f, g, h -> "$a-$b-$c-$d-$e-$f-$g-$h" }.toList(),
+      listOf(
+        "a-4-true-z-30-third-300-0.3",
+        "b-4-true-z-30-third-300-0.3",
+        "c-4-true-z-30-third-300-0.3",
+        "d-4-true-z-30-third-300-0.3",
+        "e-4-true-z-30-third-300-0.3",
+      ),
+    )
+  }
+
+  @Test
+  fun testWithLatestFrom9() = runTest {
+    val f1 = flowOf(1, 2, 3, 4)
+    val f2 = flowOf("a", "b", "c", "d", "e")
+    val f3 = flowOf(true, false, true)
+    val f4 = flowOf('x', 'y', 'z')
+    val f5 = flowOf(10.0, 20.0, 30.0)
+    val f6 = flowOf("first", "second", "third")
+    val f7 = flowOf(100L, 200L, 300L)
+    val f8 = flowOf(0.1f, 0.2f, 0.3f)
+    val f9 = flowOf("i", "ii", "iii")
+    assertEquals(
+      f2.withLatestFrom(f1, f3, f4, f5, f6, f7, f8, f9) { a, b, c, d, e, f, g, h, i -> "$a-$b-$c-$d-$e-$f-$g-$h-$i" }.toList(),
+      listOf(
+        "a-4-true-z-30-third-300-0.3-iii",
+        "b-4-true-z-30-third-300-0.3-iii",
+        "c-4-true-z-30-third-300-0.3-iii",
+        "d-4-true-z-30-third-300-0.3-iii",
+        "e-4-true-z-30-third-300-0.3-iii",
+      ),
+    )
+  }
+
+  @Test
+  fun testWithLatestFrom10() = runTest {
+    val f1 = flowOf(1, 2, 3, 4)
+    val f2 = flowOf("a", "b", "c", "d", "e")
+    val f3 = flowOf(true, false, true)
+    val f4 = flowOf('x', 'y', 'z')
+    val f5 = flowOf(10.0, 20.0, 30.0)
+    val f6 = flowOf("first", "second", "third")
+    val f7 = flowOf(100L, 200L, 300L)
+    val f8 = flowOf(0.1f, 0.2f, 0.3f)
+    val f9 = flowOf("i", "ii", "iii")
+    val f10 = flowOf(42, 43, 44)
+    assertEquals(
+      f2.withLatestFrom(f1, f3, f4, f5, f6, f7, f8, f9, f10) { a, b, c, d, e, f, g, h, i, j -> "$a-$b-$c-$d-$e-$f-$g-$h-$i-$j" }.toList(),
+      listOf(
+        "a-4-true-z-30-third-300-0.3-iii-44",
+        "b-4-true-z-30-third-300-0.3-iii-44",
+        "c-4-true-z-30-third-300-0.3-iii-44",
+        "d-4-true-z-30-third-300-0.3-iii-44",
+        "e-4-true-z-30-third-300-0.3-iii-44",
+      ),
+    )
+  }
 }
