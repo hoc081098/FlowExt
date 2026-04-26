@@ -181,6 +181,7 @@ dependencies {
   - [`retryWithExponentialBackoff`](#retrywithexponentialbackoff)
   - [`scanWith`](#scanWith)
   - [`select`](#select)
+  - [`selectAsStateFlow`](#selectasstateflow)
   - [`skipUntil`](#skipuntil--dropuntil)
   - [`dropUntil`](#skipuntil--dropuntil)
   - [`takeUntil`](#takeuntil)
@@ -1415,6 +1416,53 @@ select: emit 3
 select: emit 4
 select: [b]
 ```
+
+----
+
+#### selectAsStateFlow
+
+- Combines the memoized selector functionality of [select](#select) with StateFlow conversion.
+- Creates a hot, stateful flow that caches the latest selected value using [StateFlow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/).
+- Perfect for UI state management where you need both the efficiency of memoized selectors and the benefits of StateFlow.
+
+```kotlin
+// Example with coroutine scope
+val scope = CoroutineScope(Dispatchers.Default)
+
+val stateFlow = MutableStateFlow(
+  UiState(
+    items = listOf("a", "b", "c"),
+    term = "a",
+    isLoading = false
+  )
+)
+
+// Create a StateFlow that selects and filters items
+val filteredItemsStateFlow = stateFlow.selectAsStateFlow(
+  scope = scope,
+  started = SharingStarted.Eagerly,
+  initialValue = emptyList<String>(),
+  selector1 = { it.items },
+  selector2 = { it.term },
+  projector = { items, term ->
+    items.filter { it.contains(term ?: "", ignoreCase = true) }
+  }
+)
+
+// Access current value immediately
+println("Current filtered items: ${filteredItemsStateFlow.value}")
+
+// Collect updates
+filteredItemsStateFlow.collect { items ->
+  println("Filtered items updated: $items")
+}
+```
+
+Benefits:
+- **Memoized computation**: Selectors are only recomputed when input sub-states change
+- **Hot StateFlow**: Always has the latest value available via `.value`
+- **Configurable sharing**: Control when the StateFlow starts/stops with `SharingStarted`
+- **Multiple overloads**: Support for 1-5 selectors with projector functions
 
 ----
 
