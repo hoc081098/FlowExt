@@ -146,6 +146,9 @@ dependencies {
 
 - Intermediate operators
   - [`bufferCount`](#buffercount--chunked)
+  - [`not`](#not--inverted--toggle) (`Flow<Boolean>`)
+  - [`inverted`](#not--inverted--toggle) (`Flow<Boolean>`)
+  - [`toggle`](#not--inverted--toggle) (`Flow<Boolean>`)
   - [`combine`](#combine)
   - [`cast`](#cast--castnotnull--castnullable--safeCast)
   - [`castNotNull`](#cast--castnotnull--castnullable--safeCast)
@@ -224,6 +227,53 @@ bufferCount: [2, 3, 4]
 bufferCount: [4, 5, 6]
 bufferCount: [6, 7, 8]
 bufferCount: [8, 9]
+```
+
+----
+
+#### not / inverted / toggle
+
+Returns a `Flow<Boolean>` that emits the boolean negation (opposite) of each value emitted by the source `Flow<Boolean>`.
+
+- `not()` - Returns the negated boolean values 
+- `inverted()` - Alias for `not()`
+- `toggle()` - Alias for `not()`
+
+```kotlin
+flowOf(true, false, true, false)
+  .not()
+  .collect { println("not: $it") }
+
+println("---")
+
+flowOf(true, false, true, false)
+  .inverted()
+  .collect { println("inverted: $it") }
+
+println("---")
+
+flowOf(true, false, true, false)
+  .toggle()
+  .collect { println("toggle: $it") }
+```
+
+Output:
+
+```none
+not: false
+not: true
+not: false
+not: true
+---
+inverted: false
+inverted: true
+inverted: false
+inverted: true
+---
+toggle: false
+toggle: true
+toggle: false
+toggle: true
 ```
 
 ----
