@@ -11,17 +11,17 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 import java.net.URI
 
 plugins {
-  kotlin("multiplatform") version "2.2.0"
-  id("com.diffplug.spotless") version "8.0.0"
+  kotlin("multiplatform") version "2.3.21"
+  id("com.diffplug.spotless") version "8.5.1"
   id("maven-publish")
-  id("com.vanniktech.maven.publish") version "0.34.0"
+  id("com.vanniktech.maven.publish") version "0.36.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
-  id("org.jetbrains.dokka") version "2.0.0"
-  id("org.jetbrains.kotlinx.kover") version "0.9.1"
-  id("dev.drewhamilton.poko") version "0.19.3"
+  id("org.jetbrains.dokka") version "2.2.0"
+  id("org.jetbrains.kotlinx.kover") version "0.9.8"
+  id("dev.drewhamilton.poko") version "0.22.1"
 }
 
-val coroutinesVersion = "1.10.2"
+val coroutinesVersion = "1.11.0"
 val ktlintVersion = "1.0.0"
 
 repositories {
