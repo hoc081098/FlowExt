@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add `Flow<Boolean>.not()` operator - Returns a Flow that emits the boolean negation of each value emitted by the source Flow.
+- Add `Flow<Boolean>.inverted()` operator - Alias for `not()`.
+- Add `Flow<Boolean>.toggle()` operator - Alias for `not()`.
+
 ## [1.0.0] - Sep 22, 2024
 
 This is our first stable release! Thanks everyone for using FlowExt, reporting bugs, providing feedback and sending PRs.
