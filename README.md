@@ -23,7 +23,7 @@
 ![badge][badge-watchos]
 ![badge][badge-tvos]
 ![badge][badge-apple-silicon]
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fhoc081098%2FFlowExt&count_bg=%2379C83D&title_bg=%23555555&icon=kotlin.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+[![Hits](https://hits.sh/github.com/hoc081098/FlowExt.svg)](https://hits.sh/github.com/hoc081098/FlowExt/)
 
 - FlowExt is a Kotlin Multiplatform library, that provides many operators and extensions to Kotlin Coroutines Flow.
 - FlowExt provides a collection of operators, Flows and utilities for Flow, that are not provided by Kotlinx Coroutine
@@ -96,7 +96,7 @@ implementation("io.github.hoc081098:FlowExt:1.0.0")
 ### Snapshot
 
 <details>
-  <summary>Snapshots of the development version are available in Sonatype's snapshots repository.</summary>
+  <summary>Snapshots of the development version are available in the Central Portal Snapshots repository.</summary>
 
 - Kotlin
 
@@ -104,7 +104,7 @@ implementation("io.github.hoc081098:FlowExt:1.0.0")
 allprojects {
   repositories {
     ...
-    maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
+    maven(url = "https://central.sonatype.com/repository/maven-snapshots/")
   }
 }
 
