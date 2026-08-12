@@ -4,6 +4,9 @@
 /local.properties
 .DS_Store
 .idea/shelf
+.idea/AndroidProjectSystem.xml
+.idea/caches/
+.idea/runConfigurations.xml
 /confluence/target
 /dependencies/repo
 /android.tests.dependencies
