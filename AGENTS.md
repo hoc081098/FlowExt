@@ -18,7 +18,7 @@ On Windows, CI disables Wasm with `./gradlew build -Dkwasm=false`.
 
 ## Coding Style & Naming Conventions
 
-Follow `.editorconfig`: UTF-8, LF endings, two-space indentation, no trailing whitespace, and a final newline. Spotless uses ktlint's official Kotlin style and applies the MIT header to Kotlin sources. Because explicit API mode is enabled, declare public visibility and types deliberately. Use PascalCase for types, camelCase for functions, and established operator filenames such as `withLatestFrom.kt`; type-focused files may use names such as `Event.kt`.
+Follow `.editorconfig`: UTF-8, LF endings, two-space indentation, no trailing whitespace, and a final newline. Spotless uses ktlint's official Kotlin style and applies the MIT header to Kotlin sources. Because explicit API mode is enabled, declare public visibility and types deliberately. Use PascalCase for types and camelCase for functions. Use camelCase filenames for files centered on a single operator, such as `withLatestFrom.kt`. Use PascalCase domain-oriented filenames when a file groups multiple closely related declarations around one concept, such as `StateFlows.kt`; type-focused files may use names such as `Event.kt`.
 
 ## Testing Guidelines
 
