@@ -515,7 +515,9 @@ Both operators intentionally use **computed-on-read** semantics:
 - Every access to `value` invokes the transform with values read from the source `StateFlow` or `StateFlow`s.
 - Transformed values are not cached between property reads. Reading `replayCache` also performs a fresh computation
   and returns the result as a singleton list.
-- Each collector performs its own transformation work. Consecutive transformed values that are equal are not emitted.
+- Each collector performs its own transformation work. Collection follows `StateFlow`'s strong equality-based
+  conflation: a slow collector can skip intermediate transformed values, and a transformed value equal to the last
+  emitted value is not emitted again.
 - Property reads and collectors do not share transformed results. Updating a source performs no transformation unless
   the returned state flow is being collected or its `value` or `replayCache` is accessed.
 

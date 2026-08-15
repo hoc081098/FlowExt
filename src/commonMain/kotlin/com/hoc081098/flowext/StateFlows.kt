@@ -25,12 +25,12 @@
 package com.hoc081098.flowext
 
 import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
@@ -42,9 +42,10 @@ import kotlinx.coroutines.flow.map
  * the same fresh computation and returns the result as a singleton list. Updating the source does not invoke [transform]
  * unless the returned state flow is being collected or one of these properties is accessed.
  *
- * Each collector independently invokes [transform] for source values observed by that collector. Consecutive
- * transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do not share
- * transformed results.
+ * Each collector independently invokes [transform] for source values observed by that collector. Collection follows
+ * [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values, and a
+ * transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads and
+ * collectors do not share transformed results.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -67,10 +68,12 @@ public fun <T, R> StateFlow<T>.mapState(transform: (value: T) -> R): StateFlow<R
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -100,10 +103,12 @@ public fun <T1, T2, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -134,10 +139,12 @@ public fun <T1, T2, T3, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -169,10 +176,12 @@ public fun <T1, T2, T3, T4, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -205,10 +214,12 @@ public fun <T1, T2, T3, T4, T5, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -251,10 +262,12 @@ public fun <T1, T2, T3, T4, T5, T6, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -299,10 +312,12 @@ public fun <T1, T2, T3, T4, T5, T6, T7, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -349,10 +364,12 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -401,10 +418,12 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -457,10 +476,12 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -515,10 +536,12 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combineStates(
  * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
- * Each collector independently invokes [transform] for combined source values observed by that collector.
- * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
- * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
- * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
+ * follows [StateFlow]'s strong equality-based conflation: a slow collector can skip intermediate transformed values,
+ * and a transformed value that is [equal][Any.equals] to the last emitted value is not emitted again. Property reads
+ * and collectors do not share transformed results. Updating a source invokes [transform] only when the returned state
+ * flow is being collected; otherwise transformation occurs only when [StateFlow.value] or
+ * [StateFlow.replayCache] is accessed.
  *
  * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
  * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
@@ -623,9 +646,9 @@ private class DerivedStateFlow<T>(
   override val value: T get() = valueSupplier()
   override val replayCache: List<T> get() = listOf(value)
 
-  @InternalCoroutinesApi
   override suspend fun collect(collector: FlowCollector<T>): Nothing {
     source
+      .conflate()
       .distinctUntilChanged()
       .collect(collector)
 
