@@ -86,7 +86,7 @@ class CombineStatesTest : BaseTest() {
     val combined = combineStates(first, second) { a, b -> Box(abs(a) + abs(b)) }
     val values = mutableListOf<Box>()
     val job = launch { combined.take(3).toList(values) }
-    runCurrent()
+    runCurrent() // Let the initial value be collected.
 
     first.value = -1
     runCurrent()
@@ -115,7 +115,7 @@ class CombineStatesTest : BaseTest() {
       combined.collect { value ->
         values += value
         if (values.size == 1) {
-          releaseCollector.await()
+          releaseCollector.await() // Suspend so the source updates below are conflated while this collector is busy.
         }
       }
     }
@@ -131,6 +131,7 @@ class CombineStatesTest : BaseTest() {
     second.value = 10
     runCurrent()
 
+    // Release the collector so it resumes and collects the latest value, (10, 10).
     releaseCollector.complete(Unit)
     runCurrent()
     job.cancelAndJoin()
@@ -150,21 +151,23 @@ class CombineStatesTest : BaseTest() {
       combined.collect { value ->
         values += value
         if (values.size == 1) {
-          releaseCollector.await()
+          releaseCollector.await() // Suspend so the source updates below are conflated while this collector is busy.
         }
       }
     }
     runCurrent()
 
-    first.value = 1
+    first.value = 1 // Conflated away while the collector is suspended.
     runCurrent()
-    first.value = 0
+    first.value = 0 // Not reemitted: it equals the last emitted value (0).
     runCurrent()
 
+    // Release the collector so it resumes.
     releaseCollector.complete(Unit)
     runCurrent()
     job.cancelAndJoin()
 
+    // Only the initial value was collected; the intermediate update was conflated away.
     assertContentEquals(expected = listOf(0), actual = values)
   }
 
@@ -180,14 +183,14 @@ class CombineStatesTest : BaseTest() {
 
     val firstCollector = async { combined.take(2).toList() }
     val secondCollector = async { combined.take(2).toList() }
-    runCurrent()
+    runCurrent() // Let both collectors start and invoke transform once each for the initial value.
     assertEquals(expected = 2, actual = invocationCount)
 
     assertEquals(expected = 0, actual = combined.value)
     assertEquals(expected = 3, actual = invocationCount)
 
     first.value = 1
-    runCurrent()
+    runCurrent() // Let both collectors observe the updated value.
 
     assertContentEquals(expected = listOf(0, 1), actual = firstCollector.await())
     assertContentEquals(expected = listOf(0, 1), actual = secondCollector.await())
@@ -205,6 +208,7 @@ class CombineStatesTest : BaseTest() {
     }
     var collectionFailure: Throwable? = null
 
+    // The collector fails when transform throws.
     val job = launch {
       try {
         combined.collect {}
@@ -218,6 +222,7 @@ class CombineStatesTest : BaseTest() {
     runCurrent()
     job.join()
 
+    // Reading value/replayCache after the failure also rethrows it.
     assertEquals(
       expected = failure.message,
       actual = assertIs<TestException>(value = collectionFailure).message,
@@ -231,6 +236,7 @@ class CombineStatesTest : BaseTest() {
       actual = assertFailsWith<TestException>(block = { combined.replayCache }).message,
     )
 
+    // A later, non-throwing value is unaffected by the earlier failure.
     first.value = 2
     assertEquals(expected = 2, actual = combined.value)
     assertEquals(expected = 2, actual = combined.first())
@@ -264,6 +270,7 @@ class CombineStatesTest : BaseTest() {
     assertTrue(actual = job.isCancelled)
     assertTrue(actual = collectionCancelled.isCompleted)
 
+    // Since the collection was cancelled, the new source value is not collected.
     first.value = 1
     runCurrent()
     assertEquals(expected = 1, actual = invocationCount)
