@@ -29,9 +29,22 @@ import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.assertReadonlyStateFlow
 import kotlin.math.abs
-import kotlin.test.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 
@@ -116,7 +129,7 @@ class MapStateTest : BaseTest() {
         Box(value = 2),
         Box(value = 1),
       ),
-      actual = values
+      actual = values,
     )
   }
 
