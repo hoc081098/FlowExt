@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 
 /**
- * Returns a read-only [StateFlow] that synchronously maps this state flow with [transform].
+ * Returns a read-only [StateFlow] derived from this state flow using [transform].
  *
  * Every access to [StateFlow.value] reads the current source value once and invokes [transform] once.
  * The transformed result is not cached between property reads. Every access to [StateFlow.replayCache] performs
@@ -60,7 +60,7 @@ public fun <T, R> StateFlow<T>.mapState(transform: (value: T) -> R): StateFlow<R
   MappedAsStateFlow(this, transform)
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines two source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from two source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -93,7 +93,7 @@ public fun <T1, T2, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines three source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from three source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -127,7 +127,7 @@ public fun <T1, T2, T3, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines four source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from four source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -162,7 +162,7 @@ public fun <T1, T2, T3, T4, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines five source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from five source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -198,7 +198,7 @@ public fun <T1, T2, T3, T4, T5, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines six source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from six source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -244,7 +244,7 @@ public fun <T1, T2, T3, T4, T5, T6, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines seven source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from seven source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -292,7 +292,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines eight source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from eight source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -342,7 +342,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines nine source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from nine source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -394,7 +394,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines ten source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from ten source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -450,7 +450,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines eleven source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from eleven source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
@@ -508,7 +508,7 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combineStates(
   )
 
 /**
- * Returns a read-only [StateFlow] that synchronously combines twelve source state flows with [transform].
+ * Returns a read-only [StateFlow] derived from twelve source state flows using [transform].
  *
  * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
  * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not

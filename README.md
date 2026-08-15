@@ -507,8 +507,8 @@ timer: kotlin.Unit
 
 > **Preview:** These operators require `@OptIn(FlowExtPreview::class)`.
 
-`mapState` synchronously maps one `StateFlow` to a read-only `StateFlow`. `combineStates` synchronously combines
-2–12 source `StateFlow`s into a read-only `StateFlow`.
+`mapState` derives a read-only `StateFlow` from one source `StateFlow`. `combineStates` derives one from 2–12 source
+`StateFlow`s.
 
 Both operators intentionally use **computed-on-read** semantics:
 
