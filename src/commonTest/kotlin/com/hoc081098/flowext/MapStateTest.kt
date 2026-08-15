@@ -26,24 +26,12 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.assertReadonlyStateFlow
 import kotlin.math.abs
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertIs
-import kotlin.test.assertTrue
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
+import kotlin.test.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 
@@ -69,6 +57,7 @@ class MapStateTest : BaseTest() {
     assertEquals(expected = 1, actual = invocationCount)
     assertEquals(expected = 30, actual = mapped.value)
     assertEquals(expected = 2, actual = invocationCount)
+
     assertEquals(expected = listOf(30), actual = mapped.replayCache)
     assertEquals(expected = 3, actual = invocationCount)
     assertEquals(expected = listOf(30), actual = mapped.replayCache)
@@ -86,14 +75,14 @@ class MapStateTest : BaseTest() {
 
     val firstCollector = async { mapped.take(2).toList() }
     val secondCollector = async { mapped.take(2).toList() }
-    runCurrent()
+    runCurrent() // Let both collectors start and invoke transform once each for the initial value.
     assertEquals(expected = 2, actual = invocationCount)
 
     assertEquals(expected = 2, actual = mapped.value)
     assertEquals(expected = 3, actual = invocationCount)
 
     source.value = 2
-    runCurrent()
+    runCurrent() // Let both collectors observe the updated value.
 
     assertContentEquals(expected = listOf(2, 4), actual = firstCollector.await())
     assertContentEquals(expected = listOf(2, 4), actual = secondCollector.await())
@@ -105,10 +94,11 @@ class MapStateTest : BaseTest() {
     data class Box(val value: Int)
 
     val source = MutableStateFlow(1)
-    val mapped = source.mapState { Box(abs(it)) }
+    val mapped = source.mapState { Box(value = abs(it)) }
+
     val values = mutableListOf<Box>()
     val job = launch { mapped.take(3).toList(values) }
-    runCurrent()
+    runCurrent() // Let the initial value be collected.
 
     source.value = -1
     runCurrent()
@@ -118,15 +108,23 @@ class MapStateTest : BaseTest() {
     runCurrent()
     source.value = 1
     runCurrent()
-    job.join()
 
-    assertContentEquals(expected = listOf(Box(1), Box(2), Box(1)), actual = values)
+    job.join()
+    assertContentEquals(
+      expected = listOf(
+        Box(value = 1),
+        Box(value = 2),
+        Box(value = 1),
+      ),
+      actual = values
+    )
   }
 
   @Test
   fun testMapStateSlowCollectorSkipsIntermediateValues() = runTest(StandardTestDispatcher()) {
     val source = MutableStateFlow(0)
     val mapped = source.mapState { it }
+
     val values = mutableListOf<Int>()
     val firstEmissionStarted = CompletableDeferred<Unit>()
     val releaseCollector = CompletableDeferred<Unit>()
@@ -135,25 +133,32 @@ class MapStateTest : BaseTest() {
     val job = launch {
       mapped.collect { value ->
         values += value
+
         if (values.size == 1) {
-          firstEmissionStarted.complete(Unit)
-          releaseCollector.await()
+          firstEmissionStarted.complete(value = Unit)
+          releaseCollector.await() // Suspend so the source updates below are conflated while this collector is busy.
         }
+
         if (value == 100) {
           latestReceived.complete(Unit)
         }
       }
     }
-    runCurrent()
+
+    // Wait until the first emission has been collected.
     firstEmissionStarted.await()
 
+    // Emit 1..100 without any async boundary.
+    // Only the initial value (0) and the last value (100) will be collected; values in between are conflated.
     for (value in 1..100) {
       source.value = value
     }
     runCurrent()
+    // Only the initial value has been collected so far; the collector is still suspended in releaseCollector.await().
     assertContentEquals(expected = listOf(0), actual = values)
     assertEquals(expected = 100, actual = mapped.value)
 
+    // Release the collector so it resumes and collects the latest value, 100.
     releaseCollector.complete(Unit)
     runCurrent()
     latestReceived.await()
@@ -166,6 +171,7 @@ class MapStateTest : BaseTest() {
   fun testMapStateSlowCollectorDoesNotReemitEqualLatestValue() = runTest(StandardTestDispatcher()) {
     val source = MutableStateFlow(0)
     val mapped = source.mapState { it }
+
     val values = mutableListOf<Int>()
     val releaseCollector = CompletableDeferred<Unit>()
 
@@ -173,21 +179,23 @@ class MapStateTest : BaseTest() {
       mapped.collect { value ->
         values += value
         if (values.size == 1) {
-          releaseCollector.await()
+          releaseCollector.await() // Suspend so the source updates below are conflated while this collector is busy.
         }
       }
     }
+    runCurrent() // Let the initial value be collected.
+
+    source.value = 1 // Conflated away while the collector is suspended.
+    runCurrent()
+    source.value = 0 // Not reemitted: it equals the last emitted value (0).
     runCurrent()
 
-    source.value = 1
-    runCurrent()
-    source.value = 0
-    runCurrent()
-
-    releaseCollector.complete(Unit)
+    // Release the collector so it resumes.
+    releaseCollector.complete(value = Unit)
     runCurrent()
     job.cancelAndJoin()
 
+    // Only the initial value was collected; both updates while suspended were conflated away.
     assertContentEquals(expected = listOf(0), actual = values)
   }
 
@@ -199,34 +207,25 @@ class MapStateTest : BaseTest() {
       if (it == 1) throw failure
       it
     }
-    var collectionFailure: Throwable? = null
 
-    val job = launch {
-      try {
-        mapped.collect {}
-      } catch (throwable: Throwable) {
-        collectionFailure = throwable
-      }
-    }
+    // The collector fails when transform throws.
+    val job = launch { assertFailsWith<TestException>(mapped) }
     runCurrent()
-
     source.value = 1
     runCurrent()
     job.join()
 
+    // Reading value/replayCache after the failure also rethrows it.
     assertEquals(
       expected = failure.message,
-      actual = assertIs<TestException>(value = collectionFailure).message,
+      actual = assertFailsWith<TestException> { mapped.value }.message,
     )
     assertEquals(
       expected = failure.message,
-      actual = assertFailsWith<TestException>(block = { mapped.value }).message,
-    )
-    assertEquals(
-      expected = failure.message,
-      actual = assertFailsWith<TestException>(block = { mapped.replayCache }).message,
+      actual = assertFailsWith<TestException> { mapped.replayCache }.message,
     )
 
+    // A later, non-throwing value is unaffected by the earlier failure.
     source.value = 2
     assertEquals(expected = 2, actual = mapped.value)
     assertEquals(expected = 2, actual = mapped.first())
@@ -240,25 +239,27 @@ class MapStateTest : BaseTest() {
       ++invocationCount
       it
     }
+
     val collectionStarted = CompletableDeferred<Unit>()
     val collectionCancelled = CompletableDeferred<Unit>()
 
     val job = launch {
       try {
-        mapped.collect { collectionStarted.complete(Unit) }
-      } finally {
-        collectionCancelled.complete(Unit)
+        mapped.collect { collectionStarted.complete(value = Unit) }
+      } catch (_: CancellationException) {
+        collectionCancelled.complete(value = Unit)
       }
     }
     runCurrent()
     collectionStarted.await()
     assertEquals(expected = 1, actual = invocationCount)
-    assertTrue(actual = job.isActive)
+    assertTrue { job.isActive }
 
     job.cancelAndJoin()
-    assertTrue(actual = job.isCancelled)
-    assertTrue(actual = collectionCancelled.isCompleted)
+    assertTrue { job.isCancelled }
+    assertTrue { collectionCancelled.isCompleted }
 
+    // Since the collection was cancelled, the new source value is not collected.
     source.value = 1
     runCurrent()
     assertEquals(expected = 1, actual = invocationCount)
