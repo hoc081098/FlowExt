@@ -147,6 +147,8 @@ dependencies {
 - Intermediate operators
   - [`bufferCount`](#buffercount--chunked)
   - [`combine`](#combine)
+  - [`mapState`](#mapstate--combinestates)
+  - [`combineStates`](#mapstate--combinestates)
   - [`cast`](#cast--castnotnull--castnullable--safeCast)
   - [`castNotNull`](#cast--castnotnull--castnullable--safeCast)
   - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
@@ -498,6 +500,52 @@ timer: kotlin.Unit
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/combinelatest.html
 - `combine` versions for `6 - 12` `Flow`s.
+
+----
+
+#### mapState / combineStates
+
+> **Preview:** These operators require `@OptIn(FlowExtPreview::class)`.
+
+`mapState` synchronously maps one `StateFlow` to a read-only `StateFlow`. `combineStates` synchronously combines
+2–12 source `StateFlow`s into a read-only `StateFlow`.
+
+Both operators intentionally use **computed-on-read** semantics:
+
+- Every access to `value` invokes the transform with values read from the source `StateFlow` or `StateFlow`s.
+- Transformed values are not cached between property reads. Reading `replayCache` also performs a fresh computation
+  and returns the result as a singleton list.
+- Each collector performs its own transformation work. Consecutive transformed values that are equal are not emitted.
+- Property reads and collectors do not share transformed results. Updating a source performs no transformation unless
+  the returned state flow is being collected or its `value` or `replayCache` is accessed.
+
+A direct read of `combineStates(...).value` reads each source independently. Sources can change between those reads,
+so the values passed to the transform do not form an atomic cross-source snapshot and might not have existed at the
+same instant.
+
+The transform can be invoked repeatedly and concurrently. It must be deterministic, side-effect-free, safe for
+concurrent invocation, and must not throw. If it throws, the exception escapes the property access or fails the
+affected collection; it is not represented as a state value.
+
+```kotlin
+@OptIn(FlowExtPreview::class)
+fun stateFlowExample() {
+  val quantity = MutableStateFlow(2)
+  val unitPrice = MutableStateFlow(10)
+
+  val doubledQuantity = quantity.mapState { it * 2 }
+  val total = combineStates(quantity, unitPrice) { count, price -> count * price }
+
+  println(doubledQuantity.value) // 4; computed during this read
+  println(total.value) // 20; computed during this read
+
+  quantity.value = 3
+  println(doubledQuantity.value) // 6; computed again
+  println(total.value) // 30; computed again
+}
+```
+
+Memoization is a different behavior and is not provided by these operators.
 
 ----
 

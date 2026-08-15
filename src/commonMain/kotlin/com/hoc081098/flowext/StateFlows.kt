@@ -27,21 +27,30 @@ package com.hoc081098.flowext
 import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 
 /**
- * Map a [StateFlow] to another read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously maps this state flow with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest value of the source [StateFlow].
- * This is useful when you want to map a [StateFlow] to another [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] reads the current source value once and invokes [transform] once.
+ * The transformed result is not cached between property reads. Every access to [StateFlow.replayCache] performs
+ * the same fresh computation and returns the result as a singleton list. Updating the source does not invoke [transform]
+ * unless the returned state flow is being collected or one of these properties is accessed.
+ *
+ * Each collector independently invokes [transform] for source values observed by that collector. Consecutive
+ * transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do not share
+ * transformed results.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [map].
  *
  * @see map
  * @see combineStates
@@ -51,11 +60,23 @@ public fun <T, R> StateFlow<T>.mapState(transform: (value: T) -> R): StateFlow<R
   MappedAsStateFlow(this, transform)
 
 /**
- * Combine two [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines two source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine two or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -72,11 +93,23 @@ public fun <T1, T2, R> combineStates(
   )
 
 /**
- * Combine three [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines three source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine three or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -94,11 +127,23 @@ public fun <T1, T2, T3, R> combineStates(
   )
 
 /**
- * Combine four [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines four source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine four or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -117,11 +162,23 @@ public fun <T1, T2, T3, T4, R> combineStates(
   )
 
 /**
- * Combine five [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines five source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine five or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -141,11 +198,23 @@ public fun <T1, T2, T3, T4, T5, R> combineStates(
   )
 
 /**
- * Combine six [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines six source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine six or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -175,11 +244,23 @@ public fun <T1, T2, T3, T4, T5, T6, R> combineStates(
   )
 
 /**
- * Combine seven [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines seven source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine seven or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -211,11 +292,23 @@ public fun <T1, T2, T3, T4, T5, T6, T7, R> combineStates(
   )
 
 /**
- * Combine eight [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines eight source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine eight or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -249,11 +342,23 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combineStates(
   )
 
 /**
- * Combine nine [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines nine source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine nine or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -289,11 +394,23 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combineStates(
   )
 
 /**
- * Combine ten [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines ten source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine ten or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -333,11 +450,23 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combineStates(
   )
 
 /**
- * Combine eleven [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines eleven source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine eleven or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -379,11 +508,23 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combineStates(
   )
 
 /**
- * Combine twelve [StateFlow]s into a new read-only [StateFlow] with the given [transform] function.
+ * Returns a read-only [StateFlow] that synchronously combines twelve source state flows with [transform].
  *
- * Accessing [StateFlow.value] of the returned [StateFlow] always calls [transform]
- * with the latest values of the source [StateFlow]s.
- * This is useful when you want to combine twelve or more [StateFlow]s into a single [StateFlow] instead of a [Flow].
+ * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
+ * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
+ * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
+ *
+ * Each collector independently invokes [transform] for combined source values observed by that collector.
+ * Consecutive transformed values that are [equal][Any.equals] are not emitted. Property reads and collectors do
+ * not share transformed results. Updating a source invokes [transform] only when the returned state flow is being
+ * collected; otherwise transformation occurs only when [StateFlow.value] or [StateFlow.replayCache] is accessed.
+ *
+ * [transform] can be invoked repeatedly and concurrently. To preserve [StateFlow] semantics, it must be
+ * deterministic, side-effect-free, safe for concurrent invocation, and must not throw. An exception from
+ * [transform] escapes the property access or fails the affected collection; it is not represented as a state value.
+ *
+ * This operator is useful when a [StateFlow] result is required instead of the [Flow] returned by [combine].
  *
  * @see combine
  * @see mapState
@@ -441,7 +582,8 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R> combineStates(
 // ---------------------------------------- INTERNAL IMPLEMENTATION ----------------------------------------
 
 /**
- * Map a [Flow] to a [StateFlow] with the given [transform] function.
+ * Computed-on-read [StateFlow] used by [mapState]. Property reads and collectors invoke [transform]
+ * independently; this class does not retain transformed values.
  *
  * Ref: [kotlinx.coroutines/issues/2631](https://github.com/Kotlin/kotlinx.coroutines/issues/2631#issuecomment-870565860)
  */
@@ -466,8 +608,8 @@ private class MappedAsStateFlow<T, R>(
 }
 
 /**
- * Special state flow which value is supplied by [valueSupplier] and collection is delegated to [source]
- * [valueSupplier] should NEVER THROW to avoid contract violation
+ * Computed-on-read [StateFlow] whose property values come from [valueSupplier] and whose collection is
+ * independently delegated to [source]. [valueSupplier] can be invoked repeatedly and concurrently and must not throw.
  *
  * Ref: [kotlinx.coroutines/issues/2631](https://github.com/Kotlin/kotlinx.coroutines/issues/2631#issuecomment-870565860)
  */
@@ -483,10 +625,10 @@ private class DerivedStateFlow<T>(
 
   @InternalCoroutinesApi
   override suspend fun collect(collector: FlowCollector<T>): Nothing {
-    coroutineScope {
-      source
-        .stateIn(this)
-        .collect(collector)
-    }
+    source
+      .distinctUntilChanged()
+      .collect(collector)
+
+    awaitCancellation()
   }
 }
