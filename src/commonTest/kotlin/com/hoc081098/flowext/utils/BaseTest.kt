@@ -24,12 +24,15 @@
 
 package com.hoc081098.flowext.utils
 
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.fold
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -89,3 +92,11 @@ suspend inline fun <reified T : Throwable, R> assertFailsWith(
 }
 
 suspend fun Flow<Int>.sum() = fold(0) { acc, value -> acc + value }
+
+/**
+ * Asserts that [stateFlow] is not exposed as a [MutableStateFlow], i.e. callers cannot mutate it through that
+ * public API. This is a structural/type check only; it does not exercise [stateFlow]'s read or collection semantics.
+ */
+inline fun <reified T> assertNotMutableStateFlow(stateFlow: StateFlow<T>) {
+  assertFalse { stateFlow is MutableStateFlow<T> }
+}

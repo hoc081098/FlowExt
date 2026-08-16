@@ -4,6 +4,9 @@
 
 ### Added
 
+- Add preview `mapState` and `combineStates` operators for deriving read-only `StateFlow`s. `combineStates` supports
+  2–12 sources. Both operators compute transformed values on every property read and do not memoize them between
+  property reads. Collection preserves `StateFlow`'s strong equality-based conflation.
 - Add `Flow<Boolean>.not()` operator - Returns a Flow that emits the boolean negation of each value emitted by the source Flow.
 - Add `Flow<Boolean>.inverted()` operator - Alias for `not()`.
 - Add `Flow<Boolean>.toggle()` operator - Alias for `not()`.

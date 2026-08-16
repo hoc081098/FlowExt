@@ -23,7 +23,7 @@
 ![badge][badge-watchos]
 ![badge][badge-tvos]
 ![badge][badge-apple-silicon]
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fhoc081098%2FFlowExt&count_bg=%2379C83D&title_bg=%23555555&icon=kotlin.svg&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+[![Hits](https://hits.sh/github.com/hoc081098/FlowExt.svg)](https://hits.sh/github.com/hoc081098/FlowExt/)
 
 - FlowExt is a Kotlin Multiplatform library, that provides many operators and extensions to Kotlin Coroutines Flow.
 - FlowExt provides a collection of operators, Flows and utilities for Flow, that are not provided by Kotlinx Coroutine
@@ -150,6 +150,8 @@ dependencies {
   - [`inverted`](#not--inverted--toggle) (`Flow<Boolean>`)
   - [`toggle`](#not--inverted--toggle) (`Flow<Boolean>`)
   - [`combine`](#combine)
+  - [`mapState`](#mapstate--combinestates)
+  - [`combineStates`](#mapstate--combinestates)
   - [`cast`](#cast--castnotnull--castnullable--safeCast)
   - [`castNotNull`](#cast--castnotnull--castnullable--safeCast)
   - [`castNullable`](#cast--castnotnull--castnullable--safeCast)
@@ -548,6 +550,87 @@ timer: kotlin.Unit
 
 - ReactiveX docs: https://reactivex.io/documentation/operators/combinelatest.html
 - `combine` versions for `6 - 12` `Flow`s.
+
+----
+
+#### mapState / combineStates
+
+> **Preview:** These operators require `@OptIn(FlowExtPreview::class)`.
+
+`mapState` derives a read-only `StateFlow` from one source `StateFlow`. `combineStates` derives one from 2–12 source
+`StateFlow`s.
+
+These operators are particularly useful in ViewModels and other state holders:
+
+- `combineStates` derives one presentation-level `StateFlow` from several source `StateFlow`s.
+- `mapState` projects a focused sub-state from a larger `StateFlow` while preserving the `StateFlow` return type.
+
+On Android, the returned `StateFlow` can be passed directly to
+[`collectAsStateWithLifecycle`](<https://developer.android.com/reference/kotlin/androidx/lifecycle/compose/collectAsStateWithLifecycle.composable#(kotlinx.coroutines.flow.StateFlow).collectAsStateWithLifecycle(androidx.lifecycle.LifecycleOwner,androidx.lifecycle.Lifecycle.State,kotlin.coroutines.CoroutineContext)>).
+Its current `value` provides the initial Compose state, so callers do not need to invent a separate placeholder
+`initialValue` as they would when collecting a plain `Flow`.
+
+Conceptually, `mapState` and `combineStates` are similar to the `select` operators: both derive state and suppress
+consecutive equal emissions. The main distinction is that `mapState` and `combineStates` preserve the `StateFlow`
+return type and provide an immediately readable current `value`. They use computed-on-read semantics rather than
+selector memoization.
+
+Both operators intentionally use **computed-on-read** semantics:
+
+- Every access to `value` invokes the transform with values read from the source `StateFlow` or `StateFlow`s.
+- Transformed values are not cached between property reads. Reading `replayCache` also performs a fresh computation
+  and returns the result as a singleton list.
+- Each collector performs its own transformation work. Collection follows `StateFlow`'s strong equality-based
+  conflation: a slow collector can skip intermediate transformed values, and a transformed value equal to the last
+  emitted value is not emitted again.
+- Property reads and collectors do not share transformed results. Updating a source performs no transformation unless
+  the returned state flow is being collected or its `value` or `replayCache` is accessed.
+
+A direct read of `combineStates(...).value` reads each source's value separately. Each individual read is thread-safe,
+but reading several independent `StateFlow`s is not one atomic operation. If a source changes while the values are
+being read, the transform can receive values observed at different moments that might not have existed together.
+
+The transform can be invoked repeatedly and concurrently. It must be deterministic, side-effect-free, safe for
+concurrent invocation, and must not throw. If it throws, the exception escapes the property access or fails the
+affected collection; it is not represented as a state value.
+
+```kotlin
+data class CheckoutState(
+  val quantity: Int,
+  val isSubmitting: Boolean,
+)
+val checkoutState = MutableStateFlow(CheckoutState(quantity = 2, isSubmitting = false))
+val unitPrice = MutableStateFlow(10)
+
+// ------------------------------
+
+val quantityState: StateFlow<Int> = checkoutState.mapState { it.quantity }
+val totalState: StateFlow<Int> = combineStates(quantityState, unitPrice) { quantity, price -> quantity * price }
+
+println("quantity: " + quantityState.value) // 2; computed during this read
+println("total: " + totalState.value)       // 20; computed during this read
+
+launch {
+  delay(100)
+  checkoutState.update { it.copy(quantity = 3) }
+
+  delay(100)
+  unitPrice.value = 20
+}
+totalState
+  .take(3)
+  .collect { println("combineStates: total=$it") }
+```
+
+Output:
+
+```none
+quantity: 2
+total: 20
+combineStates: total=20
+combineStates: total=30
+combineStates: total=60
+```
 
 ----
 
