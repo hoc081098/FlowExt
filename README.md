@@ -545,21 +545,41 @@ concurrent invocation, and must not throw. If it throws, the exception escapes t
 affected collection; it is not represented as a state value.
 
 ```kotlin
-@OptIn(FlowExtPreview::class)
-fun stateFlowExample() {
-  val quantity = MutableStateFlow(2)
-  val unitPrice = MutableStateFlow(10)
+data class CheckoutState(
+  val quantity: Int,
+  val isSubmitting: Boolean,
+)
+val checkoutState = MutableStateFlow(CheckoutState(quantity = 2, isSubmitting = false))
+val unitPrice = MutableStateFlow(10)
 
-  val doubledQuantity = quantity.mapState { it * 2 }
-  val total = combineStates(quantity, unitPrice) { count, price -> count * price }
+// ------------------------------
 
-  println(doubledQuantity.value) // 4; computed during this read
-  println(total.value) // 20; computed during this read
+val quantityState: StateFlow<Int> = checkoutState.mapState { it.quantity }
+val totalState: StateFlow<Int> = combineStates(quantityState, unitPrice) { quantity, price -> quantity * price }
 
-  quantity.value = 3
-  println(doubledQuantity.value) // 6; computed again
-  println(total.value) // 30; computed again
+println("quantity: " + quantityState.value) // 2; computed during this read
+println("total: " + totalState.value)       // 20; computed during this read
+
+launch {
+  delay(100)
+  checkoutState.update { it.copy(quantity = 3) }
+
+  delay(100)
+  unitPrice.value = 20
 }
+totalState
+  .take(3)
+  .collect { println("combineStates: total=$it") }
+```
+
+Output:
+
+```none
+quantity: 2
+total: 20
+combineStates: total=20
+combineStates: total=30
+combineStates: total=60
 ```
 
 ----
