@@ -63,9 +63,10 @@ public fun <T, R> StateFlow<T>.mapState(transform: (value: T) -> R): StateFlow<R
 /**
  * Returns a read-only [StateFlow] derived from two source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -98,9 +99,10 @@ public fun <T1, T2, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from three source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -134,9 +136,10 @@ public fun <T1, T2, T3, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from four source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -171,9 +174,10 @@ public fun <T1, T2, T3, T4, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from five source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -209,9 +213,10 @@ public fun <T1, T2, T3, T4, T5, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from six source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -257,9 +262,10 @@ public fun <T1, T2, T3, T4, T5, T6, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from seven source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -307,9 +313,10 @@ public fun <T1, T2, T3, T4, T5, T6, T7, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from eight source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -359,9 +366,10 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from nine source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -413,9 +421,10 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from ten source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -471,9 +480,10 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from eleven source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection
@@ -531,9 +541,10 @@ public fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combineStates(
 /**
  * Returns a read-only [StateFlow] derived from twelve source state flows using [transform].
  *
- * Every access to [StateFlow.value] independently reads each source's current value and invokes [transform] once.
- * These reads do not form an atomic snapshot: a source can change between reads, so the supplied values are not
- * guaranteed to have existed simultaneously. The transformed result is not cached between property reads.
+ * Every access to [StateFlow.value] reads each source's current value separately and invokes [transform] once.
+ * Each individual read is thread-safe, but reading several independent state flows is not one atomic operation. If a
+ * source changes while the values are being read, [transform] can receive values observed at different moments that
+ * might not have existed together. The transformed result is not cached between property reads.
  * Every access to [StateFlow.replayCache] performs the same fresh computation and returns the result as a singleton list.
  *
  * Each collector independently invokes [transform] for combined source values observed by that collector. Collection

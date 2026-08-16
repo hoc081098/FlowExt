@@ -536,9 +536,9 @@ Both operators intentionally use **computed-on-read** semantics:
 - Property reads and collectors do not share transformed results. Updating a source performs no transformation unless
   the returned state flow is being collected or its `value` or `replayCache` is accessed.
 
-A direct read of `combineStates(...).value` reads each source independently. Sources can change between those reads,
-so the values passed to the transform do not form an atomic cross-source snapshot and might not have existed at the
-same instant.
+A direct read of `combineStates(...).value` reads each source's value separately. Each individual read is thread-safe,
+but reading several independent `StateFlow`s is not one atomic operation. If a source changes while the values are
+being read, the transform can receive values observed at different moments that might not have existed together.
 
 The transform can be invoked repeatedly and concurrently. It must be deterministic, side-effect-free, safe for
 concurrent invocation, and must not throw. If it throws, the exception escapes the property access or fails the
