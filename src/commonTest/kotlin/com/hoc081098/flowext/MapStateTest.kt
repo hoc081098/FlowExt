@@ -259,8 +259,9 @@ class MapStateTest : BaseTest() {
     val job = launch {
       try {
         mapped.collect { collectionStarted.complete(value = Unit) }
-      } catch (_: CancellationException) {
+      } catch (e: CancellationException) {
         collectionCancelled.complete(value = Unit)
+        throw e
       }
     }
     runCurrent()
