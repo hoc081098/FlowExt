@@ -30,4 +30,4 @@ Use a concise imperative subject, preferably Conventional Commit style, for exam
 
 ## Public API & Release Safety
 
-Do not commit `local.properties`, IDE caches, build output, signing keys, or Maven credentials. Follow `RELEASING.md` for version/tag work; do not run publication tasks as part of normal verification.
+Do not commit `local.properties`, IDE caches, build output, signing keys, or Maven credentials. Changes to the tracked shared IntelliJ configuration files `.idea/codeStyles/Project.xml`, `.idea/misc.xml`, and `.idea/vcs.xml` are allowed when intentional and scoped. Follow `RELEASING.md` for version/tag work; do not run publication tasks as part of normal verification.
