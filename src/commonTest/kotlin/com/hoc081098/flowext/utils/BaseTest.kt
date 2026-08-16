@@ -24,7 +24,6 @@
 
 package com.hoc081098.flowext.utils
 
-import kotlin.test.assertFails
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
@@ -94,7 +93,10 @@ suspend inline fun <reified T : Throwable, R> assertFailsWith(
 
 suspend fun Flow<Int>.sum() = fold(0) { acc, value -> acc + value }
 
-inline fun <reified T> assertReadonlyStateFlow(stateFlow: StateFlow<T>, value: T) {
+/**
+ * Asserts that [stateFlow] is not exposed as a [MutableStateFlow], i.e. callers cannot mutate it through that
+ * public API. This is a structural/type check only; it does not exercise [stateFlow]'s read or collection semantics.
+ */
+inline fun <reified T> assertNotMutableStateFlow(stateFlow: StateFlow<T>) {
   assertFalse { stateFlow is MutableStateFlow<T> }
-  assertFails { (stateFlow as MutableStateFlow<T>).value = value }
 }

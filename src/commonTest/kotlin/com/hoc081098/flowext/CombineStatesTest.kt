@@ -27,7 +27,7 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.assertFailsWith
-import com.hoc081098.flowext.utils.assertReadonlyStateFlow
+import com.hoc081098.flowext.utils.assertNotMutableStateFlow
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -61,7 +61,7 @@ class CombineStatesTest : BaseTest() {
       a * 100 + b
     }
 
-    assertReadonlyStateFlow(stateFlow = combined, value = 0)
+    assertNotMutableStateFlow(stateFlow = combined)
     assertEquals(expected = 0, actual = invocationCount)
 
     first.value = 4

@@ -27,7 +27,7 @@ package com.hoc081098.flowext
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.assertFailsWith
-import com.hoc081098.flowext.utils.assertReadonlyStateFlow
+import com.hoc081098.flowext.utils.assertNotMutableStateFlow
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -60,7 +60,7 @@ class MapStateTest : BaseTest() {
       it * 10
     }
 
-    assertReadonlyStateFlow(stateFlow = mapped, value = 0)
+    assertNotMutableStateFlow(stateFlow = mapped)
     assertEquals(expected = 0, actual = invocationCount)
 
     source.value = 3
