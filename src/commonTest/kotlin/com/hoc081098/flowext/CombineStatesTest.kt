@@ -26,14 +26,15 @@ package com.hoc081098.flowext
 
 import com.hoc081098.flowext.utils.BaseTest
 import com.hoc081098.flowext.utils.TestException
+import com.hoc081098.flowext.utils.assertFailsWith
 import com.hoc081098.flowext.utils.assertReadonlyStateFlow
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -206,16 +207,9 @@ class CombineStatesTest : BaseTest() {
       if (a == 1) throw failure
       a + b
     }
-    var collectionFailure: Throwable? = null
 
     // The collector fails when transform throws.
-    val job = launch {
-      try {
-        combined.collect {}
-      } catch (throwable: Throwable) {
-        collectionFailure = throwable
-      }
-    }
+    val job = launch { assertFailsWith<TestException>(combined) }
     runCurrent()
 
     first.value = 1
@@ -223,10 +217,6 @@ class CombineStatesTest : BaseTest() {
     job.join()
 
     // Reading value/replayCache after the failure also rethrows it.
-    assertEquals(
-      expected = failure.message,
-      actual = assertIs<TestException>(value = collectionFailure).message,
-    )
     assertEquals(
       expected = failure.message,
       actual = assertFailsWith<TestException>(block = { combined.value }).message,
@@ -257,8 +247,9 @@ class CombineStatesTest : BaseTest() {
     val job = launch {
       try {
         combined.collect { collectionStarted.complete(Unit) }
-      } finally {
+      } catch (e: CancellationException) {
         collectionCancelled.complete(Unit)
+        throw e
       }
     }
     runCurrent()
