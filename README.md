@@ -516,7 +516,7 @@ These operators are particularly useful in ViewModels and other state holders:
 - `mapState` projects a focused sub-state from a larger `StateFlow` while preserving the `StateFlow` return type.
 
 On Android, the returned `StateFlow` can be passed directly to
-[`collectAsStateWithLifecycle`](https://developer.android.com/reference/kotlin/androidx/lifecycle/compose/collectAsStateWithLifecycle.composable).
+[`collectAsStateWithLifecycle`](<https://developer.android.com/reference/kotlin/androidx/lifecycle/compose/collectAsStateWithLifecycle.composable#(kotlinx.coroutines.flow.StateFlow).collectAsStateWithLifecycle(androidx.lifecycle.LifecycleOwner,androidx.lifecycle.Lifecycle.State,kotlin.coroutines.CoroutineContext)>).
 Its current `value` provides the initial Compose state, so callers do not need to invent a separate placeholder
 `initialValue` as they would when collecting a plain `Flow`.
 
