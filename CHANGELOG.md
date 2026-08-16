@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- Add preview `mapState` and `combineStates` operators for deriving read-only `StateFlow`s. `combineStates` supports
+  2–12 sources. Both operators compute transformed values on every property read and do not memoize them between
+  property reads. Collection preserves `StateFlow`'s strong equality-based conflation.
+
 ## [1.0.0] - Sep 22, 2024
 
 This is our first stable release! Thanks everyone for using FlowExt, reporting bugs, providing feedback and sending PRs.
