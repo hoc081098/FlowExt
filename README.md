@@ -510,6 +510,21 @@ timer: kotlin.Unit
 `mapState` derives a read-only `StateFlow` from one source `StateFlow`. `combineStates` derives one from 2–12 source
 `StateFlow`s.
 
+These operators are particularly useful in ViewModels and other state holders:
+
+- `combineStates` derives one presentation-level `StateFlow` from several source `StateFlow`s.
+- `mapState` projects a focused sub-state from a larger `StateFlow` while preserving the `StateFlow` return type.
+
+On Android, the returned `StateFlow` can be passed directly to
+[`collectAsStateWithLifecycle`](https://developer.android.com/reference/kotlin/androidx/lifecycle/compose/collectAsStateWithLifecycle.composable).
+Its current `value` provides the initial Compose state, so callers do not need to invent a separate placeholder
+`initialValue` as they would when collecting a plain `Flow`.
+
+Conceptually, `mapState` and `combineStates` are similar to the `select` operators: both derive state and suppress
+consecutive equal emissions. The main distinction is that `mapState` and `combineStates` preserve the `StateFlow`
+return type and provide an immediately readable current `value`. They use computed-on-read semantics rather than
+selector memoization.
+
 Both operators intentionally use **computed-on-read** semantics:
 
 - Every access to `value` invokes the transform with values read from the source `StateFlow` or `StateFlow`s.
@@ -546,8 +561,6 @@ fun stateFlowExample() {
   println(total.value) // 30; computed again
 }
 ```
-
-Memoization is a different behavior and is not provided by these operators.
 
 ----
 
