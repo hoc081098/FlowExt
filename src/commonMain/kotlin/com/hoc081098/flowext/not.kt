@@ -34,21 +34,3 @@ import kotlinx.coroutines.flow.map
  */
 @Suppress("NOTHING_TO_INLINE")
 public inline fun Flow<Boolean>.not(): Flow<Boolean> = map { !it }
-
-/**
- * Returns a [Flow] that emits the boolean negation (opposite) of each value emitted by the source [Flow].
- * This is an alias for [not].
- *
- * @return A [Flow] that emits `false` when the source emits `true` and `true` when the source emits `false`.
- */
-@Suppress("NOTHING_TO_INLINE")
-public inline fun Flow<Boolean>.inverted(): Flow<Boolean> = not()
-
-/**
- * Returns a [Flow] that emits the boolean negation (opposite) of each value emitted by the source [Flow].
- * This is an alias for [not].
- *
- * @return A [Flow] that emits `false` when the source emits `true` and `true` when the source emits `false`.
- */
-@Suppress("NOTHING_TO_INLINE")
-public inline fun Flow<Boolean>.toggle(): Flow<Boolean> = not()

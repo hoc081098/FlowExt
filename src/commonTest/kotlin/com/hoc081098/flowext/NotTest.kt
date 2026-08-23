@@ -29,16 +29,23 @@ import com.hoc081098.flowext.utils.TestException
 import com.hoc081098.flowext.utils.test
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.toList
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class BooleanOperatorsTest : BaseTest() {
+class NotTest : BaseTest() {
   @Test
   fun notBasic() = runTest {
     val values = flowOf(true, false, true, false).not().toList()
@@ -90,57 +97,21 @@ class BooleanOperatorsTest : BaseTest() {
   }
 
   @Test
-  fun invertedBasic() = runTest {
-    val values = flowOf(true, false, true, false).inverted().toList()
-    assertEquals(listOf(false, true, false, true), values)
-  }
+  fun notPropagatesCancellationToUpstream() = runTest {
+    val upstreamStarted = CompletableDeferred<Unit>()
+    val upstreamCompletion = CompletableDeferred<Throwable?>()
 
-  @Test
-  fun invertedEmpty() = runTest {
-    val values = flowOf<Boolean>().inverted().toList()
-    assertEquals(emptyList(), values)
-  }
+    val job = flow<Boolean> {
+      upstreamStarted.complete(Unit)
+      awaitCancellation()
+    }
+      .onCompletion { upstreamCompletion.complete(it) }
+      .not()
+      .launchIn(this)
 
-  @Test
-  fun invertedUpstreamError() = runTest {
-    val throwable = TestException()
+    upstreamStarted.await()
+    job.cancelAndJoin()
 
-    flow<Boolean> { throw throwable }
-      .inverted()
-      .test(listOf(Event.Error(throwable)))
-  }
-
-  @Test
-  fun toggleBasic() = runTest {
-    val values = flowOf(true, false, true, false).toggle().toList()
-    assertEquals(listOf(false, true, false, true), values)
-  }
-
-  @Test
-  fun toggleEmpty() = runTest {
-    val values = flowOf<Boolean>().toggle().toList()
-    assertEquals(emptyList(), values)
-  }
-
-  @Test
-  fun toggleUpstreamError() = runTest {
-    val throwable = TestException()
-
-    flow<Boolean> { throw throwable }
-      .toggle()
-      .test(listOf(Event.Error(throwable)))
-  }
-
-  @Test
-  fun allVariantsProduceSameResult() = runTest {
-    val input = flowOf(true, false, true, false)
-
-    val notResult = input.not().toList()
-    val invertedResult = input.inverted().toList()
-    val toggleResult = input.toggle().toList()
-
-    assertEquals(notResult, invertedResult)
-    assertEquals(notResult, toggleResult)
-    assertEquals(listOf(false, true, false, true), notResult)
+    assertIs<CancellationException>(upstreamCompletion.await())
   }
 }

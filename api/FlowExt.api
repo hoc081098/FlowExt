@@ -1,9 +1,3 @@
-public final class com/hoc081098/flowext/BooleanOperatorsKt {
-	public static final fun inverted (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
-	public static final fun not (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
-	public static final fun toggle (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
-}
-
 public final class com/hoc081098/flowext/BufferCountKt {
 	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/Flow;
 	public static final fun bufferCount (Lkotlinx/coroutines/flow/Flow;II)Lkotlinx/coroutines/flow/Flow;
@@ -194,6 +188,10 @@ public final class com/hoc081098/flowext/NeverFlow$Companion : com/hoc081098/flo
 
 public final class com/hoc081098/flowext/NeverFlowKt {
 	public static final fun neverFlow ()Lcom/hoc081098/flowext/NeverFlow;
+}
+
+public final class com/hoc081098/flowext/NotKt {
+	public static final fun not (Lkotlinx/coroutines/flow/Flow;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class com/hoc081098/flowext/PairwiseKt {
