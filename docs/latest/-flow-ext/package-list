@@ -82,6 +82,7 @@ $dokka.location:com.hoc081098.flowext//mapToResult/kotlinx.coroutines.flow.Flow[
 $dokka.location:com.hoc081098.flowext//mapToUnit/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/map-to-unit.html
 $dokka.location:com.hoc081098.flowext//materialize/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/materialize.html
 $dokka.location:com.hoc081098.flowext//neverFlow/#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/never-flow.html
+$dokka.location:com.hoc081098.flowext//not/kotlinx.coroutines.flow.Flow[kotlin.Boolean]#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/not.html
 $dokka.location:com.hoc081098.flowext//pairwise/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/pairwise.html
 $dokka.location:com.hoc081098.flowext//pairwise/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlin.coroutines.SuspendFunction2[TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?]),TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/pairwise.html
 $dokka.location:com.hoc081098.flowext//plus/kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]#kotlinx.coroutines.flow.Flow[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/-flow-ext/com.hoc081098.flowext/plus.html
