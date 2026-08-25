@@ -146,6 +146,7 @@ dependencies {
 
 - Intermediate operators
   - [`bufferCount`](#buffercount--chunked)
+  - [`not`](#not) (`Flow<Boolean>`)
   - [`combine`](#combine)
   - [`mapState`](#mapstate--combinestates)
   - [`combineStates`](#mapstate--combinestates)
@@ -226,6 +227,27 @@ bufferCount: [2, 3, 4]
 bufferCount: [4, 5, 6]
 bufferCount: [6, 7, 8]
 bufferCount: [8, 9]
+```
+
+----
+
+#### not
+
+Returns a `Flow<Boolean>` that emits the boolean negation (opposite) of each value emitted by the source `Flow<Boolean>`.
+
+```kotlin
+flowOf(true, false, true, false)
+  .not()
+  .collect { println("not: $it") }
+```
+
+Output:
+
+```none
+not: false
+not: true
+not: false
+not: true
 ```
 
 ----
