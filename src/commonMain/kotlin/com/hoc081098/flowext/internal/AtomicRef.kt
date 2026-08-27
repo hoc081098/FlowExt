@@ -29,3 +29,50 @@ internal expect class AtomicRef<T>(initialValue: T) {
 
   fun compareAndSet(expect: T, update: T): Boolean
 }
+
+// Copy from: https://github.com/arrow-kt/arrow/blob/6fb6a75b131f5bbb272611bf277e263ff791cb67/arrow-libs/core/arrow-atomic/src/commonMain/kotlin/arrow/atomic/Atomic.kt#L44
+
+/**
+ * Infinite loop that reads this atomic variable and performs the specified [action] on its value.
+ */
+internal inline fun <T> AtomicRef<T>.loop(action: (T) -> Unit): Nothing {
+  while (true) {
+    action(value)
+  }
+}
+
+internal fun <T> AtomicRef<T>.tryUpdate(function: (T) -> T): Boolean {
+  val cur = value
+  val upd = function(cur)
+  return compareAndSet(cur, upd)
+}
+
+internal inline fun <T> AtomicRef<T>.update(function: (T) -> T) {
+  while (true) {
+    val cur = value
+    val upd = function(cur)
+    if (compareAndSet(cur, upd)) return
+  }
+}
+
+/**
+ * Updates variable atomically using the specified [function] of its value and returns its old value.
+ */
+internal inline fun <T> AtomicRef<T>.getAndUpdate(function: (T) -> T): T {
+  while (true) {
+    val cur = value
+    val upd = function(cur)
+    if (compareAndSet(cur, upd)) return cur
+  }
+}
+
+/**
+ * Updates variable atomically using the specified [function] of its value and returns its new value.
+ */
+internal inline fun <T> AtomicRef<T>.updateAndGet(function: (T) -> T): T {
+  while (true) {
+    val cur = value
+    val upd = function(cur)
+    if (compareAndSet(cur, upd)) return upd
+  }
+}
